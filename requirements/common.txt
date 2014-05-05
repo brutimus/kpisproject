@@ -5,10 +5,6 @@ dj-static==0.0.5
 gnureadline==6.3.3
 google-api-python-client==1.2
 gunicorn==18.0
-httplib2==0.9
-pyOpenSSL==0.14
-pycparser==2.10
-python-dateutil==2.2
 pytz==2014.2
 wsgiref==0.1.2
 zope.interface==4.1.1
