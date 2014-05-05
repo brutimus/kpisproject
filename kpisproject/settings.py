@@ -66,6 +66,9 @@ DATABASES = dj_database_url.config() or {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+dj_conf = dj_database_url.config()
+if dj_conf:
+    DATABASES['default'] =  dj_database_url.config()
 
 # Cache
 
