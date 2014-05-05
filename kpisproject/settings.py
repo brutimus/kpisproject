@@ -60,7 +60,7 @@ WSGI_APPLICATION = 'kpisproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-DATABASES = dj_database_url.config() or {
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
@@ -68,7 +68,7 @@ DATABASES = dj_database_url.config() or {
 }
 dj_conf = dj_database_url.config()
 if dj_conf:
-    DATABASES['default'] =  dj_database_url.config()
+    DATABASES['default'] =  dj_conf
 
 # Cache
 
