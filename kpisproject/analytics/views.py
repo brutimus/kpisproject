@@ -20,41 +20,47 @@ def story_overview(request):
         select={
             # Don't know why I need the +1 days, but it works.
             # This code requires my custom django patch.
-            'ts': "strftime('%%s', date, 'start of day', '+1 days')"
+            'ts': "EXTRACT(EPOCH from date_trunc('day', date))"
+            # 'ts': "strftime('%%s', date, 'start of day', '+1 days')"
         }
     ).values('ts').annotate(
         dcount=Count('id'),
         dv=Sum('visits'),
         dpv=Sum('pageviews')
     )
+    
     by_week = Article.objects.extra(
         select={
             # Again, not totally sure on the date math here, but it works.
             # I think I'm just confused about 0-indexed weeks.
-            'week': "strftime('%W', date, '+7 days')",
-            'week_start': "strftime('%%s', date, 'start of day', 'weekday 0', '-5 days')",
-            'week_end': "strftime('%%s', date, 'start of day', 'weekday 0', '+1 day')"
+            'week': "date_trunc('week', date)",
+            'week_start': "DATE_TRUNC('week', date)",
+            'week_end': "DATE_TRUNC('week', date) + interval '6 days'"
+            # 'week_start': "strftime('%%s', date, 'start of day', 'weekday 0', '-5 days')",
+            # 'week_end': "strftime('%%s', date, 'start of day', 'weekday 0', '+1 day')"
         }
     ).values('week', 'week_start', 'week_end').annotate(
         dcount=Count('id'), 
         dv=Sum('visits'),
         dpv=Sum('pageviews')
     ).order_by('-week')
+
     by_month = Article.objects.extra(
         select={
-            'month': "strftime('%Y-%m', date)",
+            'month': "DATE_TRUNC('month', date)",
         }
     ).values('month').annotate(
         dcount=Count('id'), 
         dv=Sum('visits'),
         dpv=Sum('pageviews')
     ).order_by('-month')
+
     # Process
     for week in by_week:
-        week['week_start'] = datetime.date.fromtimestamp(float(week['week_start']))
-        week['week_end'] = datetime.date.fromtimestamp(float(week['week_end']))
+        week['week_start'] = week['week_start']
+        week['week_end'] = week['week_end']
     for month in by_month:
-        month['month_start'] = datetime.date(*map(int, (month['month'] + '-1').split('-')))
+        month['month_start'] = month['month']
     return render_to_response('analytics/story_overview.html', {
         'histograms': {
             'count': {int(x['ts']): x['dcount'] for x in by_day},
@@ -75,7 +81,7 @@ def story_day(request, year, month, day):
         date__month=month,
         date__day=day
     ).extra(
-        select={'expanded_avg': 'ifnull(visits, 0) * ifnull(time_on_page, 0)'}
+        select={'expanded_avg': 'COALESCE(visits, 0) * COALESCE(time_on_page, 0)'}
     ).select_related(
         'status', 'category'
     ).prefetch_related(
@@ -195,7 +201,7 @@ def byline_detail(request, byline_id):
     totals = base_article_list.extra(
         select={
             'dcount': 'count(*)',
-            'dtop': 'sum(ifnull(visits, 0) * ifnull(time_on_page, 0)) / sum(visits)',
+            'dtop': 'sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits)',
             'dv': 'sum(visits)',
             'dpv': 'sum(pageviews)',
             'avg_v': 'sum(visits)/count(*)',
@@ -229,7 +235,8 @@ def byline_detail(request, byline_id):
         select={
             # Don't know why I need the +1 days, but it works.
             # This code requires my custom django patch.
-            'ts': "strftime('%%s', date, 'start of day', '+1 days')"
+            # 'ts': "strftime('%%s', date, 'start of day', '+1 days')"
+            'ts': "EXTRACT(EPOCH from date_trunc('day', date))"
         }
     ).values('ts').annotate(
         dcount=Count('id'),
@@ -242,9 +249,9 @@ def byline_detail(request, byline_id):
         select={
             # Again, not totally sure on the date math here, but it works.
             # I think I'm just confused about 0-indexed weeks.
-            'week': "strftime('%W', date, '+7 days')",
-            'week_start': "strftime('%%s', date, 'start of day', 'weekday 0', '-5 days')",
-            'week_end': "strftime('%%s', date, 'start of day', 'weekday 0', '+1 day')"
+            'week': "date_trunc('week', date)",
+            'week_start': "DATE_TRUNC('week', date)",
+            'week_end': "DATE_TRUNC('week', date) + interval '6 days'"
         }
     ).values('week', 'week_start', 'week_end').annotate(
         dcount=Count('id'), 
@@ -255,7 +262,7 @@ def byline_detail(request, byline_id):
     # Monthly Rollup
     by_month = base_article_list.extra(
         select={
-            'month': "strftime('%Y-%m', date)",
+            'month': "DATE_TRUNC('month', date)"
         }
     ).values('month').annotate(
         dcount=Count('id'), 
@@ -265,10 +272,10 @@ def byline_detail(request, byline_id):
 
     # Process
     for week in by_week:
-        week['week_start'] = datetime.date.fromtimestamp(float(week['week_start']))
-        week['week_end'] = datetime.date.fromtimestamp(float(week['week_end']))
+        week['week_start'] = week['week_start']
+        week['week_end'] = week['week_end']
     for month in by_month:
-        month['month_start'] = datetime.date(*map(int, (month['month'] + '-1').split('-')))
+        month['month_start'] = month['month']
 
     return render_to_response('analytics/byline.html', {
         'byline': Byline.objects.get(id=byline_id),
