@@ -1,4 +1,4 @@
-Django==1.6.5.dev20140505213908
+-e git://github.com/brutimus/django.git@b79e0fbedd83d4e03cacc95d7b309038adc9c090#egg=Django
 dj-database-url==0.3.0
 dj-static==0.0.5
 django-databrowse==1.3
