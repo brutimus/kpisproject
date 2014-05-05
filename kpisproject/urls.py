@@ -23,4 +23,4 @@ urlpatterns = patterns('',
     url(r'^bylines/(\d+)/$', 'kpisproject.analytics.views.byline_detail')
 )
 
-django_databrowse.site.register(Article, Byline, Status, Category)
+# django_databrowse.site.register(Article, Byline, Status, Category)

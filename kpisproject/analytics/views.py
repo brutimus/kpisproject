@@ -5,6 +5,7 @@ from itertools import groupby
 from django.db import connections
 from django.db.models import Sum, Avg, Count
 from django.shortcuts import render_to_response
+from django.views.decorators.cache import cache_page
 from django.views.generic.dates import DayArchiveView
 from django.views.generic.list import ListView
 from kpisproject.analytics.models import Article, Byline, Category, Status
@@ -13,7 +14,7 @@ from kpisproject.analytics.models import Article, Byline, Category, Status
 EDIT_URL = "http://admin.onset.freedom.com/modules/articles/edit.php?id="
 VIEW_URL = "%s"
 
-
+@cache_page(60 * 15)
 def story_overview(request):
     by_day = Article.objects.extra(
         select={
@@ -64,7 +65,7 @@ def story_overview(request):
         'by_month': by_month
     })
 
-
+@cache_page(60 * 15)
 def story_day(request, year, month, day):
 
     today = datetime.date(int(year), int(month), int(day))
@@ -178,13 +179,13 @@ def story_day(request, year, month, day):
     }
     return render_to_response('analytics/story_day.html', context)
 
-
+@cache_page(60 * 15)
 def byline_overview(request):
     return render_to_response('analytics/byline_overview.html', {
         'bylines': Byline.objects.all().order_by('first_name', 'last_name')
         })
 
-
+@cache_page(60 * 15)
 def byline_detail(request, byline_id):
     base_article_list = Article.objects.filter(
         bylines__id=byline_id
