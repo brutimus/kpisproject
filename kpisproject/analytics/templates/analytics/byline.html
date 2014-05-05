@@ -1,0 +1,208 @@
+{% extends "analytics/base.html" %}
+{% load humanize %}
+{% load sec num %}
+
+{% block title %}Byline{% endblock %}
+{% block pagenav %}
+    {% regroup articles by date|date:"Y-m-d" as articles_by_day %}
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#rollups">Rollups</a></li>
+    <li><a href="#weekly">Weekly</a></li>
+    <li><a href="#monthly">Monthly</a></li>
+    <li><a href="#stories">Stories</a></li>
+{% endblock %}
+{% block content %}
+
+    <div class="row section">
+        <h1 id="overview" class="page-header">{{ byline.first_name }} {{ byline.last_name }} <span class="pull-right text-muted"><small>{% now "DATE_FORMAT" %}</small></span></h1>
+        <div class="row">
+            <div class="col-xs-4 col-sm-3 big-stat">
+                <div class="well big-stat-box">
+                    <h1>{{ totals.dcount }}</h1>
+                    <span class="text-muted">Total Stories</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-sm-3 big-stat">
+                <div class="well big-stat-box">
+                  <h1>{{ totals.avg_v|intcomma|or:"---" }}</h1>
+                  <span class="text-muted">Avg Visits</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-sm-3 big-stat">
+                <div class="well big-stat-box">
+                  <h1>{{ totals.avg_pv|intcomma|or:"---" }}</h1>
+                  <span class="text-muted">Avg Views</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-sm-3 big-stat">
+                <div class="well big-stat-box">
+                  <h1>{{ totals.dtop|floatformat:"0"|formatSeconds|or:"---" }}</h1>
+                  <span class="text-muted">Avg Time on Page</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-sm-3 big-stat">
+                <div class="well big-stat-box">
+                  <h1 class="big-num">{{ totals.dv|intcomma|or:"---" }}</h1>
+                  <span class="text-muted">Visits</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-sm-3 big-stat">
+                <div class="well big-stat-box">
+                  <h1 class="big-num">{{ totals.dpv|intcomma|or:"---" }}</h1>
+                  <span class="text-muted">Views</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12" id="calendar"></div>
+        </div>
+    </div>
+
+<script>
+
+        var cal = new CalHeatMap();
+        cal.init({
+            itemSelector: "#calendar",
+            domain: "month",
+            subDomain: "x_day",
+            data: {{ histograms.count }},
+            start: (new Date()).setMonth((new Date()).getMonth() - 5),
+            highlight: ["now"],
+            // weekStartOnMonday: false,
+            domainDynamicDimension: false,
+            cellSize: 24,
+            cellPadding: 0,
+            domainGutter: 20,
+            range: 6,
+            tooltip: true,
+            domainLabelFormat: function(date) {
+                moment.lang("en");
+                return moment(date).format("MMMM").toUpperCase();
+            },
+            subDomainTextFormat: "%d",
+            legend: [0,1,2,3,4,5,6,7,8,9,10],
+            displayLegend: false,
+            onClick: function(date, nb) {
+                window.location = '/stories/' + moment(date).format("YYYY/MM/DD") + '/'
+            }
+        });
+
+    </script>
+    <div class="row section">
+        <h1 id="rollups" class="page-header">Rollups</h1>
+        <table class="table table-condensed table-outside table-responsive">
+            <thead>
+                <tr>
+                    <th>Segment</th>
+                    <th class="num">Stories</th>
+                    <th class="num">Visits</th>
+                    <th class="num">Views</th>
+                    <th class="num"><span class="glyphicon glyphicon-time"></span> Visit</th>
+                </tr>
+            </thead>
+            {% for segment in rollups %}
+            <tr>
+                <td>{{ segment.name }}</td>
+                <td class="num">{{ segment.stats.dcount|intcomma|or:"---" }}</td>
+                <td class="num">{{ segment.stats.dv|intcomma|or:"---" }}</td>
+                <td class="num">{{ segment.stats.dpv|intcomma|or:"---" }}</td>
+                <td class="num">{{ segment.stats.dtop|formatSeconds|or:"---" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="row section">
+        <h1 id="weekly" class="page-header">Weekly Stats</h1>
+        <table class="table table-condensed table-outside table-responsive">
+            <thead>
+                <tr>
+                    <th>Week of</th>
+                    <th class="num">Stories</th>
+                    <th class="num">Visits</th>
+                    <th class="num">Views</th>
+                    <th class="num"><span class="glyphicon glyphicon-time"></span> Visit</th>
+                </tr>
+            </thead>
+            {% for week in by_week %}
+            <tr>
+                <td>{{ week.week_start|date:"M jS"}} - {{ week.week_end|date:"M jS"}}</td>
+                <td class="num">{{ week.dcount|intcomma }}</td>
+                <td class="num">{{ week.dv|intcomma }}</td>
+                <td class="num">{{ week.dpv|intcomma }}</td>
+                <td class="num">---</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="row section">
+        <h1 id="monthly" class="page-header">Monthly Stats</h1>
+        <table class="table table-condensed table-outside table-responsive">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th class="num">Stories</th>
+                    <th class="num">Visits</th>
+                    <th class="num">Views</th>
+                    <th class="num"><span class="glyphicon glyphicon-time"></span> Visit</th>
+                </tr>
+            </thead>
+            {% for month in by_month %}
+            <tr>
+                <td>{{ month.month_start|date:"M Y"}}</td>
+                <td class="num">{{ month.dcount|intcomma }}</td>
+                <td class="num">{{ month.dv|intcomma }}</td>
+                <td class="num">{{ month.dpv|intcomma }}</td>
+                <td class="num">---</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    
+    
+    {% regroup articles by date|date:"Y-m-d" as articles_by_day %}
+    <div class="row section">
+        <h1 id="stories" class="page-header">Stories</h1>
+        <table class="table table-condensed table-outside table-sortable table-responsive">
+        <thead>
+            <tr>
+                <th class="icon"></th>
+                <th class="icon sort" name="count">#</th>
+                <th></th>
+                <th></th>
+                <th class="num sort" name="visits">Visits <small class="text-muted">(%)</small></th>
+                <th class="num sort" name="pageviews">Views <small class="text-muted">(%)</small></th>
+                <th class="num sort" name="time"><span class="glyphicon glyphicon-time"></span> Visit</th>
+            </tr>
+        </thead>
+        {% for group in articles_by_day %}
+        <tbody><tr><td class="table-container" colspan="7"><table class="table table-condensed table-inside">
+            <thead>
+                <tr class="collapse-handle collapsed">
+                    <th class="icon"></th>
+                    <th class="icon" name="count"><span class="badge">{{ group.list|length }}</span></th>
+                    <th class="handle" data-toggle="collapse" href="#collapse{{ group.list.0.date|date|slugify }}">{{ group.list.0.date|date }}</th>
+                    <th></th>
+                    <th class="num" name="visits">{{ group.total_visits|intcomma|or:"---" }} <small class="text-muted">({{ group.percent_total_visits|floatformat:2|or:"---" }})</small></th>
+                    <th class="num" name="pageviews">{{ group.total_pageviews|intcomma|or:"---" }} <small class="text-muted">({{ group.percent_total_pageviews|floatformat:2|or:"---" }})</small></th>
+                    <th class="num" name="time">{{ group.avg_time_on_page|formatSeconds|or:"---" }}</th>
+                </tr>
+            </thead>
+            <tbody id="collapse{{ group.list.0.date|date|slugify }}" class="panel-collapse collapse">
+                {% for article in group.list|dictsortreversed:"visits" %}
+                <tr{% if article.status.name == "Don't Display" %} class="danger"{% endif %}>
+                    <td class="icon"><a href="{{ EDIT_URL }}{{ article.id }}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                    <td class="icon"><a href="http://www.ocregister.com/articles/-{{ article.id }}--.html"><span class="glyphicon glyphicon-globe"></span></a></td>
+                    <td>{{ article.headline }}</td>
+                    <td>{{ article.byline.name }}</td>
+                    <td class="num">{{ article.visits|intcomma|or:"---" }} <small class="text-muted">---</small></td>
+                    <td class="num">{{ article.pageviews|intcomma|or:"---" }} <small class="text-muted">---</small></td>
+                    <td class="num">{{ article.time_on_page|formatSeconds|or:"---" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table></td></tr></tbody>            
+        {% endfor %}
+        </table>
+    </div>
+{% endblock %}

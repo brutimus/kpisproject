@@ -1,0 +1,134 @@
+{% extends "analytics/base.html" %}
+{% load humanize %}
+{% load sec %}
+
+{% block title %}Stories{% endblock %}
+{% block pagenav %}
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#weekly">Weekly</a></li>
+    <li><a href="#monthly">Monthly</a></li>
+{% endblock %}
+{% block content %}
+
+    <div class="row section">
+        <h1 id="overview" class="page-header">Stories <span class="pull-right text-muted"><small>{% now "DATE_FORMAT" %}</small></span></h1>
+        <div class="col-xs-12" id="calendar"></div>
+        <div class="col-xs-12" style="text-align:center;">
+            <div class="btn-group hidden-print">
+                <button id="calPrev" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-arrow-left"></span></button>
+                <button type="button" class="btn btn-primary btn-sm" onClick="cal.setLegend([0, 50, 75, 100, 125, 150, 175, 200]);cal.update({{ histograms.count }});">Count</button>
+                <button type="button" class="btn btn-primary btn-sm" onClick="cal.setLegend([0, 12500, 25000, 37500, 50000, 62500, 75000, 87500, 100000]);cal.update({{ histograms.v }});">Visits</button>
+                <button type="button" class="btn btn-primary btn-sm" onClick="cal.setLegend([0, 12500, 25000, 37500, 50000, 62500, 75000, 87500, 100000]);cal.update({{ histograms.pv }});">Views</button>
+                <button id="calNext" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-arrow-right"></span></button>
+            </div>
+        </div>
+        <!-- <div class="col-xs-12" id="calendar2"></div> -->
+    </div>
+    <div class="row section">
+        <h1 id="weekly" class="page-header">Weekly Stats</h1>
+        <table class="table table-condensed table-outside table-responsive">
+            <thead>
+                <tr>
+                    <th>Week of</th>
+                    <th class="num">Stories</th>
+                    <th class="num">Visits</th>
+                    <th class="num">Views</th>
+                    <th class="num"><span class="glyphicon glyphicon-time"></span> Visit</th>
+                </tr>
+            </thead>
+            {% for week in by_week %}
+            <tr>
+                <td>{{ week.week_start|date:"M jS"}} - {{ week.week_end|date:"M jS"}}</td>
+                <td class="num">{{ week.dcount|intcomma }}</td>
+                <td class="num">{{ week.dv|intcomma }}</td>
+                <td class="num">{{ week.dpv|intcomma }}</td>
+                <td class="num">---</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="row section">
+        <h1 id="monthly" class="page-header">Monthly Stats</h1>
+        <table class="table table-condensed table-outside table-responsive">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th class="num">Stories</th>
+                    <th class="num">Visits</th>
+                    <th class="num">Views</th>
+                    <th class="num"><span class="glyphicon glyphicon-time"></span> Visit</th>
+                </tr>
+            </thead>
+            {% for month in by_month %}
+            <tr>
+                <td>{{ month.month_start|date:"M Y"}}</td>
+                <td class="num">{{ month.dcount|intcomma }}</td>
+                <td class="num">{{ month.dv|intcomma }}</td>
+                <td class="num">{{ month.dpv|intcomma }}</td>
+                <td class="num">---</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <script>
+
+        var cal = new CalHeatMap();
+        cal.init({
+            itemSelector: "#calendar",
+            itemName: ['story', 'stories'],
+            domain: "month",
+            subDomain: "x_day",
+            data: {{ histograms.count }},
+            start: (new Date()).setMonth((new Date()).getMonth() - 5),
+            highlight: ["now"],
+            // weekStartOnMonday: false,
+            domainDynamicDimension: false,
+            cellSize: 24,
+            cellPadding: 0,
+            domainGutter: 20,
+            range: 6,
+            tooltip: true,
+            domainLabelFormat: function(date) {
+                moment.lang("en");
+                return moment(date).format("MMMM YYYY").toUpperCase();
+            },
+            subDomainTextFormat: "%d",
+            legend: [0, 50, 75, 100, 125, 150, 175, 200],
+            displayLegend: false,
+            onClick: function(date, nb) {
+                window.location = '/stories/' + moment(date).format("YYYY/MM/DD") + '/'
+            },
+            previousSelector: '#calPrev',
+            nextSelector: '#calNext'
+        });
+
+        // var cal2 = new CalHeatMap();
+        // cal2.init({
+        //     itemSelector: "#calendar2",
+        //     domain: "month",
+        //     subDomain: "x_week",
+        //     data: {{ by_week }},
+        //     start: (new Date()).setMonth((new Date()).getMonth() - 5),
+        //     highlight: ["now"],
+        //     // weekStartOnMonday: false,
+        //     // verticalOrientation: true,
+        //     domainDynamicDimension: false,
+        //     cellSize: 24,
+        //     cellPadding: 0,
+        //     domainGutter: 150,
+        //     range: 6,
+        //     domainLabelFormat: function(date) {
+        //         // console.log(cal2.options.data, date)
+        //         moment.lang("en");
+        //         return moment(date).format("MMMM YYYY").toUpperCase();
+        //     },
+        //     subDomainTextFormat: "%W",
+        //     legend: [0, 50, 75, 100, 125, 150, 175, 200],
+        //     onClick: function(date, nb) {
+        //         window.location = '/stories/' + moment(date).format("YYYY/MM/DD") + '/'
+        //     }
+        // });
+
+    </script>
+{% endblock %}

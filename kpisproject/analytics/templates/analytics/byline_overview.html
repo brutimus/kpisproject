@@ -1,0 +1,56 @@
+{% extends "analytics/base.html" %}
+{% load humanize %}
+{% load sec %}
+
+{% block title %}Byline{% endblock %}
+{% block pagenav %}
+{% endblock %}
+{% block content %}
+
+    <div class="row section">
+        <h1 id="overview" class="page-header">Bylines</h1>
+        <form id="live-search" action="" class="form-inline" method="post">
+            <label class="sr-only" for="filter">Byline</label>
+           <input type="text" class="form-control" id="filter" value="" placeholder="Byline" />
+        </form>
+    </div>
+    <div class="row section">
+        <ul class="byline-list list-unstyled">
+            {% for byline in bylines %}
+            <li><a href="/bylines/{{ byline.id }}/">{{ byline.first_name }} {{ byline.last_name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <script>
+    $(document).ready(function(){
+        $("#filter").keyup(function(){
+
+            // Retrieve the input field text and reset the count to zero
+            var filter = $(this).val(), count = 0;
+            if(!filter){
+                $(".commentlist li").hide();
+                return;
+            }
+
+            var regex = new RegExp(filter, "i");
+            // Loop through the comment list
+            $(".byline-list li").each(function(){
+
+                // If the list item does not contain the text phrase fade it out
+                if ($(this).text().search(regex) < 0) {
+                    $(this).hide();
+
+                // Show the list item if the phrase matches and increase the count by 1
+                } else {
+                    $(this).show();
+                    count++;
+                }
+            });
+
+            // Update the count
+            var numberItems = count;
+            $("#filter-count").text("Number of Comments = "+count);
+        });
+   });
+    </script>
+{% endblock %}

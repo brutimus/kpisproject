@@ -1,0 +1,32 @@
+{% extends "onset/base.html" %}
+
+{% block title %}Bylines{% endblock %}
+{% block header %}Bylines{% endblock %}
+
+{% block content %}
+    <div class="row">
+    <table class="table table-condensed table-bordered">
+    <thead>
+        <tr>
+            <th>Headline</th>
+            <th>Category</th>
+            <th>Visits</th>
+            <th>Pageviews</th>
+        </tr>
+    </thead>
+    {% for set in object_list %}
+        <thead>
+            <tr class="active"><th colspan="4">{{ set.byline }}</th></tr>
+        </thead>
+        {% for article in set.articles %}
+        <tr{% if article.status.name == "Don't Display" %} class="danger"{% endif %}>
+            <td>{{ article.headline }}</td>
+            <td>{{ article.category.name }}</td>
+            <td>{{ article.visits }}</td>
+            <td>{{ article.pageviews }}</td>
+        </tr>
+        {% endfor %}
+    {% endfor %}
+    </table>
+    </div>
+{% endblock %}

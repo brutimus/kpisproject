@@ -1,0 +1,339 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://getbootstrap.com/examples/dashboard/dashboard.css">
+    <link rel="stylesheet" href="{% static "analytics/d3tip.css" %}">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.css" />
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="{% static "analytics/d3tip.js" %}"></script>
+    <script src="{% static "analytics/moment.min.js" %}"></script>
+    <script src="{% static "analytics/gauge.min.js" %}"></script>
+    <script type="text/javascript">
+    jQuery.fn.sortElements = (function(){
+     
+        var sort = [].sort;
+     
+        return function(comparator, getSortable) {
+     
+            getSortable = getSortable || function(){return this;};
+     
+            var placements = this.map(function(){
+     
+                var sortElement = getSortable.call(this),
+                    parentNode = sortElement.parentNode,
+     
+                    // Since the element itself will change position, we have
+                    // to have some way of storing its original position in
+                    // the DOM. The easiest way is to have a 'flag' node:
+                    nextSibling = parentNode.insertBefore(
+                        document.createTextNode(''),
+                        sortElement.nextSibling
+                    );
+     
+                return function() {
+     
+                    if (parentNode === this) {
+                        throw new Error(
+                            "You can't sort elements if any one is a descendant of another."
+                        );
+                    }
+     
+                    // Insert before flag:
+                    parentNode.insertBefore(this, nextSibling);
+                    // Remove flag:
+                    parentNode.removeChild(nextSibling);
+     
+                };
+     
+            });
+     
+            return sort.call(this, comparator).each(function(i){
+                placements[i].call(getSortable.call(this));
+            });
+     
+        };
+     
+    })();
+    $(document).ready(function() {
+      $('table.table-sortable').each(function(index, el) {
+        $(el).find('th.sort').each(function(index2, el2) {
+          $(el2).click(function(event) {
+            $(el).find('>tbody').sortElements(function(a, b){
+              return parseInt($(a).find('thead>tr>th[name="' + el2.getAttribute('name') + '"]').text()) > parseInt($(b).find('thead>tr>th[name="' + el2.getAttribute('name') + '"]').text()) ? -1 : 1;
+            })
+          });
+        });
+      });
+    });
+    </script>
+    <style>
+      body {
+        padding-top: 0;
+        shape-rendering: crispEdges;
+      }
+      table {
+        table-layout: fixed;
+      }
+      a {
+        color: #41759a;
+      }
+      .handle {
+        cursor: pointer;
+      }
+      .badge {
+        font-weight: 400;
+        background-color: #aaa;
+      }
+      .sidebar {
+        top: 0;
+        background-color: #fafafa;
+        border-right: none;
+        box-shadow: inset -2px 0px 8px -5px;
+      }
+      .nav-sidebar > li > a {
+        font-weight: 300;
+        letter-spacing: .5px;
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+      .nav-sidebar > li > a.date {
+        font-size: 11px;
+      }
+      .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {
+        border-top: 1px solid #f0f0f0;
+        font-weight: 200;
+        letter-spacing: .2px;
+      }
+      .table>thead>tr>th {
+        border-bottom: 2px solid #f0f0f0;
+      }
+      .table.table-outside {
+        border: 1px solid #f0f0f0;
+      }
+      .table.table-outside>thead>tr>th {
+        font-weight: 400;
+      }
+      .table.table-inside {
+        margin: 0;
+        background-color: #f4fcf0;
+      }
+      .table.table-inside>thead>tr>th {
+        border: none;
+      }
+      td.table-container {
+        padding: 0 !important;
+      }
+      .table.table-inside {
+        border: none;
+      }
+      .table.table-inside>tbody>tr>td {
+        font-size: 13px;
+      }
+      .table .icon {
+        width: 30px;
+        text-align: center;
+      }
+      .table .num {
+        width: 120px;
+      }
+      .table .num small {
+        display: inline-block;
+        float: right;
+        width: 45px;
+        line-height: 160%;
+      }
+      .num {
+        text-align: right;
+      }
+      .table.table-outside>tbody+tbody {
+      border: none;
+      }
+      .table .collapse-handle {
+        background-color: #f8f8f8;
+      }
+      .table .collapse-handle.collapsed {
+        background-color: white;
+      }
+      .section {
+        margin-bottom: 70px;
+      }
+      .page-header {
+        font-weight: 200;
+        border-bottom: 2px solid #41759a;
+        letter-spacing: .5px;
+      }
+      tbody.collapse.in {
+        display: table-row-group;
+      }
+      .big-stat-box {
+        position: relative;
+      }
+      .big-stat-box .gauge {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+      }
+      .big-stat {
+        text-align: center;
+      }
+      .big-stat h1 {
+        font-weight: 200;
+        font-size: 60px;
+        line-height: 40px;
+        color: #666;
+      }
+      .big-stat h1.big-num {
+        font-size: 46px;
+      }
+      .big-stat span {
+        text-transform: uppercase;
+        font-size: .7em;
+        letter-spacing: .5px;
+      }
+      .well {
+        background: none;
+        /*background-image: linear-gradient(to bottom,#f8f8f8 0,#fff 100%);*/
+        box-shadow: 1px 1px 3px -3px #333;
+        border-radius: 2px;
+      }
+      .day {
+        fill: #fff;
+        stroke: #e3e3e3;
+      }
+      .dayCount {
+        fill: #fff;
+        font-weight: 200;
+        font-size: 12px;
+        text-shadow: 1px 1px 1px #aaa;
+      }
+
+      .month {
+        fill: none;
+        stroke: #ccc;
+        stroke-width: 2px;
+      }
+      .graph-rect {
+        fill:white;
+        transition: fill 200ms;
+        -webkit-transition: fill 200ms;
+      }
+      .subdomain-text {
+       transition: fill 200ms;
+        -webkit-transition: fill 200ms; 
+      }
+      .graph-subdomain-group rect:hover {
+        stroke: #ccc;
+        stroke-width: 1px;
+      }
+      rect.now {
+        stroke: #DCA7A7;
+        fill: #DCA7A7;
+      }
+      text.now {
+        fill: white;
+      }
+      .q3 ~ text,
+      .q4 ~ text,
+      .q5 ~ text,
+      .q6 ~ text,
+      .q7 ~ text,
+      .q8 ~ text,
+      .q9 ~ text,
+      .q10 ~ text,
+      .q11 ~ text,
+      .q12 ~ text {fill:white;}
+      .q1 {fill:white;}
+      .q2, .RdYlGn .q0-11{fill:#d9edf7}
+      .q3, .RdYlGn .q1-11{fill:#BCDFF1}
+      .q4, .RdYlGn .q2-11{fill:#9ACFEA}
+      .q5, .RdYlGn .q3-11{fill:#78BFE2}
+      .q6, .RdYlGn .q4-11{fill:#57AFDB}
+      .q7, .RdYlGn .q5-11{fill:#359FD4}
+      .q8, .RdYlGn .q6-11{fill:#2789B9}
+      .q9, .RdYlGn .q7-11{fill:#207097}
+      .q10, .RdYlGn .q8-11{fill:#195776}
+      .q11, .RdYlGn .q9-11{fill:#123E54}
+      .q12, .RdYlGn .q10-11{fill:#0B2532}
+      @media print {
+        a[href]:after {
+          content: none !important;
+        }
+      }
+      #calendar {
+        /*overflow-x: hidden;*/
+        /*overflow-y: visible;*/
+      }
+      .cal-heatmap-container {
+        float:right;
+      }
+      .btn-primary {
+        background-color: #41759a;
+        border-color: #366281;
+      }
+      .btn-primary:hover {
+        background-color: #4780a9;
+      }
+    </style>
+  </head>
+
+  <body data-spy="scroll" data-target=".sidebar">
+
+    <!-- <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Register Analytics</a>
+        </div>
+        <div class="navbar-collapse collapse">
+        </div>
+      </div>
+    </div> -->
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-1 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="/stories/">Stories</a></li>
+            <li><a href="/bylines/">Bylines</a></li>
+          </ul>
+          <hr>
+          <ul class="nav nav-sidebar">
+            {% block pagenav %}{% endblock %}
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-11 col-md-offset-1 main">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/docs.min.js"></script>
+  </body>
+</html>

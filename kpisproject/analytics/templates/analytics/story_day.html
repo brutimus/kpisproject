@@ -1,0 +1,218 @@
+{% extends "analytics/base.html" %}
+{% load humanize %}
+{% load sec num %}
+
+{% block title %}Sections{% endblock %}
+{% block pagenav %}
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#bylines">Bylines</a></li>
+    <li><a href="#sections">Sections</a></li>
+    <li><a href="#unvisited">Unvisited</a></li>
+{% endblock %}
+{% block content %}
+    {% regroup object_list|dictsort:"category_id" by category as category_list %}
+
+    <div class="row section">
+        <h1 id="overview" class="page-header">Overview
+            <span class="pull-right text-muted visible-print"><small>{{ today|date:"M j, Y" }}</small></span>
+            <div class="btn-group pull-right hidden-print">
+                <a class="btn btn-primary" role="button" href="/stories/{{ yesterday|date:"Y/m/d" }}/">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                </a>
+                <button type="button" class="btn btn-primary">{{ today|date:"M j, Y" }}</button>
+                <a class="btn btn-primary" role="button" href="/stories/{{ tomorrow|date:"Y/m/d" }}/">
+                    <span class="glyphicon glyphicon-arrow-right"></span>
+                </a>
+            </div>
+        </h1>
+        <div class="row">
+        <div class="col-xs-4 col-sm-3 big-stat">
+          <div class="well big-stat-box">
+              <h1>{{ articles|length }}</h1>
+              <span class="text-muted">Total Stories</span>
+              <!-- <canvas id="total-stories-gauge" class="gauge"></canvas> -->
+          </div>
+        </div>
+        <script>
+        // $(document).ready(function() {
+            
+        
+        //     var opts = {
+        //       lines: 12, // The number of lines to draw
+        //       angle: 0, // The length of each line
+        //       lineWidth: 0.1, // The line thickness
+        //       pointer: {
+        //         length: 0.9, // The radius of the inner circle
+        //         strokeWidth: 0, // The rotation offset
+        //         color: '#333333' // Fill color
+        //       },
+        //       limitMax: 'false',   // If true, the pointer will not go past the end of the gauge
+        //       colorStart: '#41759A',   // Colors
+        //       colorStop: '#41759A',    // just experiment with them
+        //       strokeColor: '#E0E0E0',   // to see which ones work best for you
+        //       generateGradient: true
+        //     };
+        //     var gauge = new Gauge($('#total-stories-gauge').get(0)).setOptions(opts); // create sexy gauge!
+        //     gauge.maxValue = 200; // set max gauge value
+        //     gauge.animationSpeed = 10; // set animation speed (32 is default value)
+        //     gauge.set({{ articles|length }}); // set actual value
+        // });
+        </script>
+        <div class="col-xs-4 col-sm-3 big-stat">
+            <div class="well big-stat-box">
+          <h1>{{ unused|length }}</h1>
+          <span class="text-muted">Unvisited Stories</span>
+          </div>
+        </div>
+        <div class="col-xs-4 col-sm-3 big-stat">
+        <div class="well big-stat-box">
+          <h1>{{ sections.count }}</h1>
+          <span class="text-muted">Sections</span>
+          </div>
+        </div>
+        <div class="col-xs-4 col-sm-3 big-stat">
+        <div class="well big-stat-box">
+          <h1>{{ bylines.count }}</h1>
+          <span class="text-muted">Bylines</span>
+          </div>
+        </div>
+        <div class="col-xs-4 col-sm-3 big-stat">
+        <div class="well big-stat-box">
+          <h1 class="big-num">{{ totals.visits__sum|intcomma|or:"---" }}</h1>
+          <span class="text-muted">Visits</span>
+          </div>
+        </div>
+        <div class="col-xs-4 col-sm-3 big-stat">
+        <div class="well big-stat-box">
+          <h1 class="big-num">{{ totals.pageviews__sum|intcomma|or:"---" }}</h1>
+          <span class="text-muted">Views</span>
+          </div>
+        </div>
+        <div class="col-xs-4 col-sm-3 big-stat">
+        <div class="well big-stat-box">
+          <h1>{{ totals.time_on_page__avg|floatformat:"0"|formatSeconds|or:"---" }}</h1>
+          <span class="text-muted">Avg Time on Page</span>
+          </div>
+        </div>
+        </div>
+    </div>
+    
+    <div class="row section">
+        <h1 id="bylines" class="page-header">Bylines</h1>
+        <table class="table table-condensed table-outside table-sortable table-responsive">
+        <thead>
+            <tr>
+                <th class="icon"></th>
+                <th class="icon sort" name="count">#</th>
+                <th></th>
+                <th></th>
+                <th class="num sort" name="visits">Visits <small class="text-muted">(%)</small></th>
+                <th class="num sort" name="pageviews">Views <small class="text-muted">(%)</small></th>
+                <th class="num sort" name="time"><span class="glyphicon glyphicon-time"></span> Visit</th>
+            </tr>
+        </thead>
+        {% for group in bylines.list %}{% if group.byline %}
+        <tbody><tr><td class="table-container" colspan="7"><table class="table table-condensed table-inside">
+            <thead>
+                <tr class="collapse-handle collapsed">
+                    <th class="icon"><a href="/bylines/{{ group.byline.id }}/"><span class="glyphicon glyphicon-align-left"></span></a></th>
+                    <th class="icon" name="count"><span class="badge">{{ group.list|length }}</span></th>
+                    <th class="handle" data-toggle="collapse" href="#collapse{{ group.byline|slugify }}">{{ group.byline }}</th>
+                    <th></th>
+                    <th class="num" name="visits">{{ group.total_visits|intcomma|or:"---" }} <small class="text-muted">({{ group.percent_total_visits|floatformat:2|or:"---" }})</small></th>
+                    <th class="num" name="pageviews">{{ group.total_pageviews|intcomma|or:"---" }} <small class="text-muted">({{ group.percent_total_pageviews|floatformat:2|or:"---" }})</small></th>
+                    <th class="num" name="time">{{ group.avg_time_on_page|formatSeconds|or:"---" }}</th>
+                </tr>
+            </thead>
+            <tbody id="collapse{{ group.byline|slugify }}" class="panel-collapse collapse">
+                {% for article in group.list|dictsortreversed:"visits" %}
+                <tr{% if article.status.name == "Don't Display" %} class="danger"{% endif %}>
+                    <td class="icon"><a href="{{ EDIT_URL }}{{ article.id }}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                    <td class="icon"><a href="http://www.ocregister.com/articles/-{{ article.id }}--.html"><span class="glyphicon glyphicon-globe"></span></a></td>
+                    <td>{{ article.headline }}</td>
+                    <td>{{ article.category.name }}</td>
+                    <td class="num">{{ article.visits|intcomma|or:"---" }} <small class="text-muted">---</small></td>
+                    <td class="num">{{ article.pageviews|intcomma|or:"---" }} <small class="text-muted">---</small></td>
+                    <th class="num">{{ article.time_on_page|formatSeconds|or:"---" }}</th>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table></td></tr></tbody>            
+        {% endif %}{% endfor %}
+        </table>
+    </div>
+
+    <div class="row section">
+        <h1 id="sections" class="page-header">Sections</h1>
+        <table class="table table-condensed table-outside table-sortable table-responsive">
+        <thead>
+            <tr>
+                <th class="icon"></th>
+                <th class="icon sort" name="count">#</th>
+                <th></th>
+                <th></th>
+                <th class="num sort" name="visits">Visits <small class="text-muted">(%)</small></th>
+                <th class="num sort" name="pageviews">Views <small class="text-muted">(%)</small></th>
+                <th class="num sort" name="time"><span class="glyphicon glyphicon-time"></span> Visit</th>
+            </tr>
+        </thead>
+        {% for group in sections.list %}{% if group.section %}
+        <tbody><tr><td class="table-container" colspan="7"><table class="table table-condensed table-inside">
+            <thead>
+                <tr class="collapse-handle collapsed">
+                    <th class="icon"></th>
+                    <th class="icon" name="count"><span class="badge">{{ group.list|length }}</span></th>
+                    <th class="handle" data-toggle="collapse" href="#collapse{{ group.section|slugify }}">{{ group.section }}</th>
+                    <th></th>
+                    <th class="num" name="visits">{{ group.total_visits|intcomma|or:"---" }} <small class="text-muted">({{ group.percent_total_visits|floatformat:2|or:"---" }})</small></th>
+                    <th class="num" name="pageviews">{{ group.total_pageviews|intcomma|or:"---" }} <small class="text-muted">({{ group.percent_total_pageviews|floatformat:2|or:"---" }})</small></th>
+                    <th class="num" name="time">{{ group.avg_time_on_page|formatSeconds|or:"---" }}</th>
+                </tr>
+            </thead>
+            <tbody id="collapse{{ group.section|slugify }}" class="panel-collapse collapse">
+                {% for article in group.list|dictsortreversed:"visits" %}
+                <tr{% if article.status.name == "Don't Display" %} class="danger"{% endif %}>
+                    <td class="icon"><a href="{{ EDIT_URL }}{{ article.id }}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                    <td class="icon"><a href="http://www.ocregister.com/articles/-{{ article.id }}--.html"><span class="glyphicon glyphicon-globe"></span></a></td>
+                    <td>{{ article.headline }}</td>
+                    <td>{{ article.byline.name }}</td>
+                    <td class="num">{{ article.visits|intcomma|or:"---" }} <small class="text-muted">---</small></td>
+                    <td class="num">{{ article.pageviews|intcomma|or:"---" }} <small class="text-muted">---</small></td>
+                    <td class="num">{{ article.time_on_page|formatSeconds|or:"---" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table></td></tr></tbody>            
+        {% endif %}{% endfor %}
+        </table>
+    </div>
+
+    <div class="row section">
+        <h1 id="unvisited" class="page-header">Unvisited</h1>
+        <div class="alert alert-warning">
+            <strong>Notice!</strong> These stories were not found in the analytics report for the day of <strong>{{ today|date:"M j, Y" }}</strong>.
+        </div>
+        <table class="table table-condensed table-outside table-responsive">
+            <thead>
+                <tr>
+                    <th class="icon"></th>
+                    <th class="icon"></th>
+                    <th>Headline</th>
+                    <th>Section</th>
+                    <th class="num"><span class="glyphicon glyphicon-time"></span> Pub</th>
+                </tr>
+            </thead>
+            {% for article in unused %}
+            <tr{% if article.status.name == "Don't Display" %} class="danger"{% endif %}>
+                <td class="icon"><a href="{{ EDIT_URL }}{{ article.id }}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                <td class="icon"><a href="http://www.ocregister.com/articles/-{{ article.id }}--.html"><span class="glyphicon glyphicon-globe"></span></a></td>
+                <td>{{ article.headline }}</td>
+                <td>{{ article.category.name }}</td>
+                <td class="num">{{ article.date|time:"H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

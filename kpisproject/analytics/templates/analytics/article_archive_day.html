@@ -1,0 +1,27 @@
+{% extends "onset/base.html" %}
+
+{% block title %}Articles{% endblock %}
+{% block header %}Articles{% endblock %}
+
+{% block content %}
+    <div class="row">
+    <table class="table table-condensed table-bordered">
+    <thead>
+        <tr>
+            <th>Headline</th>
+            <th>Category</th>
+            <th>Visits</th>
+            <th>Pageviews</th>
+        </tr>
+    </thead>
+    {% for article in object_list %}
+        <tr{% if article.status.name == "Don't Display" %} class="danger"{% endif %}>
+            <td>{{ article.headline }}</td>
+            <td>{{ article.category.name }}</td>
+            <td>{{ article.visits }}</td>
+            <td>{{ article.pageviews }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+    </div>
+{% endblock %}
