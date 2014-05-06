@@ -13,7 +13,9 @@
     {% regroup object_list|dictsort:"category_id" by category as category_list %}
 
     <div class="row section">
-        <h1 id="overview" class="page-header">Overview
+        <h1 id="overview" class="page-header clearfix">
+            {% include "analytics/menu-button.html" %}
+            <span class="hidden-xs">Overview</span>
             <span class="pull-right text-muted visible-print"><small>{{ today|date:"M j, Y" }}</small></span>
             <div class="btn-group pull-right hidden-print">
                 <a class="btn btn-primary" role="button" href="/stories/{{ yesterday|date:"Y/m/d" }}/">

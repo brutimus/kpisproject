@@ -8,7 +8,10 @@
 {% block content %}
 
     <div class="row section">
-        <h1 id="overview" class="page-header">Bylines</h1>
+        <h1 id="overview" class="page-header clearfix">
+            {% include "analytics/menu-button.html" %}
+            <span class="hidden-xs">Bylines</span>
+        </h1>
         <form id="live-search" action="" class="form-inline" method="post">
             <label class="sr-only" for="filter">Byline</label>
            <input type="text" class="form-control" id="filter" value="" placeholder="Byline" />
