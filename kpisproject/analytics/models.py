@@ -10,9 +10,16 @@ class Article(models.Model):
     category = models.ForeignKey('Category', blank=True, null=True)
     status = models.ForeignKey('Status')
     bylines = models.ManyToManyField('Byline')
+
+    # Used for day-of-publish analytics stats
     visits = models.IntegerField(blank=True, null=True)
     pageviews = models.IntegerField(blank=True, null=True)
     time_on_page = models.IntegerField(blank=True, null=True)
+
+    # all_ fields used for overall analytics stats
+    all_visits = models.IntegerField(blank=True, null=True)
+    all_pageviews = models.IntegerField(blank=True, null=True)
+    all_time_on_page = models.IntegerField(blank=True, null=True)
 
     def __unicode__(self):
         return self.headline
