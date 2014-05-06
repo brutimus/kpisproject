@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'kpisproject.analytics'
+    'kpisproject.analytics',
+    'south'
 ]
 if DEBUG:
     INSTALLED_APPS.extend([

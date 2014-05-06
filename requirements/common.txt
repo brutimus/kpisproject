@@ -8,4 +8,5 @@ pystache==0.5.3
 pytz==2014.2
 sqlparse==0.1.11
 static==1.0.2
+South==0.8.4
 wsgiref==0.1.2

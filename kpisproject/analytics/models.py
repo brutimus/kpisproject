@@ -27,6 +27,7 @@ class Category(models.Model):
 class Byline(models.Model):
     first_name = models.CharField(max_length=500)
     last_name = models.CharField(max_length=500)
+    editor = models.ManyToManyField('Byline')
 
     def __unicode__(self):
         return "%s %s" % (self.first_name, self.last_name)
