@@ -1,6 +1,12 @@
 from django.db import models
 
 BN = {'blank': True, 'null': True}
+URLS = {
+    'ocr': {
+        'view': 'http://www.ocregister.com/articles/-%s--.html',
+        'edit': 'http://admin.onset.freedom.com/modules/articles/edit.php?id=%s'
+    }
+}
 
 class Article(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -33,6 +39,12 @@ class Article(models.Model):
 
     def __unicode__(self):
         return self.headline
+
+    def view_url(self):
+        return URLS['ocr']['view'] % self.id
+
+    def edit_url(self):
+        return URLS['ocr']['edit'] % self.id
 
 
 class Category(models.Model):

@@ -11,11 +11,37 @@ from django.views.generic.list import ListView
 from kpisproject.analytics.models import Article, Byline, Category, Status
 
 
-EDIT_URL = "http://admin.onset.freedom.com/modules/articles/edit.php?id="
-VIEW_URL = "%s"
-
 @cache_page(60 * 15)
 def story_overview(request):
+    totals = Article.objects.extra(
+        select={
+            'count': 'count(*)',
+            # Day of
+            'top': 'sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits)',
+            'v': 'sum(visits)',
+            'pv': 'sum(pageviews)',
+            'avg_v': '(select sum(visits)/count(*) from analytics_article where visits > 0)',
+            'avg_pv': '(select sum(pageviews)/count(*) from analytics_article where pageviews > 0)',
+            # All time
+            't_top': 'sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits)',
+            't_v': 'sum(all_visits)',
+            't_pv': 'sum(all_pageviews)',
+            'avg_t_v': '(select sum(all_visits)/count(*) from analytics_article where all_visits > 0)',
+            'avg_t_pv': '(select sum(all_pageviews)/count(*) from analytics_article where all_pageviews > 0)'
+        }
+    ).values(
+        'count',
+        'top',
+        'v',
+        't_v',
+        'pv',
+        't_pv',
+        'avg_v',
+        'avg_t_v',
+        'avg_pv',
+        'avg_t_pv'
+    ).get()
+
     by_day = Article.objects.extra(
         select={
             'ts': "EXTRACT(EPOCH from date_trunc('day', date))"
@@ -55,6 +81,7 @@ def story_overview(request):
     for month in by_month:
         month['month_start'] = month['month']
     return render_to_response('analytics/story_overview.html', {
+        'totals': totals,
         'histograms': {
             'count': {int(x['ts']): x['dcount'] for x in by_day},
             'v': {int(x['ts']): x['dv'] for x in by_day},
@@ -68,6 +95,16 @@ def story_overview(request):
 def story_day(request, year, month, day):
 
     today = datetime.date(int(year), int(month), int(day))
+    s = lambda z: lambda x, y: (x or 0) + (getattr(y, z) or 0)
+    field_fns = {
+        'count': lambda x, y: x + 1,
+        'v': s('visits'),
+        'pv': s('pageviews'),
+        't_v': s('all_visits'),
+        't_pv': s('all_pageviews'),
+        'ea': s('expanded_avg'),
+        't_ea': s('expanded_t_avg')
+    }
 
     base_article_list = Article.objects.filter(
         date__year=year,
@@ -75,36 +112,69 @@ def story_day(request, year, month, day):
         date__day=day
     ).extra(
         select={
+            # 'count': 'count(*)',
+            # # Day of
+            # 'sigma_v': 'sum(visits)',
+            # 'sigma_pv': 'sum(pageviews)',
+            # 'sigma_top': 'sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits)',
+            # # Overall
+            # 'sigma_t_v': 'sum(all_visits)',
+            # 'sigma_t_pv': 'sum(all_pageviews)',
+            # 'sigma_t_top': 'sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits)',
+            # old
             'expanded_avg': 'COALESCE(visits, 0) * COALESCE(time_on_page, 0)',
-            'expanded_all_avg': 'COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)'
+            'expanded_t_avg': 'COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)'
         }
     ).select_related(
         'status', 'category'
     ).prefetch_related(
         'bylines'
     ).order_by('date')
+
     base_byline_list = Byline.objects.filter(
         article__date__year=year,
         article__date__month=month,
         article__date__day=day
     ).order_by('first_name', 'last_name').distinct()
-    total_v = sum(map(lambda x:x.visits or 0, base_article_list))
-    total_pv = sum(map(lambda x:x.pageviews or 0, base_article_list))
-    total_all_v = sum(map(lambda x:x.all_visits or 0, base_article_list))
-    total_all_pv = sum(map(lambda x:x.all_pageviews or 0, base_article_list))
-    total_avg_time_on_page = (
-        sum(map(attrgetter('expanded_avg'), base_article_list)) / total_v
-    ) if total_v > 0 else None
-    total_all_avg_time_on_page = (
-        sum(map(attrgetter('expanded_all_avg'), base_article_list)) / total_all_v
-    ) if total_all_v > 0 else None
+
+    sigma_v = reduce(field_fns['v'], base_article_list, 0)
+    sigma_pv = reduce(field_fns['pv'], base_article_list, 0)
+    sigma_top = (
+        reduce(field_fns['ea'], base_article_list, 0) / sigma_v
+    ) if sigma_v > 0 else None
+    sigma_t_v = reduce(field_fns['t_v'], base_article_list, 0)
+    sigma_t_pv = reduce(field_fns['t_pv'], base_article_list, 0)
+    sigma_t_top = (
+        reduce(field_fns['t_ea'], base_article_list, 0) / sigma_t_v
+    ) if sigma_t_v > 0 else None
+
     # PROCESS BYLINES
     byline_context = {
-        'count': 0,
+        'count': len(base_byline_list),
         'list': []
     }
 
-    byline_context['count'] = len(base_byline_list)
+    
+    def summarize_groups(data, fields=field_fns):
+        results = {}
+        for key, group in data.items():
+            results[key] = {'sums': {}, 'group': group}
+            for name, fn in fields.items():
+                results[key]['sums'][name] = reduce(fn, group, 0)
+        return results
+
+    def ammend_sums(data):
+        for k, v in data.items():
+            v['sums']['top'] = (v['sums']['ea'] / v['sums']['v']) if v['sums']['v'] else 0
+            v['sums']['t_top'] = (v['sums']['t_ea'] / v['sums']['t_v']) if v['sums']['t_v'] else 0
+            v['sums']['p_t_v'] = float(v['sums']['v']) / float(sigma_v) * 100
+            v['sums']['p_t_pv'] = float(v['sums']['pv']) / float(sigma_pv) * 100
+            for a in v['group']:
+                a.p_t_v = float(a.visits or 0) / float(sigma_v) * 100
+                a.p_t_pv = float(a.pageviews or 0) / float(sigma_pv) * 100
+        return data
+
+
 
     # Byline(): [Article(), ... ]
     byline_groups = {}
@@ -113,34 +183,9 @@ def story_day(request, year, month, day):
             byline_groups[byline] = byline_groups.get(byline, [])
             byline_groups[byline].append(article)
 
-    for byline, article_list in byline_groups.items():
-        byline_total_v = sum(map(lambda x:x.visits or 0, article_list))
-        byline_total_all_v = sum(map(lambda x:x.all_visits or 0, article_list))
-        byline_total_pv = sum(map(lambda x:x.pageviews or 0, article_list))
-        byline_total_all_pv = sum(map(lambda x:x.all_pageviews or 0, article_list))
-        byline_context['list'].append({
-            'byline': byline,
-            'count': len(article_list),
-            'list': article_list,
-            'total_visits': byline_total_v,
-            'total_all_visits': byline_total_all_v,
-            'total_pageviews': byline_total_pv,
-            'total_all_pageviews': byline_total_all_pv,
-            'avg_time_on_page': (
-                sum(map(
-                    attrgetter('expanded_avg'), article_list
-                )) / byline_total_v
-            ) if byline_total_v > 0 else None,
-            'all_avg_time_on_page': (
-                sum(map(
-                    attrgetter('expanded_all_avg'), article_list
-                )) / byline_total_all_v
-            ) if byline_total_all_v > 0 else None,
-            'percent_total_visits': (
-                float(byline_total_v) / float(total_v)) * 100,
-            'percent_total_pageviews': (
-                float(byline_total_pv) / float(total_pv)) * 100,
-        })
+    byline_sums = summarize_groups(byline_groups, field_fns)
+    ammend_sums(byline_sums)
+    byline_context['list'] = byline_sums
 
     # PROCESS SECTIONS
     section_context = {
@@ -148,47 +193,26 @@ def story_day(request, year, month, day):
         'list': []
     }
     key = lambda x:x.category.name if x.category else None
-    category_group = [
-        (key, list(group)) for key, group in
-        groupby(sorted(base_article_list, key=key), key=key)]
-    section_context['count'] = len(category_group)
-    for category, article_list in category_group:
-        article_list = list(article_list)
-        section_total_v = sum(map(lambda x:x.visits or 0, article_list))
-        section_total_pv = sum(map(lambda x:x.pageviews or 0, article_list))
-        section_context['list'].append({
-            'section': category,
-            'count': len(article_list),
-            'list': article_list,
-            'total_visits': section_total_v,
-            'total_pageviews': section_total_pv,
-            'avg_time_on_page': (
-                sum(map(
-                    attrgetter('expanded_avg'), article_list
-                )) / section_total_v
-            ) if section_total_v > 0 else None,
-            'percent_total_visits': (
-                float(section_total_v) / float(total_v)) * 100,
-            'percent_total_pageviews': (
-                float(section_total_pv) / float(total_pv)) * 100
-        })
+    category_groups = {
+        key: list(group) for key, group in
+        groupby(sorted(base_article_list, key=key), key=key)}
+    section_context['count'] = len(category_groups)
+
+
+    category_sums = summarize_groups(category_groups, field_fns)
+    ammend_sums(category_sums)
+    section_context['list'] = category_sums
 
     context = {
         'totals': {
-            'visits__sum': total_v,
-            'pageviews__sum': total_pv,
-            'time_on_page__avg': total_avg_time_on_page
+            'visits__sum': sigma_v,
+            'pageviews__sum': sigma_pv,
+            'time_on_page__avg': sigma_top
         },
         'articles': base_article_list,
         'bylines': byline_context,
         'sections': section_context,
-        'unused': Article.objects.filter(
-            date__year=year,
-            date__month=month,
-            date__day=day,
-            visits__isnull=True
-        ).order_by('date').select_related('status', 'category'),
-        'EDIT_URL': EDIT_URL,
+        'unused': base_article_list.filter(visits__isnull=True),
         'yesterday': today - datetime.timedelta(days=1),
         'today': today,
         'tomorrow': today + datetime.timedelta(days=1)
@@ -210,21 +234,32 @@ def byline_detail(request, byline_id):
     # Overall totals
     totals = base_article_list.extra(
         select={
-            'dcount': 'count(*)',
+            'count': 'count(*)',
             # Day of
-            'dtop': 'sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits)',
-            'dv': 'sum(visits)',
-            'dpv': 'sum(pageviews)',
+            'top': 'sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits)',
+            'v': 'sum(visits)',
+            'pv': 'sum(pageviews)',
             'avg_v': 'sum(visits)/count(*)',
             'avg_pv': 'sum(pageviews)/count(*)',
             # All time
-            'all_dtop': 'sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits)',
-            'all_dv': 'sum(all_visits)',
-            'all_dpv': 'sum(all_pageviews)',
-            'avg_all_v': 'sum(all_visits)/count(*)',
-            'avg_all_pv': 'sum(all_pageviews)/count(*)'
+            't_top': 'sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits)',
+            't_v': 'sum(all_visits)',
+            't_pv': 'sum(all_pageviews)',
+            'avg_t_v': 'sum(all_visits)/count(*)',
+            'avg_t_pv': 'sum(all_pageviews)/count(*)'
         }
-    ).values('dcount', 'dtop', 'dv', 'all_dv', 'dpv', 'all_dpv', 'avg_v', 'avg_all_v', 'avg_pv', 'avg_all_pv')
+    ).values(
+        'count',
+        'top',
+        'v',
+        't_v',
+        'pv',
+        't_pv',
+        'avg_v',
+        'avg_t_v',
+        'avg_pv',
+        'avg_t_pv'
+    )
 
     # Past 30 days
     days_30 = totals.filter(
@@ -250,9 +285,6 @@ def byline_detail(request, byline_id):
     # Daily Rollup
     by_day = base_article_list.extra(
         select={
-            # Don't know why I need the +1 days, but it works.
-            # This code requires my custom django patch.
-            # 'ts': "strftime('%%s', date, 'start of day', '+1 days')"
             'ts': "EXTRACT(EPOCH from date_trunc('day', date))"
         }
     ).values('ts').annotate(
@@ -264,8 +296,6 @@ def byline_detail(request, byline_id):
     # Weekly Rollup
     by_week = base_article_list.extra(
         select={
-            # Again, not totally sure on the date math here, but it works.
-            # I think I'm just confused about 0-indexed weeks.
             'week': "date_trunc('week', date)",
             'week_start': "DATE_TRUNC('week', date)",
             'week_end': "DATE_TRUNC('week', date) + interval '6 days'"
@@ -320,6 +350,5 @@ def byline_detail(request, byline_id):
         },{
             'name': 'Past 12 Months',
             'stats': months_12
-        },),
-        'EDIT_URL': EDIT_URL
-        })
+        },)
+    })

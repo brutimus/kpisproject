@@ -1,6 +1,6 @@
 {% extends "analytics/base.html" %}
 {% load humanize %}
-{% load sec %}
+{% load sec num %}
 
 {% block title %}Stories{% endblock %}
 {% block pagenav %}
@@ -12,23 +12,54 @@
 
     <div class="row section">
         <h1 id="overview" class="page-header clearfix">
-        {% include "analytics/menu-button.html" %}
-        <span class="hidden-xs">Stories</span>
-        <span class="pull-right text-muted"><small>{% now "DATE_FORMAT" %}</small></span></h1>
-        <div class="col-xs-12" id="calendar"></div>
-        <div class="col-xs-12" style="text-align:center;">
-            <div class="btn-group hidden-print" data-toggle="buttons">
-                <button id="calPrev" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-arrow-left"></span></button>
-                <label class="btn btn-primary btn-sm active" onClick="cal.setLegend([0, 50, 75, 100, 125, 150, 175, 200]);cal.update({{ histograms.count }});">
-                    <input type="radio" name="options">Count</input>
-                </label>
-                <label class="btn btn-primary btn-sm" onClick="cal.setLegend([0, 12500, 25000, 37500, 50000, 62500, 75000, 87500, 100000]);cal.update({{ histograms.v }});">
-                    <input type="radio" name="options">Visits</input>
-                </label>
-                <label class="btn btn-primary btn-sm" onClick="cal.setLegend([0, 12500, 25000, 37500, 50000, 62500, 75000, 87500, 100000]);cal.update({{ histograms.pv }});">
-                    <input type="radio" name="options">Views</input>
-                </label>
-                <button id="calNext" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-arrow-right"></span></button>
+            {% include "analytics/menu-button.html" %}
+            <span class="hidden-xs">Stories</span>
+            <span class="pull-right text-muted"><small>{% now "DATE_FORMAT" %}</small></span>
+        </h1>
+        <div class="row">
+            <div class="col-xs-4 col-sm-3 big-stat">
+                <div class="well big-stat-box">
+                    <h1 class="num">{{ totals.count|intcomma|or:"---" }}</h1>
+                    <span class="text-muted">Total Stories Analyzed</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-sm-3 big-stat">
+                <div class="well big-stat-box">
+                  <h1 class="num">{{ totals.avg_t_v|intcomma|or:"---" }}</h1>
+                  <span class="text-muted">Avg Visits</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-sm-3 big-stat">
+                <div class="well big-stat-box">
+                  <h1 class="num">{{ totals.avg_t_pv|intcomma|or:"---" }}</h1>
+                  <span class="text-muted">Avg Views</span>
+                </div>
+            </div>
+            <div class="col-xs-4 col-sm-3 big-stat">
+                <div class="well big-stat-box">
+                  <h1 class="num">{{ totals.top|floatformat:"0"|formatSeconds|or:"---" }}</h1>
+                  <span class="text-muted">Avg Time on Page</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12" id="calendar"></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12" style="text-align:center;">
+                <div class="btn-group hidden-print" data-toggle="buttons">
+                    <button id="calPrev" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-arrow-left"></span></button>
+                    <label class="btn btn-primary btn-sm active" onClick="cal.setLegend([0, 50, 75, 100, 125, 150, 175, 200]);cal.update({{ histograms.count }});">
+                        <input type="radio" name="options">Count</input>
+                    </label>
+                    <label class="btn btn-primary btn-sm" onClick="cal.setLegend([0, 12500, 25000, 37500, 50000, 62500, 75000, 87500, 100000]);cal.update({{ histograms.v }});">
+                        <input type="radio" name="options">Visits</input>
+                    </label>
+                    <label class="btn btn-primary btn-sm" onClick="cal.setLegend([0, 12500, 25000, 37500, 50000, 62500, 75000, 87500, 100000]);cal.update({{ histograms.pv }});">
+                        <input type="radio" name="options">Views</input>
+                    </label>
+                    <button id="calNext" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-arrow-right"></span></button>
+                </div>
             </div>
         </div>
         <!-- <div class="col-xs-12" id="calendar2"></div> -->

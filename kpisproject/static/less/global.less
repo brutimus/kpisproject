@@ -136,6 +136,7 @@ a {
 
 
 .table {
+  border: 1px solid #f0f0f0;
   &>thead>tr>th,
   &>tbody>tr>th,
   &>tfoot>tr>th,
@@ -148,29 +149,10 @@ a {
   }
   &>thead>tr>th {
     border-bottom: 2px solid #f0f0f0;
+    font-weight: 400;
   }
-  &.table-outside {
-    border: 1px solid #f0f0f0;
-    &>thead>tr>th {
-      font-weight: 400;
-    }
-    td.table-container {
-      padding: 0 !important;
-    }
-    &>tbody+tbody {
-      border: none;
-    }
-  }
-  &.table-inside {
-    margin: 0;
-    background-color: #f4fcf0;
+  &>tbody+tbody {
     border: none;
-    &>thead>tr>th {
-      border: none;
-    }
-    &>tbody>tr>td {
-      font-size: 13px;
-    }
   }
 
   .icon {
@@ -185,12 +167,6 @@ a {
       float: right;
       width: 45px;
       line-height: 160%;
-    }
-  }
-  .collapse-handle {
-    background-color: #f8f8f8;
-    &.collapsed {
-      background-color: white;
     }
   }
 }

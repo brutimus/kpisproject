@@ -15,7 +15,7 @@
     <div class="row section">
         <h1 id="overview" class="page-header clearfix">
             {% include "analytics/menu-button.html" %}
-            <span class="hidden-xs">Overview</span>
+            <span class="hidden-xs">Daily Analysis</span>
             <span class="pull-right text-muted visible-print"><small>{{ today|date:"M j, Y" }}</small></span>
             <div class="btn-group pull-right hidden-print">
                 <a class="btn btn-primary" role="button" href="/stories/{{ yesterday|date:"Y/m/d" }}/">
@@ -30,7 +30,7 @@
         <div class="row">
         <div class="col-xs-4 col-sm-3 big-stat">
           <div class="well big-stat-box">
-              <h1>{{ articles|length }}</h1>
+              <h1 class="num">{{ articles|length }}</h1>
               <span class="text-muted">Total Stories</span>
               <!-- <canvas id="total-stories-gauge" class="gauge"></canvas> -->
           </div>
@@ -62,37 +62,37 @@
         </script>
         <div class="col-xs-4 col-sm-3 big-stat">
             <div class="well big-stat-box">
-          <h1>{{ unused|length }}</h1>
+          <h1 class="num">{{ unused|length }}</h1>
           <span class="text-muted">Unvisited Stories</span>
           </div>
         </div>
         <div class="col-xs-4 col-sm-3 big-stat">
         <div class="well big-stat-box">
-          <h1>{{ sections.count }}</h1>
+          <h1 class="num">{{ sections.count }}</h1>
           <span class="text-muted">Sections</span>
           </div>
         </div>
         <div class="col-xs-4 col-sm-3 big-stat">
         <div class="well big-stat-box">
-          <h1>{{ bylines.count }}</h1>
+          <h1 class="num">{{ bylines.count }}</h1>
           <span class="text-muted">Bylines</span>
           </div>
         </div>
         <div class="col-xs-4 col-sm-3 big-stat">
         <div class="well big-stat-box">
-          <h1 class="big-num">{{ totals.visits__sum|intcomma|or:"---" }}</h1>
+          <h1 class="big num">{{ totals.visits__sum|intcomma|or:"---" }}</h1>
           <span class="text-muted">Visits</span>
           </div>
         </div>
         <div class="col-xs-4 col-sm-3 big-stat">
         <div class="well big-stat-box">
-          <h1 class="big-num">{{ totals.pageviews__sum|intcomma|or:"---" }}</h1>
+          <h1 class="big num">{{ totals.pageviews__sum|intcomma|or:"---" }}</h1>
           <span class="text-muted">Views</span>
           </div>
         </div>
         <div class="col-xs-4 col-sm-3 big-stat">
         <div class="well big-stat-box">
-          <h1>{{ totals.time_on_page__avg|floatformat:"0"|formatSeconds|or:"---" }}</h1>
+          <h1 class="num">{{ totals.time_on_page__avg|floatformat:"0"|formatSeconds|or:"---" }}</h1>
           <span class="text-muted">Avg Time on Page</span>
           </div>
         </div>
@@ -101,7 +101,7 @@
     
     <div class="row section">
         <h1 id="bylines" class="page-header">Bylines</h1>
-        <table class="table table-condensed table-outside table-sortable table-responsive">
+        <table class="table table-accordion table-sortable table-responsive table-accordion">
         <thead>
             <tr>
                 <th class="icon"></th>
@@ -111,53 +111,39 @@
                 <th class="num sort" name="visits">Visits <small class="text-muted">(%)</small></th>
                 <th class="num sort" name="pageviews">Views <small class="text-muted">(%)</small></th>
                 <th class="num sort" name="time"><span class="glyphicon glyphicon-time"></span> Visit</th>
-                <!-- <th class="num sort" name="all-visits">Σ Visits</th>
-                <th class="num sort" name="all-pageviews">Σ Views</th>
-                <th class="num sort" name="all-time"><span class="glyphicon glyphicon-time"></span> Σ Visit</th> -->
             </tr>
         </thead>
-        {% for group in bylines.list %}{% if group.byline %}
-        <tbody><tr><td class="table-container" colspan="7"><table class="table table-condensed table-inside">
-            <thead>
-                <tr class="collapse-handle collapsed">
-                    <th class="icon"><a href="/bylines/{{ group.byline.id }}/"><span class="glyphicon glyphicon-align-left"></span></a></th>
-                    <th class="icon" name="count"><span class="badge">{{ group.list|length }}</span></th>
-                    <th class="handle" data-toggle="collapse" href="#collapse{{ group.byline|slugify }}">{{ group.byline }}</th>
-                    <th></th>
-                    <th class="num" name="visits">{{ group.total_visits|intcomma|or:"---" }} <small class="text-muted">({{ group.percent_total_visits|floatformat:2|or:"---" }})</small></th>
-                    <th class="num" name="pageviews">{{ group.total_pageviews|intcomma|or:"---" }} <small class="text-muted">({{ group.percent_total_pageviews|floatformat:2|or:"---" }})</small></th>
-                    <th class="num" name="time">{{ group.avg_time_on_page|formatSeconds|or:"---" }}</th>
-
-                    <!-- <th class="num" name="all-visits">{{ group.total_all_visits|intcomma|or:"---" }}</th>
-                    <th class="num" name="all-pageviews">{{ group.total_all_pageviews|intcomma|or:"---" }}</th>
-                    <th class="num" name="all-time">{{ group.all_avg_time_on_page|formatSeconds|or:"---" }}</th> -->
-                </tr>
-            </thead>
-            <tbody id="collapse{{ group.byline|slugify }}" class="panel-collapse collapse">
-                {% for article in group.list|dictsortreversed:"visits" %}
-                <tr{% if article.status.name == "Don't Display" %} class="danger"{% endif %}>
-                    <td class="icon"><a href="{{ EDIT_URL }}{{ article.id }}"><span class="glyphicon glyphicon-pencil"></span></a></td>
-                    <td class="icon"><a href="http://www.ocregister.com/articles/-{{ article.id }}--.html"><span class="glyphicon glyphicon-globe"></span></a></td>
-                    <td>{{ article.headline }}</td>
-                    <td>{{ article.category.name }}</td>
-                    <td class="num">{{ article.visits|intcomma|or:"---" }} <small class="text-muted">---</small></td>
-                    <td class="num">{{ article.pageviews|intcomma|or:"---" }} <small class="text-muted">---</small></td>
-                    <td class="num">{{ article.time_on_page|formatSeconds|or:"---" }}</td>
-                    <!-- <td class="num">{{ article.all_visits|intcomma|or:"---" }} <small class="text-muted">---</small></td>
-                    <td class="num">{{ article.all_pageviews|intcomma|or:"---" }} <small class="text-muted">---</small></td>
-                    <th class="num">{{ article.all_time_on_page|formatSeconds|or:"---" }}</th> -->
-                </tr>
-                {% endfor %}
-            </tbody>
-
-        </table></td></tr></tbody>            
-        {% endif %}{% endfor %}
+        {% for byline, group in bylines.list.items %}
+        
+        <tbody>
+            <tr class="accordion">
+                <td class="icon"><a href="/bylines/{{ byline.id }}/"><span class="glyphicon glyphicon-align-left"></span></a></td>
+                <td class="icon" name="count"><span class="badge">{{ group.sums.count }}</span></td>
+                <td class="handle" data-toggle="collapse" href="#collapse{{ byline|slugify }}">{{ byline }}</td>
+                <td></td>
+                <td class="num" name="visits">{{ group.sums.v|intcomma|or:"---" }} <small class="text-muted">({{ group.sums.p_t_v|floatformat:2|or:"---" }})</small></td>
+                <td class="num" name="pageviews">{{ group.sums.pv|intcomma|or:"---" }} <small class="text-muted">({{ group.sums.p_t_pv|floatformat:2|or:"---" }})</small></td>
+                <td class="num" name="time">{{ group.sums.top|formatSeconds|or:"---" }}</td>
+            </tr>
+            {% for article in group.group|dictsortreversed:"visits" %}
+            <tr{% if article.status.name == "Don't Display" %} class="danger"{% endif %}>
+                <td class="icon"><a href="{{ article.edit_url }}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                <td class="icon"><a href="{{ article.view_url }}"><span class="glyphicon glyphicon-globe"></span></a></td>
+                <td>{{ article.headline }}</td>
+                <td>{{ article.category.name }}</td>
+                <td class="num">{{ article.visits|intcomma|or:"---" }} <small class="text-muted">({{ article.p_t_v|floatformat:2|or:"---" }})</small></td>
+                <td class="num">{{ article.pageviews|intcomma|or:"---" }} <small class="text-muted">({{ article.p_t_pv|floatformat:2|or:"---" }})</small></td>
+                <td class="num">{{ article.time_on_page|formatSeconds|or:"---" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        {% endfor %}
         </table>
     </div>
 
     <div class="row section">
         <h1 id="sections" class="page-header">Sections</h1>
-        <table class="table table-condensed table-outside table-sortable table-responsive">
+        <table class="table table-accordion table-sortable table-responsive">
         <thead>
             <tr>
                 <th class="icon"></th>
@@ -169,35 +155,34 @@
                 <th class="num sort" name="time"><span class="glyphicon glyphicon-time"></span> Visit</th>
             </tr>
         </thead>
-        {% for group in sections.list %}{% if group.section %}
-        <tbody><tr><td class="table-container" colspan="7"><table class="table table-condensed table-inside">
-            <thead>
-                <tr class="collapse-handle collapsed">
-                    <th class="icon"></th>
-                    <th class="icon" name="count"><span class="badge">{{ group.list|length }}</span></th>
-                    <th class="handle" data-toggle="collapse" href="#collapse{{ group.section|slugify }}">{{ group.section }}</th>
-                    <th></th>
-                    <th class="num" name="visits">{{ group.total_visits|intcomma|or:"---" }} <small class="text-muted">({{ group.percent_total_visits|floatformat:2|or:"---" }})</small></th>
-                    <th class="num" name="pageviews">{{ group.total_pageviews|intcomma|or:"---" }} <small class="text-muted">({{ group.percent_total_pageviews|floatformat:2|or:"---" }})</small></th>
-                    <th class="num" name="time">{{ group.avg_time_on_page|formatSeconds|or:"---" }}</th>
-                </tr>
-            </thead>
-            <tbody id="collapse{{ group.section|slugify }}" class="panel-collapse collapse">
-                {% for article in group.list|dictsortreversed:"visits" %}
-                <tr{% if article.status.name == "Don't Display" %} class="danger"{% endif %}>
-                    <td class="icon"><a href="{{ EDIT_URL }}{{ article.id }}"><span class="glyphicon glyphicon-pencil"></span></a></td>
-                    <td class="icon"><a href="http://www.ocregister.com/articles/-{{ article.id }}--.html"><span class="glyphicon glyphicon-globe"></span></a></td>
-                    <td>{{ article.headline }}</td>
-                    <td>{{ article.byline.name }}</td>
-                    <td class="num">{{ article.visits|intcomma|or:"---" }} <small class="text-muted">---</small></td>
-                    <td class="num">{{ article.pageviews|intcomma|or:"---" }} <small class="text-muted">---</small></td>
-                    <td class="num">{{ article.time_on_page|formatSeconds|or:"---" }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+        {% for category, group in sections.list.items %}
+        <tbody>
 
-        </table></td></tr></tbody>            
-        {% endif %}{% endfor %}
+            <tr class="accordion">
+                <td class="icon"></td>
+                <td class="icon" name="count"><span class="badge">{{ group.sums.count }}</span></td>
+                <td class="handle" data-toggle="collapse" href="#collapse{{ category|slugify }}">{{ category }}</td>
+                <td></td>
+                <td class="num" name="visits">{{ group.sums.v|intcomma|or:"---" }} <small class="text-muted">({{ group.sums.p_t_v|floatformat:2|or:"---" }})</small></td>
+                <td class="num" name="pageviews">{{ group.sums.pv|intcomma|or:"---" }} <small class="text-muted">({{ group.sums.p_t_pv|floatformat:2|or:"---" }})</small></td>
+                <td class="num" name="time">{{ group.sums.top|formatSeconds|or:"---" }}</td>
+            </tr>
+
+            {% for article in group.group|dictsortreversed:"visits" %}
+            <tr{% if article.status.name == "Don't Display" %} class="danger"{% endif %}>
+                <td class="icon"><a href="{{ article.edit_url }}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                <td class="icon"><a href="{{ article.view_url }}"><span class="glyphicon glyphicon-globe"></span></a></td>
+                <td>{{ article.headline }}</td>
+                <td>{{ article.byline.name }}</td>
+                <td class="num">{{ article.visits|intcomma|or:"---" }} <small class="text-muted">({{ article.p_t_v|floatformat:2|or:"---" }})</small></td>
+                <td class="num">{{ article.pageviews|intcomma|or:"---" }} <small class="text-muted">({{ article.p_t_pv|floatformat:2|or:"---" }})</small></td>
+                <td class="num">{{ article.time_on_page|formatSeconds|or:"---" }}</td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+        {% endfor %}
+
         </table>
     </div>
 
@@ -206,7 +191,7 @@
         <div class="alert alert-warning">
             <strong>Notice!</strong> These stories were not found in the analytics report for the day of <strong>{{ today|date:"M j, Y" }}</strong>.
         </div>
-        <table class="table table-condensed table-outside table-responsive">
+        <table class="table table-outside table-responsive">
             <thead>
                 <tr>
                     <th class="icon"></th>
