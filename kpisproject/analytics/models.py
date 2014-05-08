@@ -1,25 +1,35 @@
 from django.db import models
 
-# Create your models here.
+BN = {'blank': True, 'null': True}
 
 class Article(models.Model):
     id = models.IntegerField(primary_key=True)
     url = models.URLField()
     headline = models.CharField(max_length=500)
     date = models.DateTimeField()
-    category = models.ForeignKey('Category', blank=True, null=True)
-    status = models.ForeignKey('Status')
+
+    # Relationships
     bylines = models.ManyToManyField('Byline')
+    category = models.ForeignKey('Category', **BN)
+    status = models.ForeignKey('Status')
+
+    # Raw fields to store original data in case we need to reparse
+    raw_byline_text = models.CharField(max_length=200, **BN)
+    raw_category_text = models.CharField(max_length=200, **BN)
+    raw_status_text = models.CharField(max_length=200, **BN)
 
     # Used for day-of-publish analytics stats
-    visits = models.IntegerField(blank=True, null=True)
-    pageviews = models.IntegerField(blank=True, null=True)
-    time_on_page = models.IntegerField(blank=True, null=True)
+    visits = models.IntegerField(**BN)
+    pageviews = models.IntegerField(**BN)
+    time_on_page = models.IntegerField(**BN)
 
     # all_ fields used for overall analytics stats
-    all_visits = models.IntegerField(blank=True, null=True)
-    all_pageviews = models.IntegerField(blank=True, null=True)
-    all_time_on_page = models.IntegerField(blank=True, null=True)
+    all_visits = models.IntegerField(**BN)
+    all_pageviews = models.IntegerField(**BN)
+    all_time_on_page = models.IntegerField(**BN)
+
+    # Tracking
+    record_updated = models.DateTimeField(**BN)
 
     def __unicode__(self):
         return self.headline

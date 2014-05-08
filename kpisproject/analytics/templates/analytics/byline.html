@@ -22,37 +22,39 @@
         <div class="row">
             <div class="col-xs-4 col-sm-3 big-stat">
                 <div class="well big-stat-box">
-                    <h1>{{ totals.dcount }}</h1>
+                    <h1 class="num">{{ totals.dcount }}</h1>
                     <span class="text-muted">Total Stories</span>
                 </div>
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
                 <div class="well big-stat-box">
-                  <h1>{{ totals.avg_v|intcomma|or:"---" }}</h1>
+                  <h1 class="num">{{ totals.avg_all_v|intcomma|or:"---" }}</h1>
                   <span class="text-muted">Avg Visits</span>
                 </div>
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
                 <div class="well big-stat-box">
-                  <h1>{{ totals.avg_pv|intcomma|or:"---" }}</h1>
+                  <h1 class="num">{{ totals.avg_all_pv|intcomma|or:"---" }}</h1>
                   <span class="text-muted">Avg Views</span>
                 </div>
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
                 <div class="well big-stat-box">
-                  <h1>{{ totals.dtop|floatformat:"0"|formatSeconds|or:"---" }}</h1>
+                  <h1 class="num">{{ totals.dtop|floatformat:"0"|formatSeconds|or:"---" }}</h1>
                   <span class="text-muted">Avg Time on Page</span>
                 </div>
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
                 <div class="well big-stat-box">
-                  <h1 class="big-num">{{ totals.dv|intcomma|or:"---" }}</h1>
+                  <h1 class="big num">{{ totals.all_dv|intcomma|or:"---" }}</h1>
+                  <h5 class="num">({{ totals.dv|intcomma|or:"---" }} day of)</h5>
                   <span class="text-muted">Visits</span>
                 </div>
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
                 <div class="well big-stat-box">
-                  <h1 class="big-num">{{ totals.dpv|intcomma|or:"---" }}</h1>
+                  <h1 class="big num">{{ totals.all_dpv|intcomma|or:"---" }}</h1>
+                  <h5 class="num">({{ totals.dpv|intcomma|or:"---" }} day of)</h5>
                   <span class="text-muted">Views</span>
                 </div>
             </div>
@@ -108,8 +110,8 @@
             <tr>
                 <td>{{ segment.name }}</td>
                 <td class="num">{{ segment.stats.dcount|intcomma|or:"---" }}</td>
-                <td class="num">{{ segment.stats.dv|intcomma|or:"---" }}</td>
-                <td class="num">{{ segment.stats.dpv|intcomma|or:"---" }}</td>
+                <td class="num">{{ segment.stats.all_dv|intcomma|or:"---" }}</td>
+                <td class="num">{{ segment.stats.all_dpv|intcomma|or:"---" }}</td>
                 <td class="num">{{ segment.stats.dtop|formatSeconds|or:"---" }}</td>
             </tr>
             {% endfor %}

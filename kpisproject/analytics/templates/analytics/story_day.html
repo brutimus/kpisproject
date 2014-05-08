@@ -111,6 +111,9 @@
                 <th class="num sort" name="visits">Visits <small class="text-muted">(%)</small></th>
                 <th class="num sort" name="pageviews">Views <small class="text-muted">(%)</small></th>
                 <th class="num sort" name="time"><span class="glyphicon glyphicon-time"></span> Visit</th>
+                <!-- <th class="num sort" name="all-visits">Σ Visits</th>
+                <th class="num sort" name="all-pageviews">Σ Views</th>
+                <th class="num sort" name="all-time"><span class="glyphicon glyphicon-time"></span> Σ Visit</th> -->
             </tr>
         </thead>
         {% for group in bylines.list %}{% if group.byline %}
@@ -124,6 +127,10 @@
                     <th class="num" name="visits">{{ group.total_visits|intcomma|or:"---" }} <small class="text-muted">({{ group.percent_total_visits|floatformat:2|or:"---" }})</small></th>
                     <th class="num" name="pageviews">{{ group.total_pageviews|intcomma|or:"---" }} <small class="text-muted">({{ group.percent_total_pageviews|floatformat:2|or:"---" }})</small></th>
                     <th class="num" name="time">{{ group.avg_time_on_page|formatSeconds|or:"---" }}</th>
+
+                    <!-- <th class="num" name="all-visits">{{ group.total_all_visits|intcomma|or:"---" }}</th>
+                    <th class="num" name="all-pageviews">{{ group.total_all_pageviews|intcomma|or:"---" }}</th>
+                    <th class="num" name="all-time">{{ group.all_avg_time_on_page|formatSeconds|or:"---" }}</th> -->
                 </tr>
             </thead>
             <tbody id="collapse{{ group.byline|slugify }}" class="panel-collapse collapse">
@@ -135,7 +142,10 @@
                     <td>{{ article.category.name }}</td>
                     <td class="num">{{ article.visits|intcomma|or:"---" }} <small class="text-muted">---</small></td>
                     <td class="num">{{ article.pageviews|intcomma|or:"---" }} <small class="text-muted">---</small></td>
-                    <th class="num">{{ article.time_on_page|formatSeconds|or:"---" }}</th>
+                    <td class="num">{{ article.time_on_page|formatSeconds|or:"---" }}</td>
+                    <!-- <td class="num">{{ article.all_visits|intcomma|or:"---" }} <small class="text-muted">---</small></td>
+                    <td class="num">{{ article.all_pageviews|intcomma|or:"---" }} <small class="text-muted">---</small></td>
+                    <th class="num">{{ article.all_time_on_page|formatSeconds|or:"---" }}</th> -->
                 </tr>
                 {% endfor %}
             </tbody>
