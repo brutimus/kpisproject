@@ -2,6 +2,7 @@ import json, datetime, time
 from operator import itemgetter, methodcaller, attrgetter
 from itertools import groupby
 
+from django.contrib.auth.decorators import login_required
 from django.db import connections
 from django.db.models import Sum, Avg, Count
 from django.shortcuts import render_to_response
@@ -12,6 +13,7 @@ from kpisproject.analytics.models import Article, Byline, Category, Status
 
 
 @cache_page(60 * 15)
+# @login_required(login_url='/admin/')
 def story_overview(request):
     totals = Article.objects.extra(
         select={
@@ -40,7 +42,7 @@ def story_overview(request):
         'avg_t_v',
         'avg_pv',
         'avg_t_pv'
-    ).get()
+    )
 
     by_day = Article.objects.extra(
         select={
@@ -81,7 +83,7 @@ def story_overview(request):
     for month in by_month:
         month['month_start'] = month['month']
     return render_to_response('analytics/story_overview.html', {
-        'totals': totals,
+        'totals': totals.get(),
         'histograms': {
             'count': {int(x['ts']): x['dcount'] for x in by_day},
             'v': {int(x['ts']): x['dv'] for x in by_day},
@@ -205,8 +207,8 @@ def story_day(request, year, month, day):
 
     context = {
         'totals': {
-            'visits__sum': sigma_v,
-            'pageviews__sum': sigma_pv,
+            'v': sigma_v,
+            'pv': sigma_pv,
             'time_on_page__avg': sigma_top
         },
         'articles': base_article_list,
@@ -227,6 +229,36 @@ def byline_overview(request):
 
 @cache_page(60 * 15)
 def byline_detail(request, byline_id):
+
+    site_totals = Article.objects.extra(
+        select={
+            'count': 'count(*)',
+            # Day of
+            'top': 'sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits)',
+            'v': 'sum(visits)',
+            'pv': 'sum(pageviews)',
+            'avg_v': '(select sum(visits)/count(*) from analytics_article where visits > 0)',
+            'avg_pv': '(select sum(pageviews)/count(*) from analytics_article where pageviews > 0)',
+            # All time
+            't_top': 'sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits)',
+            't_v': 'sum(all_visits)',
+            't_pv': 'sum(all_pageviews)',
+            'avg_t_v': '(select sum(all_visits)/count(*) from analytics_article where all_visits > 0)',
+            'avg_t_pv': '(select sum(all_pageviews)/count(*) from analytics_article where all_pageviews > 0)'
+        }
+    ).values(
+        'count',
+        'top',
+        'v',
+        't_v',
+        'pv',
+        't_pv',
+        'avg_v',
+        'avg_t_v',
+        'avg_pv',
+        'avg_t_pv'
+    )
+
     base_article_list = Article.objects.filter(
         bylines__id=byline_id
     )
@@ -246,11 +278,38 @@ def byline_detail(request, byline_id):
             't_v': 'sum(all_visits)',
             't_pv': 'sum(all_pageviews)',
             'avg_t_v': 'sum(all_visits)/count(*)',
-            'avg_t_pv': 'sum(all_pageviews)/count(*)'
+            'avg_t_pv': 'sum(all_pageviews)/count(*)',
+            # Ratios day of
+            'r_avg_v': '(\
+                (sum(visits)/count(*))::real - (\
+                    select sum(visits)/count(*) from analytics_article where visits > 0)\
+            ) / (select sum(visits)/count(*) from analytics_article where visits > 0) * 100',
+            'r_avg_pv': '(\
+                (sum(pageviews)/count(*))::real - (\
+                    select sum(pageviews)/count(*) from analytics_article where pageviews > 0)\
+            ) / (select sum(pageviews)/count(*) from analytics_article where pageviews > 0) * 100',
+            'r_top': '(\
+                (sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits))::real - (\
+                    select sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits) from analytics_article)\
+            ) / (select sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits) from analytics_article) * 100',
+            # Ratios all time
+            'r_avg_t_v': '(\
+                (sum(all_visits)/count(*))::real - (\
+                    select sum(all_visits)/count(*) from analytics_article where all_visits > 0)\
+            ) / (select sum(all_visits)/count(*) from analytics_article where all_visits > 0) * 100',
+            'r_avg_t_pv': '(\
+                (sum(all_pageviews)/count(*))::real - (\
+                    select sum(all_pageviews)/count(*) from analytics_article where all_pageviews > 0)\
+            ) / (select sum(all_pageviews)/count(*) from analytics_article where all_pageviews > 0) * 100',
+            'r_t_top': '(\
+                (sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits))::real - (\
+                    select sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits) from analytics_article)\
+            ) / (select sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits) from analytics_article) * 100'
         }
     ).values(
         'count',
         'top',
+        't_top',
         'v',
         't_v',
         'pv',
@@ -258,7 +317,13 @@ def byline_detail(request, byline_id):
         'avg_v',
         'avg_t_v',
         'avg_pv',
-        'avg_t_pv'
+        'avg_t_pv',
+        'r_avg_v',
+        'r_avg_pv',
+        'r_top',
+        'r_avg_t_v',
+        'r_avg_t_pv',
+        'r_t_top',
     )
 
     # Past 30 days
@@ -281,6 +346,7 @@ def byline_detail(request, byline_id):
     months_12 = totals.filter(
         date__gte=datetime.date.today() - datetime.timedelta(days=365)
     ).get()
+    print days_30, days_60, days_90, days_180
 
     # Daily Rollup
     by_day = base_article_list.extra(
@@ -334,6 +400,7 @@ def byline_detail(request, byline_id):
         },
         'by_week': by_week,
         'by_month': by_month,
+        'site_totals': site_totals.get(),
         'totals': totals.get(),
         'rollups': ({
             'name': 'Past 30 Days',

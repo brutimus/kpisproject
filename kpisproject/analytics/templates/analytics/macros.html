@@ -1,0 +1,25 @@
+{% load macro num %}
+
+
+{% macro four_up_row icon tt1 tt2 d1 d2 big=0 %}
+    <tr class="two-up">
+        <td>
+            <span class="glyphicon glyphicon-{{ icon }} tt" data-toggle="tooltip" title="{{ tt1 }}"></span>
+            <span class="num{% if big == 1 %} big{% endif %}">{{ d1 }}</span>
+        </td>
+        <td class="{% if d2 < 0 %}negative{% else %}positive{% endif %}">
+            <span class="glyphicon chevron"></span>
+            <span class="percent tt" data-toggle="tooltip" title="{{ tt2 }}">{{ d2|floatformat:0|or:"---" }}%</span>
+        </td>
+    </tr>
+{% endmacro %}
+
+{% macro four_up_well tl tr bl br label="" tltip="All time" trtip="Compared to site average" bltip="Day published" brtip="Compared to site average" big=0 %}
+    <div class="well">
+        <table>
+            {% usemacro four_up_row "calendar" tltip trtip tl tr big %}
+            {% usemacro four_up_row "time" bltip brtip bl br big %}
+        </table>
+        <span class="well-label text-muted">{{ label }}</span>
+    </div>
+{% endmacro %}

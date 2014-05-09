@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800);
 @import "bootstrap/bootstrap.less";
 @import "../css/d3tip.css";
 @import "../css/cal-heatmap.css";
@@ -16,12 +17,6 @@ body {
     left: 100px;
   }
 }
-table {
-  table-layout: fixed;
-}
-a {
-  color: #41759a;
-}
 
 /*
  * Global add-ons
@@ -31,9 +26,8 @@ a {
   margin-bottom: 70px;
 }
 .page-header {
-  font-weight: 200;
+  font-weight: 400;
   border-bottom: 2px solid #41759a;
-  letter-spacing: .5px;
 }
 .sub-header {
   padding-bottom: 10px;
@@ -131,12 +125,14 @@ a {
 }
 .badge {
   font-weight: 400;
-  background-color: #aaa;
+  background-color: @gray-light;
 }
 
 
 .table {
   border: 1px solid #f0f0f0;
+  table-layout: fixed;
+
   &>thead>tr>th,
   &>tbody>tr>th,
   &>tfoot>tr>th,
@@ -172,48 +168,100 @@ a {
 }
 
 
-tbody.collapse.in {
-  display: table-row-group;
-}
 .big-stat {
   text-align: center;
-
+  font-weight: 200;
+  
   .well {
     background: none;
-    box-shadow: 1px 1px 3px -3px #333;
-    border-radius: 2px;
-
-    &.big-stat-box {
-      position: relative;
-
-      .gauge {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100% !important;
-        height: 100% !important;
+    // box-shadow: 1px 1px 3px -3px #333;
+    // border-radius: 2px;
+    border: none;
+    box-shadow: none;
+    
+    h1.num {
+      font-size: 60px;
+      line-height: 40px;
+      font-weight: 300;
+      &.big {
+        font-size: 46px;
       }
+    }
 
-      .num {
-        font-weight: 200;
-        color: #666;
+    &>.well-label {
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .7px;
+      font-weight: 600;
+    }
 
-        &.small {
+    table {
+      width: 100%;
+      color: @gray;
+      margin-bottom: 5px;
 
+      tr.two-up {
+        &:first-child {
+          border-bottom: 1px solid @gray-lighter;
+        }
+        td {
+          // padding: 0px 5px;
+          .num {
+            font-size: 30px;
+            line-height: 34px;
+            &.big {
+              font-size: 22px;
+            }
+          }
+        }
+        td:first-child {
+          text-align: right;
+          width: 70%;
+          padding-right: 10px;
+          span {
+            display: inline-block;
+            float: right;
+            &.glyphicon {
+              font-size: 15px;
+              float: left;
+              line-height: 34px;
+              color: @gray-light;
+            }
+          }
+        }
+        td:last-child {
+          text-align: left;
+          width: 30%;
+
+          span {
+            display: inline-block;
+            float: left;
+          }
         }
       }
-      h1.num {
-        font-size: 60px;
-        line-height: 40px;
-        &.big {
-          font-size: 46px;
-        }
+
+      .percent {
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 20px;
+      }
+      .glyphicon {
+        font-size: 16px;
+        line-height: 19px;
+        margin-right: 3px;
       }
 
-      span {
-        text-transform: uppercase;
-        font-size: .7em;
-        letter-spacing: .5px;
+      .positive {
+        color: @brand-success;
+        .glyphicon.chevron:before {
+          content: "\e113";
+        }
+      }
+      .negative {
+        color: @brand-danger;
+        .glyphicon.chevron:before {
+          content: "\e114";
+        }
       }
     }
   }

@@ -2,7 +2,7 @@
 {% load humanize %}
 {% load sec num %}
 
-{% block title %}Sections{% endblock %}
+{% block title %}{{ today|date:"M j, Y" }} daily analysis{% endblock %}
 {% block pagenav %}
     <li><a href="#overview">Overview</a></li>
     <li><a href="#bylines">Bylines</a></li>
@@ -80,13 +80,13 @@
         </div>
         <div class="col-xs-4 col-sm-3 big-stat">
         <div class="well big-stat-box">
-          <h1 class="big num">{{ totals.visits__sum|intcomma|or:"---" }}</h1>
+          <h1 class="big num">{{ totals.v|intcomma|or:"---" }}</h1>
           <span class="text-muted">Visits</span>
           </div>
         </div>
         <div class="col-xs-4 col-sm-3 big-stat">
         <div class="well big-stat-box">
-          <h1 class="big num">{{ totals.pageviews__sum|intcomma|or:"---" }}</h1>
+          <h1 class="big num">{{ totals.pv|intcomma|or:"---" }}</h1>
           <span class="text-muted">Views</span>
           </div>
         </div>

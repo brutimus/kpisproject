@@ -1,8 +1,9 @@
 {% extends "analytics/base.html" %}
 {% load humanize %}
-{% load sec num %}
+{% load sec num macro %}
+{% loadmacros "analytics/macros.html" %}
 
-{% block title %}Byline{% endblock %}
+{% block title %}{{ byline.first_name }} {{ byline.last_name }}{% endblock %}
 {% block pagenav %}
     {% regroup articles by date|date:"Y-m-d" as articles_by_day %}
     <li><a href="#overview">Overview</a></li>
@@ -12,6 +13,7 @@
     <li><a href="#stories">Stories</a></li>
 {% endblock %}
 {% block content %}
+
 
     <div class="row section">
         <h1 id="overview" class="page-header clearfix">
@@ -23,41 +25,24 @@
             <div class="col-xs-4 col-sm-3 big-stat">
                 <div class="well big-stat-box">
                     <h1 class="num">{{ totals.count }}</h1>
-                    <span class="text-muted">Total Stories</span>
+                    <span class="well-label text-muted">Total Stories</span>
                 </div>
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                <div class="well big-stat-box">
-                  <h1 class="num">{{ totals.avg_t_v|intcomma|or:"---" }}</h1>
-                  <span class="text-muted">Avg Visits</span>
-                </div>
+                {% usemacro four_up_well totals.avg_t_v|intcomma|or:"---" totals.r_avg_t_v totals.avg_v|intcomma|or:"---" totals.r_avg_v label="Avg Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                <div class="well big-stat-box">
-                  <h1 class="num">{{ totals.avg_t_pv|intcomma|or:"---" }}</h1>
-                  <span class="text-muted">Avg Views</span>
-                </div>
+                {% usemacro four_up_well totals.avg_t_pv|intcomma|or:"---" totals.r_avg_t_pv totals.avg_pv|intcomma|or:"---" totals.r_avg_pv label="Avg Views" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                <div class="well big-stat-box">
-                  <h1 class="num">{{ totals.top|floatformat:"0"|formatSeconds|or:"---" }}</h1>
-                  <span class="text-muted">Avg Time on Page</span>
-                </div>
+                {% usemacro four_up_well totals.t_top|floatformat:"0"|formatSeconds|or:"---" totals.r_t_top totals.top|floatformat:"0"|formatSeconds|or:"---" totals.r_top label="Avg Time on Page" %}
+            </div>
+            <!-- <div class="col-xs-4 col-sm-3 big-stat">
+                {% usemacro four_up_well totals.t_v|intcomma|or:"---" totals.r_t_v totals.v|intcomma|or:"---" totals.r_v label="Visits" big=1 %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                <div class="well big-stat-box">
-                  <h1 class="big num">{{ totals.t_v|intcomma|or:"---" }}</h1>
-                  <h5 class="num">({{ totals.v|intcomma|or:"---" }} day of)</h5>
-                  <span class="text-muted">Visits</span>
-                </div>
-            </div>
-            <div class="col-xs-4 col-sm-3 big-stat">
-                <div class="well big-stat-box">
-                  <h1 class="big num">{{ totals.t_pv|intcomma|or:"---" }}</h1>
-                  <h5 class="num">({{ totals.pv|intcomma|or:"---" }} day of)</h5>
-                  <span class="text-muted">Views</span>
-                </div>
-            </div>
+                {% usemacro four_up_well totals.t_pv|intcomma|or:"---" totals.r_t_pv totals.pv|intcomma|or:"---" totals.r_pv label="Views" big=1 %}
+            </div> -->
         </div>
         <div class="row">
             <div class="col-xs-12" id="calendar"></div>
@@ -112,7 +97,7 @@
                 <td class="num">{{ segment.stats.count|intcomma|or:"---" }}</td>
                 <td class="num">{{ segment.stats.t_v|intcomma|or:"---" }}</td>
                 <td class="num">{{ segment.stats.t_pv|intcomma|or:"---" }}</td>
-                <td class="num">{{ segment.stats.top|formatSeconds|or:"---" }}</td>
+                <td class="num">{{ segment.stats.t_top|formatSeconds|or:"---" }}</td>
             </tr>
             {% endfor %}
         </table>

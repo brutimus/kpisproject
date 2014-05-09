@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800);
 @import "../css/d3tip.css";
 @import "../css/cal-heatmap.css";
 /*! normalize.css v3.0.0 | MIT License | git.io/normalize */
@@ -391,10 +392,10 @@ html {
 /* line 27, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/scaffolding.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/scaffolding\.less}line{font-family:\0000327}}
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 14px;
   line-height: 1.428571429;
-  color: #333333;
+  color: #555555;
   background-color: #ffffff;
 }
 /* line 36, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/scaffolding.less */
@@ -451,7 +452,7 @@ img {
 /* line 86, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/scaffolding.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/scaffolding\.less}line{font-family:\0000386}}
 .img-rounded {
-  border-radius: 6px;
+  border-radius: 4px;
 }
 /* line 93, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/scaffolding.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/scaffolding\.less}line{font-family:\0000393}}
@@ -460,7 +461,7 @@ img {
   line-height: 1.428571429;
   background-color: #ffffff;
   border: 1px solid #dddddd;
-  border-radius: 4px;
+  border-radius: 3px;
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
   display: inline-block;
@@ -974,7 +975,7 @@ code {
   color: #c7254e;
   background-color: #f9f2f4;
   white-space: nowrap;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 /* line 25, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/code.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/code\.less}line{font-family:\0000325}}
@@ -983,7 +984,7 @@ kbd {
   font-size: 90%;
   color: #ffffff;
   background-color: #333333;
-  border-radius: 3px;
+  border-radius: 2px;
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 /* line 35, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/code.less */
@@ -999,7 +1000,7 @@ pre {
   color: #333333;
   background-color: #f5f5f5;
   border: 1px solid #cccccc;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 /* line 49, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/code.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/code\.less}line{font-family:\0000349}}
@@ -2501,7 +2502,7 @@ output {
   background-color: #ffffff;
   background-image: none;
   border: 1px solid #cccccc;
-  border-radius: 4px;
+  border-radius: 3px;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
@@ -2634,7 +2635,7 @@ fieldset[disabled] .checkbox-inline {
   padding: 5px 10px;
   font-size: 12px;
   line-height: 1.5;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 /* line 920, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/mixins.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/mixins\.less}line{font-family:\00003920}}
@@ -2655,7 +2656,7 @@ select[multiple].input-sm {
   padding: 10px 16px;
   font-size: 18px;
   line-height: 1.33;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 /* line 920, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/mixins.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/mixins\.less}line{font-family:\00003920}}
@@ -2810,7 +2811,7 @@ select[multiple].input-lg {
   display: block;
   margin-top: 5px;
   margin-bottom: 10px;
-  color: #737373;
+  color: #959595;
 }
 @media (min-width: 768px) {
   /* line 340, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/forms.less */
@@ -2917,7 +2918,7 @@ select[multiple].input-lg {
   padding: 6px 12px;
   font-size: 14px;
   line-height: 1.428571429;
-  border-radius: 4px;
+  border-radius: 3px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -3316,7 +3317,7 @@ fieldset[disabled] .btn-link:focus {
   padding: 10px 16px;
   font-size: 18px;
   line-height: 1.33;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 /* line 128, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/buttons.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/buttons\.less}line{font-family:\00003128}}
@@ -3325,7 +3326,7 @@ fieldset[disabled] .btn-link:focus {
   padding: 5px 10px;
   font-size: 12px;
   line-height: 1.5;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 /* line 132, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/buttons.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/buttons\.less}line{font-family:\00003132}}
@@ -3334,7 +3335,7 @@ fieldset[disabled] .btn-link:focus {
   padding: 1px 5px;
   font-size: 12px;
   line-height: 1.5;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 /* line 140, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/buttons.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/buttons\.less}line{font-family:\00003140}}
@@ -4444,7 +4445,7 @@ input[type="button"].btn-block {
   background-color: #ffffff;
   border: 1px solid #cccccc;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
+  border-radius: 3px;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   background-clip: padding-box;
@@ -4769,14 +4770,14 @@ input[type="button"].btn-block {
 /* line 178, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/button-groups.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/button-groups\.less}line{font-family:\00003178}}
 .btn-group-vertical > .btn:first-child:not(:last-child) {
-  border-top-right-radius: 4px;
+  border-top-right-radius: 3px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 /* line 182, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/button-groups.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/button-groups\.less}line{font-family:\00003182}}
 .btn-group-vertical > .btn:last-child:not(:first-child) {
-  border-bottom-left-radius: 4px;
+  border-bottom-left-radius: 3px;
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
@@ -4857,7 +4858,7 @@ input[type="button"].btn-block {
   padding: 10px 16px;
   font-size: 18px;
   line-height: 1.33;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 /* line 920, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/mixins.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/mixins\.less}line{font-family:\00003920}}
@@ -4886,7 +4887,7 @@ select[multiple].input-group-lg > .input-group-btn > .btn {
   padding: 5px 10px;
   font-size: 12px;
   line-height: 1.5;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 /* line 920, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/mixins.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/mixins\.less}line{font-family:\00003920}}
@@ -4939,21 +4940,21 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   text-align: center;
   background-color: #eeeeee;
   border: 1px solid #cccccc;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 /* line 81, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/input-groups.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/input-groups\.less}line{font-family:\0000381}}
 .input-group-addon.input-sm {
   padding: 5px 10px;
   font-size: 12px;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 /* line 86, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/input-groups.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/input-groups\.less}line{font-family:\0000386}}
 .input-group-addon.input-lg {
   padding: 10px 16px;
   font-size: 18px;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 /* line 93, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/input-groups.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/input-groups\.less}line{font-family:\0000393}}
@@ -5110,7 +5111,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-right: 2px;
   line-height: 1.428571429;
   border: 1px solid transparent;
-  border-radius: 4px 4px 0 0;
+  border-radius: 3px 3px 0 0;
 }
 /* line 89, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/navs.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/navs\.less}line{font-family:\0000389}}
@@ -5168,7 +5169,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/navs\.less}line{font-family:\00003193}}
 .nav-tabs.nav-justified > li > a {
   margin-right: 0;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 /* line 199, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/navs.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/navs\.less}line{font-family:\00003199}}
@@ -5182,7 +5183,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/navs\.less}line{font-family:\00003206}}
   .nav-tabs.nav-justified > li > a {
     border-bottom: 1px solid #dddddd;
-    border-radius: 4px 4px 0 0;
+    border-radius: 3px 3px 0 0;
   }
   /* line 210, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/navs.less */
   @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/navs\.less}line{font-family:\00003210}}
@@ -5200,7 +5201,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 /* line 122, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/navs.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/navs\.less}line{font-family:\00003122}}
 .nav-pills > li > a {
-  border-radius: 4px;
+  border-radius: 3px;
 }
 /* line 125, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/navs.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/navs\.less}line{font-family:\00003125}}
@@ -5270,7 +5271,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/navs\.less}line{font-family:\00003193}}
 .nav-tabs-justified > li > a {
   margin-right: 0;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 /* line 199, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/navs.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/navs\.less}line{font-family:\00003199}}
@@ -5284,7 +5285,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/navs\.less}line{font-family:\00003206}}
   .nav-tabs-justified > li > a {
     border-bottom: 1px solid #dddddd;
-    border-radius: 4px 4px 0 0;
+    border-radius: 3px 3px 0 0;
   }
   /* line 210, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/navs.less */
   @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/navs\.less}line{font-family:\00003210}}
@@ -5323,7 +5324,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   /* line 20, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/navbar.less */
   @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/navbar\.less}line{font-family:\0000320}}
   .navbar {
-    border-radius: 4px;
+    border-radius: 3px;
   }
 }
 @media (min-width: 768px) {
@@ -5477,7 +5478,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   background-color: transparent;
   background-image: none;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 /* line 192, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/navbar.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/navbar\.less}line{font-family:\00003192}}
@@ -5980,7 +5981,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-bottom: 20px;
   list-style: none;
   background-color: #f5f5f5;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 /* line 13, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/breadcrumbs.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/breadcrumbs\.less}line{font-family:\0000313}}
@@ -6005,7 +6006,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   display: inline-block;
   padding-left: 0;
   margin: 20px 0;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 /* line 10, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/pagination.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/pagination\.less}line{font-family:\0000310}}
@@ -6031,15 +6032,15 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .pagination > li:first-child > a,
 .pagination > li:first-child > span {
   margin-left: 0;
-  border-bottom-left-radius: 4px;
-  border-top-left-radius: 4px;
+  border-bottom-left-radius: 3px;
+  border-top-left-radius: 3px;
 }
 /* line 32, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/pagination.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/pagination\.less}line{font-family:\0000332}}
 .pagination > li:last-child > a,
 .pagination > li:last-child > span {
-  border-bottom-right-radius: 4px;
-  border-top-right-radius: 4px;
+  border-bottom-right-radius: 3px;
+  border-top-right-radius: 3px;
 }
 /* line 41, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/pagination.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/pagination\.less}line{font-family:\0000341}}
@@ -6089,15 +6090,15 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/mixins\.less}line{font-family:\00003556}}
 .pagination-lg > li:first-child > a,
 .pagination-lg > li:first-child > span {
-  border-bottom-left-radius: 6px;
-  border-top-left-radius: 6px;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
 }
 /* line 562, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/mixins.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/mixins\.less}line{font-family:\00003562}}
 .pagination-lg > li:last-child > a,
 .pagination-lg > li:last-child > span {
-  border-bottom-right-radius: 6px;
-  border-top-right-radius: 6px;
+  border-bottom-right-radius: 4px;
+  border-top-right-radius: 4px;
 }
 /* line 550, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/mixins.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/mixins\.less}line{font-family:\00003550}}
@@ -6110,15 +6111,15 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/mixins\.less}line{font-family:\00003556}}
 .pagination-sm > li:first-child > a,
 .pagination-sm > li:first-child > span {
-  border-bottom-left-radius: 3px;
-  border-top-left-radius: 3px;
+  border-bottom-left-radius: 2px;
+  border-top-left-radius: 2px;
 }
 /* line 562, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/mixins.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/mixins\.less}line{font-family:\00003562}}
 .pagination-sm > li:last-child > a,
 .pagination-sm > li:last-child > span {
-  border-bottom-right-radius: 3px;
-  border-top-right-radius: 3px;
+  border-bottom-right-radius: 2px;
+  border-top-right-radius: 2px;
 }
 /* line 6, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/pager.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/pager\.less}line{font-family:\000036}}
@@ -6348,7 +6349,7 @@ a.list-group-item.active > .badge,
 /* line 22, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/jumbotron.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/jumbotron\.less}line{font-family:\0000322}}
 .container .jumbotron {
-  border-radius: 6px;
+  border-radius: 4px;
 }
 /* line 26, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/jumbotron.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/jumbotron\.less}line{font-family:\0000326}}
@@ -6384,7 +6385,7 @@ a.list-group-item.active > .badge,
   line-height: 1.428571429;
   background-color: #ffffff;
   border: 1px solid #dddddd;
-  border-radius: 4px;
+  border-radius: 3px;
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
@@ -6406,7 +6407,7 @@ a.thumbnail.active {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/thumbnails\.less}line{font-family:\0000332}}
 .thumbnail .caption {
   padding: 9px;
-  color: #333333;
+  color: #555555;
 }
 /* line 9, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/alerts.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/alerts\.less}line{font-family:\000039}}
@@ -6414,7 +6415,7 @@ a.thumbnail.active {
   padding: 15px;
   margin-bottom: 20px;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 /* line 16, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/alerts.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/alerts\.less}line{font-family:\0000316}}
@@ -6550,7 +6551,7 @@ a.thumbnail.active {
   height: 20px;
   margin-bottom: 20px;
   background-color: #f5f5f5;
-  border-radius: 4px;
+  border-radius: 3px;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
@@ -6690,15 +6691,15 @@ a.thumbnail.active {
 /* line 31, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/list-group.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/list-group\.less}line{font-family:\0000331}}
 .list-group-item:first-child {
-  border-top-right-radius: 4px;
-  border-top-left-radius: 4px;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
 }
 /* line 34, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/list-group.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/list-group\.less}line{font-family:\0000334}}
 .list-group-item:last-child {
   margin-bottom: 0;
-  border-bottom-right-radius: 4px;
-  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
 }
 /* line 40, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/list-group.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/list-group\.less}line{font-family:\0000340}}
@@ -6897,7 +6898,7 @@ a.list-group-item-danger.active:focus {
   margin-bottom: 20px;
   background-color: #ffffff;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: 3px;
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
@@ -6911,8 +6912,8 @@ a.list-group-item-danger.active:focus {
 .panel-heading {
   padding: 10px 15px;
   border-bottom: 1px solid transparent;
-  border-top-right-radius: 3px;
-  border-top-left-radius: 3px;
+  border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
 }
 /* line 27, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/panels.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/panels\.less}line{font-family:\0000327}}
@@ -6938,8 +6939,8 @@ a.list-group-item-danger.active:focus {
   padding: 10px 15px;
   background-color: #f5f5f5;
   border-top: 1px solid #dddddd;
-  border-bottom-right-radius: 3px;
-  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
 }
 /* line 59, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/panels.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/panels\.less}line{font-family:\0000359}}
@@ -6956,15 +6957,15 @@ a.list-group-item-danger.active:focus {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/panels\.less}line{font-family:\0000369}}
 .panel > .list-group:first-child .list-group-item:first-child {
   border-top: 0;
-  border-top-right-radius: 3px;
-  border-top-left-radius: 3px;
+  border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
 }
 /* line 76, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/panels.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/panels\.less}line{font-family:\0000376}}
 .panel > .list-group:last-child .list-group-item:last-child {
   border-bottom: 0;
-  border-bottom-right-radius: 3px;
-  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
 }
 /* line 85, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/panels.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/panels\.less}line{font-family:\0000385}}
@@ -6981,8 +6982,8 @@ a.list-group-item-danger.active:focus {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/panels\.less}line{font-family:\00003102}}
 .panel > .table:first-child,
 .panel > .table-responsive:first-child > .table:first-child {
-  border-top-right-radius: 3px;
-  border-top-left-radius: 3px;
+  border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
 }
 /* line 109, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/panels.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/panels\.less}line{font-family:\00003109}}
@@ -6994,7 +6995,7 @@ a.list-group-item-danger.active:focus {
 .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:first-child,
 .panel > .table:first-child > tbody:first-child > tr:first-child th:first-child,
 .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:first-child {
-  border-top-left-radius: 3px;
+  border-top-left-radius: 2px;
 }
 /* line 113, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/panels.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/panels\.less}line{font-family:\00003113}}
@@ -7006,14 +7007,14 @@ a.list-group-item-danger.active:focus {
 .panel > .table-responsive:first-child > .table:first-child > thead:first-child > tr:first-child th:last-child,
 .panel > .table:first-child > tbody:first-child > tr:first-child th:last-child,
 .panel > .table-responsive:first-child > .table:first-child > tbody:first-child > tr:first-child th:last-child {
-  border-top-right-radius: 3px;
+  border-top-right-radius: 2px;
 }
 /* line 121, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/panels.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/panels\.less}line{font-family:\00003121}}
 .panel > .table:last-child,
 .panel > .table-responsive:last-child > .table:last-child {
-  border-bottom-right-radius: 3px;
-  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
 }
 /* line 128, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/panels.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/panels\.less}line{font-family:\00003128}}
@@ -7025,7 +7026,7 @@ a.list-group-item-danger.active:focus {
 .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:first-child,
 .panel > .table:last-child > tfoot:last-child > tr:last-child th:first-child,
 .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:first-child {
-  border-bottom-left-radius: 3px;
+  border-bottom-left-radius: 2px;
 }
 /* line 132, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/panels.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/panels\.less}line{font-family:\00003132}}
@@ -7037,7 +7038,7 @@ a.list-group-item-danger.active:focus {
 .panel > .table-responsive:last-child > .table:last-child > tbody:last-child > tr:last-child th:last-child,
 .panel > .table:last-child > tfoot:last-child > tr:last-child th:last-child,
 .panel > .table-responsive:last-child > .table:last-child > tfoot:last-child > tr:last-child th:last-child {
-  border-bottom-right-radius: 3px;
+  border-bottom-right-radius: 2px;
 }
 /* line 139, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/panels.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/panels\.less}line{font-family:\00003139}}
@@ -7128,7 +7129,7 @@ a.list-group-item-danger.active:focus {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/panels\.less}line{font-family:\00003199}}
 .panel-group .panel {
   margin-bottom: 0;
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
 }
 /* line 203, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/panels.less */
@@ -7296,7 +7297,7 @@ a.list-group-item-danger.active:focus {
   margin-bottom: 20px;
   background-color: #f5f5f5;
   border: 1px solid #e3e3e3;
-  border-radius: 4px;
+  border-radius: 3px;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
@@ -7310,13 +7311,13 @@ a.list-group-item-danger.active:focus {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/wells\.less}line{font-family:\0000322}}
 .well-lg {
   padding: 24px;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 /* line 26, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/wells.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/wells\.less}line{font-family:\0000326}}
 .well-sm {
   padding: 9px;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 /* line 6, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/close.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/close\.less}line{font-family:\000036}}
@@ -7401,7 +7402,7 @@ button.close {
   background-color: #ffffff;
   border: 1px solid #999999;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
+  border-radius: 4px;
   -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
   box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
   background-clip: padding-box;
@@ -7519,8 +7520,8 @@ button.close {
 /* line 16, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/tooltip.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/tooltip\.less}line{font-family:\0000316}}
 .tooltip.in {
-  opacity: 0.9;
-  filter: alpha(opacity=90);
+  opacity: 0.8;
+  filter: alpha(opacity=80);
 }
 /* line 17, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/tooltip.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/tooltip\.less}line{font-family:\0000317}}
@@ -7554,8 +7555,8 @@ button.close {
   color: #ffffff;
   text-align: center;
   text-decoration: none;
-  background-color: #000000;
-  border-radius: 4px;
+  background-color: #333333;
+  border-radius: 3px;
 }
 /* line 35, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/tooltip.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/tooltip\.less}line{font-family:\0000335}}
@@ -7573,7 +7574,7 @@ button.close {
   left: 50%;
   margin-left: -5px;
   border-width: 5px 5px 0;
-  border-top-color: #000000;
+  border-top-color: #333333;
 }
 /* line 50, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/tooltip.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/tooltip\.less}line{font-family:\0000350}}
@@ -7581,7 +7582,7 @@ button.close {
   bottom: 0;
   left: 5px;
   border-width: 5px 5px 0;
-  border-top-color: #000000;
+  border-top-color: #333333;
 }
 /* line 56, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/tooltip.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/tooltip\.less}line{font-family:\0000356}}
@@ -7589,7 +7590,7 @@ button.close {
   bottom: 0;
   right: 5px;
   border-width: 5px 5px 0;
-  border-top-color: #000000;
+  border-top-color: #333333;
 }
 /* line 62, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/tooltip.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/tooltip\.less}line{font-family:\0000362}}
@@ -7598,7 +7599,7 @@ button.close {
   left: 0;
   margin-top: -5px;
   border-width: 5px 5px 5px 0;
-  border-right-color: #000000;
+  border-right-color: #333333;
 }
 /* line 69, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/tooltip.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/tooltip\.less}line{font-family:\0000369}}
@@ -7607,7 +7608,7 @@ button.close {
   right: 0;
   margin-top: -5px;
   border-width: 5px 0 5px 5px;
-  border-left-color: #000000;
+  border-left-color: #333333;
 }
 /* line 76, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/tooltip.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/tooltip\.less}line{font-family:\0000376}}
@@ -7616,7 +7617,7 @@ button.close {
   left: 50%;
   margin-left: -5px;
   border-width: 0 5px 5px;
-  border-bottom-color: #000000;
+  border-bottom-color: #333333;
 }
 /* line 83, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/tooltip.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/tooltip\.less}line{font-family:\0000383}}
@@ -7624,7 +7625,7 @@ button.close {
   top: 0;
   left: 5px;
   border-width: 0 5px 5px;
-  border-bottom-color: #000000;
+  border-bottom-color: #333333;
 }
 /* line 89, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/tooltip.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/tooltip\.less}line{font-family:\0000389}}
@@ -7632,7 +7633,7 @@ button.close {
   top: 0;
   right: 5px;
   border-width: 0 5px 5px;
-  border-bottom-color: #000000;
+  border-bottom-color: #333333;
 }
 /* line 6, /Users/brutimus/Code/kpisproject/kpisproject/static/less/bootstrap/popovers.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/bootstrap\/popovers\.less}line{font-family:\000036}}
@@ -7649,7 +7650,7 @@ button.close {
   background-clip: padding-box;
   border: 1px solid #cccccc;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
+  border-radius: 4px;
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   white-space: normal;
@@ -8299,8 +8300,8 @@ button.close {
 /*
  * Base structure
  */
-/* line 8, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\000038}}
+/* line 9, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\000039}}
 body {
   shape-rendering: crispEdges;
   width: 100%;
@@ -8309,51 +8310,40 @@ body {
   transition: left 200ms;
   -webkit-transition: left 200ms;
 }
-/* line 15, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000315}}
+/* line 16, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000316}}
 body.menu-open {
   left: 100px;
-}
-/* line 19, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000319}}
-table {
-  table-layout: fixed;
-}
-/* line 22, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000322}}
-a {
-  color: #41759a;
 }
 /*
  * Global add-ons
  */
-/* line 30, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000330}}
+/* line 25, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000325}}
 .section {
   margin-bottom: 70px;
 }
-/* line 33, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000333}}
+/* line 28, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000328}}
 .page-header {
-  font-weight: 200;
+  font-weight: 400;
   border-bottom: 2px solid #41759a;
-  letter-spacing: .5px;
 }
-/* line 38, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000338}}
+/* line 32, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000332}}
 .sub-header {
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
 }
-/* line 42, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000342}}
+/* line 36, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000336}}
 .navbar-toggle {
   float: left;
   margin: 0 10px 0 0;
   background-color: #41759a;
 }
-/* line 47, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000347}}
+/* line 41, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000341}}
 .navbar-toggle .icon-bar {
   background-color: white;
 }
@@ -8361,8 +8351,8 @@ a {
  * Sidebar
  */
 /* Hide for mobile, show later */
-/* line 58, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000358}}
+/* line 52, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000352}}
 .sidebar {
   position: absolute;
   top: 0;
@@ -8378,15 +8368,15 @@ a {
   box-shadow: inset -2px 0px 8px -5px;
 }
 @media (max-width: 768px) {
-  /* line 73, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000373}}
+  /* line 67, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000367}}
   .sidebar {
     width: 100px;
   }
 }
 @media (min-width: 768px) {
-  /* line 78, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000378}}
+  /* line 72, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000372}}
   .sidebar {
     display: block;
     left: 0;
@@ -8394,27 +8384,27 @@ a {
   }
 }
 /* Sidebar navigation */
-/* line 86, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000386}}
+/* line 80, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000380}}
 .nav-sidebar {
   margin-right: -21px;
   /* 20px padding + 1px border */
   margin-bottom: 20px;
   margin-left: -20px;
 }
-/* line 91, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000391}}
+/* line 85, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000385}}
 .nav-sidebar > li > a {
   padding-right: 20px;
   padding-left: 20px;
 }
-/* line 95, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000395}}
+/* line 89, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000389}}
 .nav-sidebar > li > a.date {
   font-size: 11px;
 }
-/* line 100, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003100}}
+/* line 94, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\0000394}}
 .nav-sidebar > .active > a {
   font-weight: 300;
   letter-spacing: .5px;
@@ -8426,42 +8416,43 @@ a {
 /*
  * Main content
  */
-/* line 114, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003114}}
+/* line 108, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003108}}
 .main {
   padding: 20px;
 }
 @media (min-width: 768px) {
-  /* line 118, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003118}}
+  /* line 112, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003112}}
   .main {
     padding-right: 40px;
     padding-left: 40px;
   }
 }
-/* line 123, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003123}}
+/* line 117, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003117}}
 .main .page-header {
   margin-top: 0;
 }
-/* line 129, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003129}}
+/* line 123, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003123}}
 .handle {
   cursor: pointer;
 }
-/* line 132, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003132}}
+/* line 126, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003126}}
 .badge {
   font-weight: 400;
-  background-color: #aaa;
+  background-color: #999999;
 }
-/* line 138, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003138}}
+/* line 132, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003132}}
 .table {
   border: 1px solid #f0f0f0;
+  table-layout: fixed;
 }
-/* line 140, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003140}}
+/* line 136, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003136}}
 .table > thead > tr > th,
 .table > tbody > tr > th,
 .table > tfoot > tr > th,
@@ -8472,129 +8463,197 @@ a {
   font-weight: 200;
   letter-spacing: .2px;
 }
-/* line 150, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003150}}
+/* line 146, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003146}}
 .table > thead > tr > th {
   border-bottom: 2px solid #f0f0f0;
   font-weight: 400;
 }
-/* line 154, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003154}}
+/* line 150, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003150}}
 .table > tbody + tbody {
   border: none;
 }
-/* line 158, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003158}}
+/* line 154, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003154}}
 .table .icon {
   width: 30px;
   text-align: center;
 }
-/* line 162, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003162}}
+/* line 158, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003158}}
 .table .num {
   width: 120px;
   text-align: right;
 }
-/* line 165, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003165}}
+/* line 161, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003161}}
 .table .num small {
   display: inline-block;
   float: right;
   width: 45px;
   line-height: 160%;
 }
-/* line 175, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003175}}
-tbody.collapse.in {
-  display: table-row-group;
-}
-/* line 178, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003178}}
+/* line 171, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003171}}
 .big-stat {
   text-align: center;
+  font-weight: 200;
 }
-/* line 181, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003181}}
+/* line 175, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003175}}
 .big-stat .well {
   background: none;
-  box-shadow: 1px 1px 3px -3px #333333;
-  border-radius: 2px;
+  border: none;
+  box-shadow: none;
+}
+/* line 182, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003182}}
+.big-stat .well h1.num {
+  font-size: 60px;
+  line-height: 40px;
+  font-weight: 300;
 }
 /* line 186, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003186}}
-.big-stat .well.big-stat-box {
-  position: relative;
-}
-/* line 189, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003189}}
-.big-stat .well.big-stat-box .gauge {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100% !important;
-  height: 100% !important;
-}
-/* line 197, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003197}}
-.big-stat .well.big-stat-box .num {
-  font-weight: 200;
-  color: #666;
-}
-/* line 205, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003205}}
-.big-stat .well.big-stat-box h1.num {
-  font-size: 60px;
-  line-height: 40px;
-}
-/* line 208, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003208}}
-.big-stat .well.big-stat-box h1.num.big {
+.big-stat .well h1.num.big {
   font-size: 46px;
 }
-/* line 213, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003213}}
-.big-stat .well.big-stat-box span {
+/* line 191, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003191}}
+.big-stat .well > .well-label {
   text-transform: uppercase;
-  font-size: .7em;
-  letter-spacing: .5px;
+  font-size: 12px;
+  letter-spacing: .7px;
+  font-weight: 600;
 }
-/* line 222, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003222}}
+/* line 198, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003198}}
+.big-stat .well table {
+  width: 100%;
+  color: #555555;
+  margin-bottom: 5px;
+}
+/* line 204, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003204}}
+.big-stat .well table tr.two-up:first-child {
+  border-bottom: 1px solid #eeeeee;
+}
+/* line 209, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003209}}
+.big-stat .well table tr.two-up td .num {
+  font-size: 30px;
+  line-height: 34px;
+}
+/* line 212, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003212}}
+.big-stat .well table tr.two-up td .num.big {
+  font-size: 22px;
+}
+/* line 217, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003217}}
+.big-stat .well table tr.two-up td:first-child {
+  text-align: right;
+  width: 70%;
+  padding-right: 10px;
+}
+/* line 221, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003221}}
+.big-stat .well table tr.two-up td:first-child span {
+  display: inline-block;
+  float: right;
+}
+/* line 224, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003224}}
+.big-stat .well table tr.two-up td:first-child span.glyphicon {
+  font-size: 15px;
+  float: left;
+  line-height: 34px;
+  color: #999999;
+}
+/* line 232, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003232}}
+.big-stat .well table tr.two-up td:last-child {
+  text-align: left;
+  width: 30%;
+}
+/* line 236, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003236}}
+.big-stat .well table tr.two-up td:last-child span {
+  display: inline-block;
+  float: left;
+}
+/* line 243, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003243}}
+.big-stat .well table .percent {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 20px;
+}
+/* line 248, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003248}}
+.big-stat .well table .glyphicon {
+  font-size: 16px;
+  line-height: 19px;
+  margin-right: 3px;
+}
+/* line 254, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003254}}
+.big-stat .well table .positive {
+  color: #5cb85c;
+}
+/* line 256, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003256}}
+.big-stat .well table .positive .glyphicon.chevron:before {
+  content: "\e113";
+}
+/* line 260, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003260}}
+.big-stat .well table .negative {
+  color: #d9534f;
+}
+/* line 262, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003262}}
+.big-stat .well table .negative .glyphicon.chevron:before {
+  content: "\e114";
+}
+/* line 270, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003270}}
 .cal-heatmap-container {
   float: right;
 }
-/* line 225, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003225}}
+/* line 273, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003273}}
 .cal-heatmap-container .graph-rect {
   fill: white;
   transition: fill 200ms;
   -webkit-transition: fill 200ms;
 }
-/* line 230, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003230}}
+/* line 278, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003278}}
 .cal-heatmap-container .subdomain-text {
   transition: fill 200ms;
   -webkit-transition: fill 200ms;
 }
-/* line 234, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003234}}
+/* line 282, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003282}}
 .cal-heatmap-container .graph-subdomain-group rect:hover {
   stroke: #ccc;
   stroke-width: 1px;
 }
-/* line 238, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003238}}
+/* line 286, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003286}}
 .cal-heatmap-container rect.now {
   stroke: #DCA7A7;
   fill: #DCA7A7;
 }
-/* line 242, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003242}}
+/* line 290, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003290}}
 .cal-heatmap-container text.now {
   fill: white;
 }
-/* line 245, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003245}}
+/* line 293, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003293}}
 .cal-heatmap-container .q3 ~ text,
 .cal-heatmap-container .q4 ~ text,
 .cal-heatmap-container .q5 ~ text,
@@ -8607,80 +8666,80 @@ tbody.collapse.in {
 .cal-heatmap-container .q12 ~ text {
   fill: white;
 }
-/* line 255, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003255}}
+/* line 303, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003303}}
 .cal-heatmap-container .q1 {
   fill: white;
 }
-/* line 256, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003256}}
+/* line 304, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003304}}
 .cal-heatmap-container .q2,
 .cal-heatmap-container .RdYlGn .q0-11 {
   fill: #d9edf7;
 }
-/* line 257, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003257}}
+/* line 305, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003305}}
 .cal-heatmap-container .q3,
 .cal-heatmap-container .RdYlGn .q1-11 {
   fill: #bcdff1;
 }
-/* line 258, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003258}}
+/* line 306, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003306}}
 .cal-heatmap-container .q4,
 .cal-heatmap-container .RdYlGn .q2-11 {
   fill: #9acfea;
 }
-/* line 259, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003259}}
+/* line 307, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003307}}
 .cal-heatmap-container .q5,
 .cal-heatmap-container .RdYlGn .q3-11 {
   fill: #78bfe2;
 }
-/* line 260, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003260}}
+/* line 308, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003308}}
 .cal-heatmap-container .q6,
 .cal-heatmap-container .RdYlGn .q4-11 {
   fill: #57afdb;
 }
-/* line 261, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003261}}
+/* line 309, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003309}}
 .cal-heatmap-container .q7,
 .cal-heatmap-container .RdYlGn .q5-11 {
   fill: #359fd4;
 }
-/* line 262, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003262}}
+/* line 310, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003310}}
 .cal-heatmap-container .q8,
 .cal-heatmap-container .RdYlGn .q6-11 {
   fill: #2789b9;
 }
-/* line 263, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003263}}
+/* line 311, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003311}}
 .cal-heatmap-container .q9,
 .cal-heatmap-container .RdYlGn .q7-11 {
   fill: #207097;
 }
-/* line 264, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003264}}
+/* line 312, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003312}}
 .cal-heatmap-container .q10,
 .cal-heatmap-container .RdYlGn .q8-11 {
   fill: #195776;
 }
-/* line 265, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003265}}
+/* line 313, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003313}}
 .cal-heatmap-container .q11,
 .cal-heatmap-container .RdYlGn .q9-11 {
   fill: #123e54;
 }
-/* line 266, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003266}}
+/* line 314, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003314}}
 .cal-heatmap-container .q12,
 .cal-heatmap-container .RdYlGn .q10-11 {
   fill: #0b2532;
 }
 @media print {
-  /* line 272, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003272}}
+  /* line 320, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003320}}
   a[href]:after {
     content: none !important;
   }
