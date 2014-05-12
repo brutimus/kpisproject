@@ -8,8 +8,10 @@
             <span class="num{% if big == 1 %} big{% endif %}">{{ d1 }}</span>
         </td>
         <td class="{% if d2 < 0 %}negative{% else %}positive{% endif %}">
+            {% if d2 == "999" %}
             <span class="glyphicon chevron"></span>
             <span class="percent tt" data-toggle="tooltip" title="{{ tt2 }}">{{ d2|floatformat:0|or:"---" }}%</span>
+            {% endif %}
         </td>
     </tr>
 {% endmacro %}

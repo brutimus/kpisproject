@@ -1,6 +1,7 @@
 {% extends "analytics/base.html" %}
 {% load humanize %}
-{% load sec num %}
+{% load sec num macro %}
+{% loadmacros "analytics/macros.html" %}
 
 {% block title %}Stories{% endblock %}
 {% block pagenav %}
@@ -17,29 +18,23 @@
             <span class="pull-right text-muted"><small>{% now "DATE_FORMAT" %}</small></span>
         </h1>
         <div class="row">
-            <div class="col-xs-4 col-sm-3 big-stat">
+            <!-- <div class="col-xs-4 col-sm-3 big-stat">
                 <div class="well big-stat-box">
-                    <h1 class="num">{{ totals.count|intcomma|or:"---" }}</h1>
+                    <h1 class="num big">{{ totals.count|intcomma|or:"---" }}</h1>
                     <span class="text-muted">Total Stories Analyzed</span>
                 </div>
+            </div> -->
+            <div class="col-xs-4 col-sm-3 big-stat">
+                {% usemacro four_up_well totals.avg_t_v|intcomma|or:"---" 999 totals.avg_v|intcomma|or:"---" 999 label="Avg Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                <div class="well big-stat-box">
-                  <h1 class="num">{{ totals.avg_t_v|intcomma|or:"---" }}</h1>
-                  <span class="text-muted">Avg Visits</span>
-                </div>
+                {% usemacro four_up_well totals.avg_p_t_lv|percent|or:"---" 999 totals.avg_p_lv|percent|or:"---" 999 label="% Local Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                <div class="well big-stat-box">
-                  <h1 class="num">{{ totals.avg_t_pv|intcomma|or:"---" }}</h1>
-                  <span class="text-muted">Avg Views</span>
-                </div>
+                {% usemacro four_up_well totals.avg_t_pv|intcomma|or:"---" 999 totals.avg_pv|intcomma|or:"---" 999 label="Avg Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                <div class="well big-stat-box">
-                  <h1 class="num">{{ totals.top|floatformat:"0"|formatSeconds|or:"---" }}</h1>
-                  <span class="text-muted">Avg Time on Page</span>
-                </div>
+                {% usemacro four_up_well totals.t_top|floatformat:"0"|formatSeconds|or:"---" 999 totals.top|floatformat:"0"|formatSeconds|or:"---" 999 label="Avg Time on Page" %}
             </div>
         </div>
         <div class="row">
@@ -79,9 +74,9 @@
             {% for week in by_week %}
             <tr>
                 <td>{{ week.week_start|date:"M jS"}} - {{ week.week_end|date:"M jS"}}</td>
-                <td class="num">{{ week.dcount|intcomma }}</td>
-                <td class="num">{{ week.dv|intcomma }}</td>
-                <td class="num">{{ week.dpv|intcomma }}</td>
+                <td class="num">{{ week.count|intcomma }}</td>
+                <td class="num">{{ week.v|intcomma }}</td>
+                <td class="num">{{ week.pv|intcomma }}</td>
                 <td class="num">---</td>
             </tr>
             {% endfor %}
@@ -101,10 +96,10 @@
             </thead>
             {% for month in by_month %}
             <tr>
-                <td>{{ month.month_start|date:"M Y"}}</td>
-                <td class="num">{{ month.dcount|intcomma }}</td>
-                <td class="num">{{ month.dv|intcomma }}</td>
-                <td class="num">{{ month.dpv|intcomma }}</td>
+                <td>{{ month.month|date:"M Y"}}</td>
+                <td class="num">{{ month.count|intcomma }}</td>
+                <td class="num">{{ month.v|intcomma }}</td>
+                <td class="num">{{ month.pv|intcomma }}</td>
                 <td class="num">---</td>
             </tr>
             {% endfor %}

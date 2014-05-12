@@ -22,20 +22,23 @@
             <span class="pull-right text-muted hidden-xs"><small>{% now "DATE_FORMAT" %}</small></span>
         </h1>
         <div class="row">
-            <div class="col-xs-4 col-sm-3 big-stat">
+            <!-- <div class="col-xs-4 col-sm-3 big-stat">
                 <div class="well big-stat-box">
                     <h1 class="num">{{ totals.count }}</h1>
                     <span class="well-label text-muted">Total Stories</span>
                 </div>
+            </div> -->
+            <div class="col-xs-4 col-sm-3 big-stat">
+                {% usemacro four_up_well totals.averages_total.avg_t_v|intcomma|or:"---" totals.averages_total.r_avg_t_v totals.averages_day.avg_v|intcomma|or:"---" totals.averages_day.r_avg_v label="Avg Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                {% usemacro four_up_well totals.avg_t_v|intcomma|or:"---" totals.r_avg_t_v totals.avg_v|intcomma|or:"---" totals.r_avg_v label="Avg Visits" %}
+                {% usemacro four_up_well totals.averages_total.avg_p_t_lv|percent|or:"---" totals.averages_total.r_avg_p_t_lv totals.averages_day.avg_p_lv|percent|or:"---" totals.averages_day.r_avg_p_lv label="% Local Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                {% usemacro four_up_well totals.avg_t_pv|intcomma|or:"---" totals.r_avg_t_pv totals.avg_pv|intcomma|or:"---" totals.r_avg_pv label="Avg Views" %}
+                {% usemacro four_up_well totals.averages_total.avg_t_pv|intcomma|or:"---" totals.averages_total.r_avg_t_pv totals.averages_day.avg_pv|intcomma|or:"---" totals.averages_day.r_avg_pv label="Avg Views" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                {% usemacro four_up_well totals.t_top|floatformat:"0"|formatSeconds|or:"---" totals.r_t_top totals.top|floatformat:"0"|formatSeconds|or:"---" totals.r_top label="Avg Time on Page" %}
+                {% usemacro four_up_well totals.averages_total.avg_t_top|floatformat:"0"|formatSeconds|or:"---" totals.averages_total.r_avg_t_top totals.averages_day.avg_top|floatformat:"0"|formatSeconds|or:"---" totals.averages_day.r_avg_top label="Avg Time on Page" %}
             </div>
             <!-- <div class="col-xs-4 col-sm-3 big-stat">
                 {% usemacro four_up_well totals.t_v|intcomma|or:"---" totals.r_t_v totals.v|intcomma|or:"---" totals.r_v label="Visits" big=1 %}
@@ -87,17 +90,19 @@
                     <th>Segment</th>
                     <th class="num">Stories</th>
                     <th class="num">Visits</th>
+                    <th class="num">Local Visits</th>
                     <th class="num">Views</th>
                     <th class="num"><span class="glyphicon glyphicon-time"></span> Visit</th>
                 </tr>
             </thead>
-            {% for segment in rollups %}
+            {% for v in rollups|dictsort:'delta' %}
             <tr>
-                <td>{{ segment.name }}</td>
-                <td class="num">{{ segment.stats.count|intcomma|or:"---" }}</td>
-                <td class="num">{{ segment.stats.t_v|intcomma|or:"---" }}</td>
-                <td class="num">{{ segment.stats.t_pv|intcomma|or:"---" }}</td>
-                <td class="num">{{ segment.stats.t_top|formatSeconds|or:"---" }}</td>
+                <td>Past {{ v.delta }} days</td>
+                <td class="num">{{ v.sums.count|intcomma|or:"---" }}</td>
+                <td class="num">{{ v.sums.t_v|intcomma|or:"---" }}</td>
+                <td class="num">{{ v.averages_day.avg_p_lv|floatformat:0|or:"---" }}%</td>
+                <td class="num">{{ v.sums.t_pv|intcomma|or:"---" }}</td>
+                <td class="num">{{ v.averages_total.avg_t_top|formatSeconds|or:"---" }}</td>
             </tr>
             {% endfor %}
         </table>
@@ -117,10 +122,10 @@
             {% for week in by_week %}
             <tr>
                 <td>{{ week.week_start|date:"M jS"}} - {{ week.week_end|date:"M jS"}}</td>
-                <td class="num">{{ week.dcount|intcomma }}</td>
-                <td class="num">{{ week.dv|intcomma }}</td>
-                <td class="num">{{ week.dpv|intcomma }}</td>
-                <td class="num">---</td>
+                <td class="num">{{ week.count|intcomma }}</td>
+                <td class="num">{{ week.v|intcomma }}</td>
+                <td class="num">{{ week.pv|intcomma }}</td>
+                <td class="num">{{ week.avg_top|floatformat:"0"|formatSeconds|or:"---" }}</td>
             </tr>
             {% endfor %}
         </table>
@@ -139,11 +144,11 @@
             </thead>
             {% for month in by_month %}
             <tr>
-                <td>{{ month.month_start|date:"M Y"}}</td>
-                <td class="num">{{ month.dcount|intcomma }}</td>
-                <td class="num">{{ month.dv|intcomma }}</td>
-                <td class="num">{{ month.dpv|intcomma }}</td>
-                <td class="num">---</td>
+                <td>{{ month.month|date:"M Y"}}</td>
+                <td class="num">{{ month.count|intcomma }}</td>
+                <td class="num">{{ month.v|intcomma }}</td>
+                <td class="num">{{ month.pv|intcomma }}</td>
+                <td class="num">{{ month.avg_top|floatformat:"0"|formatSeconds|or:"---" }}</td>
             </tr>
             {% endfor %}
         </table>

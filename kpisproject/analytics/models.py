@@ -8,6 +8,15 @@ URLS = {
     }
 }
 
+# class Site(models.Model):
+#     name = models.CharField(max_length=100)
+#     edit_url = models.CharField(max_length=200)
+#     view_url = models.CharField(max_length=200)
+#     ga_table = models.CharField(max_length=50)
+#     dma = models.CharField(max_length=100)
+
+
+
 class Article(models.Model):
     id = models.IntegerField(primary_key=True)
     url = models.URLField()
@@ -19,18 +28,20 @@ class Article(models.Model):
     category = models.ForeignKey('Category', **BN)
     status = models.ForeignKey('Status')
 
-    # Raw fields to store original data in case we need to reparse
+    # Raw fields to store original data in case we need to re-parse
     raw_byline_text = models.CharField(max_length=200, **BN)
     raw_category_text = models.CharField(max_length=200, **BN)
     raw_status_text = models.CharField(max_length=200, **BN)
 
     # Used for day-of-publish analytics stats
     visits = models.IntegerField(**BN)
+    visits_local = models.IntegerField(**BN)
     pageviews = models.IntegerField(**BN)
     time_on_page = models.IntegerField(**BN)
 
     # all_ fields used for overall analytics stats
     all_visits = models.IntegerField(**BN)
+    all_visits_local = models.IntegerField(**BN)
     all_pageviews = models.IntegerField(**BN)
     all_time_on_page = models.IntegerField(**BN)
 
