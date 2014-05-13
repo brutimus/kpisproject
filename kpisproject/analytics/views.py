@@ -1,4 +1,4 @@
-import json, datetime, time
+import json, datetime, time, re
 from operator import itemgetter, methodcaller, attrgetter
 from itertools import groupby
 
@@ -6,11 +6,17 @@ from django.contrib.auth.decorators import login_required
 from django.db import connections, connection
 from django.db.models import Sum, Avg, Count
 from django.shortcuts import render_to_response
+from django.template import base
 from django.views.decorators.cache import cache_page
 from django.views.generic.dates import DayArchiveView
 from django.views.generic.list import ListView
 from kpisproject.analytics.models import Article, Byline, Category, Status
 from kpisproject.analytics import sql
+
+base.tag_re = (re.compile('(%s.*?%s|%s.*?%s|%s.*?%s)' %
+          (re.escape(base.BLOCK_TAG_START), re.escape(base.BLOCK_TAG_END),
+           re.escape(base.VARIABLE_TAG_START), re.escape(base.VARIABLE_TAG_END),
+           re.escape(base.COMMENT_TAG_START), re.escape(base.COMMENT_TAG_END)), re.DOTALL))
 
 
 def dictfetchall(cursor):
@@ -26,54 +32,80 @@ def dictfetchall(cursor):
 # @login_required(login_url='/admin/')
 def story_overview(request):
     cursor = connection.cursor()
-    totals = Article.objects.extra(
-        select={
-            'count': 'count(*)',
-            # Day of
-            'top': 'sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits)',
-            'v': 'sum(visits)',
-            'pv': 'sum(pageviews)',
-            'avg_v': '(select sum(visits)/count(*) from analytics_article where visits > 0)',
-            'avg_pv': '(select sum(pageviews)/count(*) from analytics_article where pageviews > 0)',
-            'avg_p_lv': 'SUM(visits_local)::real / SUM(visits)::real * 100',
-            # All time
-            't_top': 'sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits)',
-            't_v': 'sum(all_visits)',
-            't_pv': 'sum(all_pageviews)',
-            'avg_t_v': '(select sum(all_visits)/count(*) from analytics_article where all_visits > 0)',
-            'avg_t_pv': '(select sum(all_pageviews)/count(*) from analytics_article where all_pageviews > 0)',
-            'avg_p_t_lv': 'SUM(all_visits_local)::real / SUM(all_visits)::real * 100',
-        }
-    ).values(
-        'count',
-        'top',
-        'v',
-        't_v',
-        'pv',
-        't_pv',
-        't_top',
-        'avg_v',
-        'avg_t_v',
-        'avg_pv',
-        'avg_t_pv',
-        'avg_p_lv',
-        'avg_p_t_lv'
-    )
+
+    cursor.execute(sql.sums_query % {
+        'select': '',
+        'from': '',
+        'where': '',
+        'group_by': ''
+    })
+    totals = dictfetchall(cursor)
+
+    avg_sql = """
+    SELECT
+        SUM(visits) / COUNT(*) AS avg_v,
+        SUM(pageviews) / COUNT(*) AS avg_pv,
+        SUM(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / SUM(visits) AS avg_top
+    FROM
+        analytics_article
+    LEFT OUTER JOIN
+        analytics_stats ON (analytics_article.%s = analytics_stats.id)
+    WHERE
+        visits IS NOT NULL
+    """
+
+    cursor.execute(avg_sql % 'stats_day_id')
+    averages_day = dictfetchall(cursor)[0]
+
+    cursor.execute(avg_sql % 'stats_day_local_id')
+    averages_day_local = dictfetchall(cursor)[0]
+
+    cursor.execute(avg_sql % 'stats_total_id')
+    averages_total = dictfetchall(cursor)[0]
+    
+    cursor.execute(avg_sql % 'stats_total_local_id')
+    averages_total_local = dictfetchall(cursor)[0]
+    # print averages_day, averages_total, averages_day_local, averages_total_local
 
     # Daily Rollup
-    cursor.execute(sql.daily_rollup % '0 = 0')
+    cursor.execute(sql.sums_query % {
+        'select': "EXTRACT(EPOCH FROM DATE_TRUNC('day', date)) AS ts,",
+        'from': '',
+        'where': '',
+        'group_by': "GROUP BY ts"
+    })
     by_day = dictfetchall(cursor)
 
     # Weekly Rollup
-    cursor.execute(sql.weekly_rollup % '0 = 0')
+    cursor.execute(sql.sums_query % {
+        'select': """
+            DATE_TRUNC('week', date) AS week_start,
+            DATE_TRUNC('week', date) + INTERVAL '6 days' AS week_end,""",
+        'from': '',
+        'where': '',
+        'group_by': """GROUP BY 
+            week_start,
+            week_end"""
+    })
     by_week = dictfetchall(cursor)
 
     # Monthly Rollup
-    cursor.execute(sql.monthly_rollup % '0 = 0')
+    cursor.execute(sql.sums_query % {
+        'select': "DATE_TRUNC('month', date) AS month,",
+        'from': '',
+        'where': '',
+        'group_by': "GROUP BY month"
+    })
     by_month = dictfetchall(cursor)
 
     return render_to_response('analytics/story_overview.html', {
-        'totals': totals.get(),
+        'totals': {
+            'sums': totals,
+            'day': averages_day,
+            'day_local': averages_day_local,
+            'total': averages_total,
+            'total_local': averages_total_local
+        },
         'histograms': {
             'count': {int(x['ts']): int(x['count']) for x in by_day},
             'v': {int(x['ts']): int(x['v'] or 0) for x in by_day},
@@ -219,216 +251,215 @@ def byline_overview(request):
 
 @cache_page(60 * 15)
 def byline_detail(request, byline_id):
+    date_min = datetime.date(2000,1,1)
     cursor = connection.cursor()
 
-    site_totals = Article.objects.extra(
-        select={
-            'count': 'count(*)',
-            # Day of
-            'top': 'sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits)',
-            'v': 'sum(visits)',
-            'pv': 'sum(pageviews)',
-            'avg_v': '(select sum(visits)/count(*) from analytics_article where visits > 0)',
-            'avg_pv': '(select sum(pageviews)/count(*) from analytics_article where pageviews > 0)',
-            # All time
-            't_top': 'sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits)',
-            't_v': 'sum(all_visits)',
-            't_pv': 'sum(all_pageviews)',
-            'avg_t_v': '(select sum(all_visits)/count(*) from analytics_article where all_visits > 0)',
-            'avg_t_pv': '(select sum(all_pageviews)/count(*) from analytics_article where all_pageviews > 0)'
-        }
-    ).values(
-        'count',
-        'top',
-        'v',
-        't_v',
-        'pv',
-        't_pv',
-        'avg_v',
-        'avg_t_v',
-        'avg_pv',
-        'avg_t_pv'
-    )
+    cursor.execute(sql.sums_query % {
+        'select': '',
+        'from': '',
+        'where': '',
+        'group_by': ''
+    })
+    site_totals = dictfetchall(cursor)[0]
+    site_avg_sql = """
+    SELECT
+        SUM(visits) / COUNT(*) AS avg_v,
+        SUM(pageviews) / COUNT(*) AS avg_pv,
+        SUM(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / SUM(visits) AS avg_top
+    FROM
+        analytics_article
+    LEFT OUTER JOIN
+        analytics_stats ON (analytics_article.%s = analytics_stats.id)
+    WHERE
+        visits IS NOT NULL
+    """
+
+    cursor.execute(site_avg_sql % 'stats_day_id')
+    site_averages_day = dictfetchall(cursor)[0]
+
+    cursor.execute(site_avg_sql % 'stats_day_local_id')
+    site_averages_day_local = dictfetchall(cursor)[0]
+
+    cursor.execute(site_avg_sql % 'stats_total_id')
+    site_averages_total = dictfetchall(cursor)[0]
+    
+    cursor.execute(site_avg_sql % 'stats_total_local_id')
+    site_averages_total_local = dictfetchall(cursor)[0]
+
+    avg_sql = """
+    SELECT
+        SUM(visits) / COUNT(*) AS avg_v,
+        SUM(pageviews) / COUNT(*) AS avg_pv,
+        SUM(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / SUM(visits) AS avg_top
+    FROM
+        analytics_article,
+        analytics_article_bylines,
+        analytics_stats
+    WHERE
+        analytics_article.id = analytics_article_bylines.article_id
+        AND analytics_article_bylines.byline_id = %%s
+        AND analytics_article.%s = analytics_stats.id
+        AND visits IS NOT NULL
+        AND date >= TIMESTAMP %%s;
+    """
+
+    cursor.execute(avg_sql % 'stats_day_id', [byline_id, date_min])
+    averages_day = dictfetchall(cursor)[0]
+
+    cursor.execute(avg_sql % 'stats_day_local_id', [byline_id, date_min])
+    averages_day_local = dictfetchall(cursor)[0]
+
+    cursor.execute(avg_sql % 'stats_total_id', [byline_id, date_min])
+    averages_total = dictfetchall(cursor)[0]
+    
+    cursor.execute(avg_sql % 'stats_total_local_id', [byline_id, date_min])
+    averages_total_local = dictfetchall(cursor)[0]
+
 
     base_article_list = Article.objects.filter(
         bylines__id=byline_id
     )
 
     # Sums ##########################################################
-    sums = base_article_list.extra(
-        select={
-            # Totals
-            'count': 'count(*)',
-            'v': 'sum(visits)',
-            'pv': 'sum(pageviews)',
-            't_v': 'sum(all_visits)',
-            't_pv': 'sum(all_pageviews)'
-        }
-    ).values(
-        'count',
-        'v',
-        't_v',
-        'pv',
-        't_pv',
-    )
+    cursor.execute(sql.sums_query % {
+        'select': '',
+        'from': """JOIN analytics_article_bylines ON (
+            analytics_article.id = analytics_article_bylines.article_id)""",
+        'where': """WHERE analytics_article.id = analytics_article_bylines.article_id
+            AND analytics_article_bylines.byline_id = %s""" % int(byline_id),
+        'group_by': ''
+    })
+    sums = dictfetchall(cursor)[0]
 
-    # Averages ######################################################
-    averages_day_extra = {
-        'avg_v': 'sum(visits)/count(*)',
-        'avg_pv': 'sum(pageviews)/count(*)',
-        'avg_top': 'sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits)',
-        'avg_p_lv': 'SUM(visits_local)::real / SUM(visits)::real * 100',
-
-        'r_avg_v': """(
-            (sum(visits)/count(*))::real - (
-                select sum(visits)/count(*) from analytics_article where visits > 0)
-        ) / (select sum(visits)/count(*) from analytics_article where visits > 0) * 100""",
-
-        'r_avg_pv': """(
-            (sum(pageviews)/count(*))::real - (
-                select sum(pageviews)/count(*) from analytics_article where pageviews > 0)
-        ) / (select sum(pageviews)/count(*) from analytics_article where pageviews > 0) * 100""",
-
-        'r_avg_top': """(
-            (sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits))::real - (
-                select sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits) from analytics_article)
-        ) / (select sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits) from analytics_article) * 100""",
-
-        'r_avg_p_lv': """(
-            (SUM(visits_local)::real / SUM(visits)::real) - (
-                SELECT SUM(visits_local)::real / SUM(visits)::real from analytics_article where visits_local > 0 AND visits > 0)
-        ) / (SELECT SUM(visits_local)::real / SUM(visits)::real from analytics_article where visits_local > 0 AND visits > 0) * 100"""        
-    }
-    averages_day = base_article_list.filter(
-        visits__isnull=False,
-        pageviews__isnull=False
-    ).extra(
-        select=averages_day_extra
-    ).values(*averages_day_extra.keys())
-
-    averages_total_extra = {
-        'avg_t_v': 'sum(all_visits)/count(*)',
-        'avg_t_pv': 'sum(all_pageviews)/count(*)',
-        'avg_t_top': 'sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits)',
-        'avg_p_t_lv': 'SUM(all_visits_local)::real / SUM(all_visits)::real * 100',
-
-        'r_avg_t_v': """(
-            (sum(all_visits)/count(*))::real - (
-                select sum(all_visits)/count(*) from analytics_article where all_visits > 0)
-        ) / (select sum(all_visits)/count(*) from analytics_article where all_visits > 0) * 100""",
-
-        'r_avg_t_pv': """(
-            (sum(all_pageviews)/count(*))::real - (
-                select sum(all_pageviews)/count(*) from analytics_article where all_pageviews > 0)
-        ) / (select sum(all_pageviews)/count(*) from analytics_article where all_pageviews > 0) * 100""",
-
-        'r_avg_t_top': """(
-            (sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits))::real - (
-                select sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits) from analytics_article)
-        ) / (select sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits) from analytics_article) * 100""",
-
-        'r_avg_p_t_lv': """(
-            (SUM(all_visits_local)::real / SUM(all_visits)::real) - (
-                SELECT SUM(all_visits_local)::real / SUM(all_visits)::real from analytics_article where all_visits_local > 0 AND all_visits > 0)
-        ) / (SELECT SUM(all_visits_local)::real / SUM(all_visits)::real from analytics_article where all_visits_local > 0 AND all_visits > 0) * 100"""
-    }
-    averages_total = base_article_list.filter(
-        all_visits__isnull=False,
-        all_pageviews__isnull=False
-    ).extra(
-        select=averages_total_extra
-    ).values(*averages_total_extra.keys())
-
-    cursor.execute("""
-    SELECT
-        SUM(all_visits)/COUNT(*) AS avg_t_v,
-        SUM(all_pageviews)/COUNT(*) AS avg_t_pv,
-        SUM(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0))
-            / SUM(all_visits) AS avg_t_top,
-        SUM(all_visits_local)::real / SUM(all_visits)::real * 100 AS avg_p_t_lv,
-        ((SUM(all_visits) / COUNT(*))::real - (
-            SELECT
-                SUM(all_visits) / COUNT(*)
-            FROM analytics_article
-            WHERE all_visits > 0
-        )::real) / (
-            SELECT
-                SUM(all_visits) / COUNT(*)
-                FROM analytics_article
-                WHERE all_visits > 0
-        )::real * 100 AS r_avg_t_v,
-        ((SUM(all_pageviews) / COUNT(*))::real - (
-            SELECT
-                SUM(all_pageviews) / COUNT(*)
-            FROM analytics_article
-            WHERE all_pageviews > 0
-        )::real) / (
-            SELECT
-                SUM(all_pageviews) / COUNT(*)
-            FROM analytics_article
-            WHERE all_pageviews > 0
-        )::real * 100 AS r_avg_t_pv,
-        ((SUM(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / SUM(all_visits))::real - (
-            SELECT
-                SUM(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / SUM(all_visits)
-            FROM analytics_article
-        )) / (
-            SELECT
-                SUM(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / SUM(all_visits)
-            FROM analytics_article
-        ) * 100 AS r_avg_t_top,
-        ((SUM(all_visits_local)::real / SUM(all_visits)::real) - (
-            SELECT
-                SUM(all_visits_local)::real / SUM(all_visits)::real
-            FROM analytics_article
-            WHERE all_visits_local > 0 AND all_visits > 0
-        )::real) / (
-            SELECT
-                SUM(all_visits_local)::real / SUM(all_visits)::real
-            FROM analytics_article
-            WHERE all_visits_local > 0 AND all_visits > 0
-        ) * 100 AS r_avg_p_t_lv
-    FROM
-        analytics_article,
-        analytics_article_bylines
-    WHERE
-        analytics_article.id = analytics_article_bylines.article_id
-        AND analytics_article_bylines.byline_id = %s
-        AND all_visits IS NOT NULL
-        AND all_pageviews IS NOT NULL;
-    """, [int(byline_id)])
-
-
+    # Rollups
     rollup_days = (30, 60, 90, 180, 365)
     rollups = []
     for delta in rollup_days:
-        f = {'date__gte': datetime.date.today() - datetime.timedelta(days=delta)}
+        d = datetime.date.today() - datetime.timedelta(days=delta)
+
+        cursor.execute(sql.sums_query % {
+            'select': '',
+            'from': """JOIN analytics_article_bylines ON (
+            analytics_article.id = analytics_article_bylines.article_id)""",
+            'where': """WHERE analytics_article_bylines.byline_id = %s
+                AND date >= TIMESTAMP '%s'""" % (
+                    int(byline_id),
+                    d.strftime('%Y-%m-%d')),
+            'group_by': ''
+        })
+        sums = dictfetchall(cursor)[0]
+
+        cursor.execute(avg_sql % 'stats_day_id', [byline_id, d])
+        averages_day = dictfetchall(cursor)[0]
+
+        cursor.execute(avg_sql % 'stats_day_local_id', [byline_id, d])
+        averages_day_local = dictfetchall(cursor)[0]
+
+        cursor.execute(avg_sql % 'stats_total_id', [byline_id, d])
+        averages_total = dictfetchall(cursor)[0]
+        
+        cursor.execute(avg_sql % 'stats_total_local_id', [byline_id, d])
+        averages_total_local = dictfetchall(cursor)[0]
+        
+
         rollups.append({
             'delta': delta,
-            'sums': sums.filter(**f).get(),
-            'averages_day': averages_day.filter(**f).get(),
-            'averages_total': averages_total.filter(**f).get()
+            'sums': sums,
+            'day': averages_day,
+            'day_local': averages_day_local,
+            'total': averages_total,
+            'total_local': averages_total_local
         })
 
 
     # Daily Rollup
-    
-    cursor.execute(sql.daily_rollup % (
-        "analytics_article_bylines.byline_id = %s" % int(byline_id),
-    ))
+    cursor.execute(sql.sums_query % {
+        'select': "EXTRACT(EPOCH FROM DATE_TRUNC('day', date)) AS ts,",
+        'from': """JOIN analytics_article_bylines ON (
+            analytics_article.id = analytics_article_bylines.article_id)""",
+        'where': """WHERE analytics_article_bylines.byline_id = %s""" % int(byline_id),
+        'group_by': "GROUP BY ts"
+    })
     by_day = dictfetchall(cursor)
 
     # Weekly Rollup
-    cursor.execute(sql.weekly_rollup % (
-        "analytics_article_bylines.byline_id = %s" % int(byline_id),
-    ))
+    cursor.execute(sql.sums_query % {
+        'select': """
+            DATE_TRUNC('week', date) AS week_start,
+            DATE_TRUNC('week', date) + INTERVAL '6 days' AS week_end,""",
+        'from': """JOIN analytics_article_bylines ON (
+            analytics_article.id = analytics_article_bylines.article_id)""",
+        'where': """WHERE analytics_article_bylines.byline_id = %s""" % int(byline_id),
+        'group_by': """GROUP BY 
+            week_start,
+            week_end"""
+    })
     by_week = dictfetchall(cursor)
 
     # Monthly Rollup
-    cursor.execute(sql.monthly_rollup % (
-        "analytics_article_bylines.byline_id = %s" % int(byline_id),
-    ))
+    cursor.execute(sql.sums_query % {
+        'select': "DATE_TRUNC('month', date) AS month,",
+        'from': """JOIN analytics_article_bylines ON (
+            analytics_article.id = analytics_article_bylines.article_id)""",
+        'where': """WHERE analytics_article_bylines.byline_id = %s""" % int(byline_id),
+        'group_by': "GROUP BY month"
+    })
     by_month = dictfetchall(cursor)
+
+    # Process ratios
+    def floatall(d):
+        return {k: float(v) for k, v in d.items()}
+    averages_day = floatall(averages_day)
+    averages_day_local = floatall(averages_day_local)
+    averages_total = floatall(averages_total)
+    averages_total_local = floatall(averages_total_local)
+    site_averages_day = floatall(site_averages_day)
+    site_averages_day_local = floatall(site_averages_day_local)
+    site_averages_total = floatall(site_averages_total)
+    site_averages_total_local = floatall(site_averages_total_local)
+
+    ratios = {
+        'day': {
+            # Compare day to site avg
+            'avg_v': averages_day['avg_v'] / site_averages_day['avg_v'],
+            'avg_pv': averages_day['avg_pv'] / site_averages_day['avg_pv'],
+            'avg_top': averages_day['avg_top'] / site_averages_day['avg_top']},
+        'day_local': {
+            # Compare day local to day (percent local)
+            'avg_v': averages_day_local['avg_v'] / averages_day['avg_v'],
+            'avg_pv': averages_day_local['avg_pv'] / averages_day['avg_pv'],
+            'avg_top': averages_day_local['avg_top'] / averages_day['avg_top'],
+            # Compare byline percent local to site percent local
+            'r_avg_v': (
+                averages_day_local['avg_v'] / averages_day['avg_v']) / (
+                site_averages_day_local['avg_v'] / site_averages_day['avg_v']),
+            'r_avg_pv': (
+                averages_day_local['avg_pv'] / averages_day['avg_pv']) / (
+                site_averages_day_local['avg_pv'] / site_averages_day['avg_pv']),
+            'r_avg_top': (
+                averages_day_local['avg_top'] / averages_day['avg_top']) / (
+                site_averages_day_local['avg_top'] / site_averages_day['avg_top'])},
+        'total': {
+            # Compare total to site total
+            'avg_v': averages_total['avg_v'] / site_averages_total['avg_v'],
+            'avg_pv': averages_total['avg_pv'] / site_averages_total['avg_pv'],
+            'avg_top': averages_total['avg_top'] / site_averages_total['avg_top']},
+        'total_local': {
+            # Compare total local to total (percent local)
+            'avg_v': averages_total_local['avg_v'] / averages_total['avg_v'],
+            'avg_pv': averages_total_local['avg_pv'] / averages_total['avg_pv'],
+            'avg_top': averages_total_local['avg_top'] / averages_total['avg_top'],
+            # Compare byline percent local to site percent local
+            'r_avg_v': (
+                averages_total_local['avg_v'] / averages_total['avg_v']) / (
+                site_averages_total_local['avg_v'] / site_averages_total['avg_v']),
+            'r_avg_pv': (
+                averages_total_local['avg_pv'] / averages_total['avg_pv']) / (
+                site_averages_total_local['avg_pv'] / site_averages_total['avg_pv']),
+            'r_avg_top': (
+                averages_total_local['avg_top'] / averages_total['avg_top']) / (
+                site_averages_total_local['avg_top'] / site_averages_total['avg_top'])},
+    }
 
 
     return render_to_response('analytics/byline.html', {
@@ -441,11 +472,20 @@ def byline_detail(request, byline_id):
         },
         'by_week': by_week,
         'by_month': by_month,
-        'site_totals': site_totals.get(),
-        'totals': {
-            'sums': sums.get(),
-            'averages_day': averages_day.get(),
-            'averages_total': averages_total.get()
+        'site_totals': {
+            'sums': site_totals,
+            'day': site_averages_day,
+            'day_local': site_averages_day_local,
+            'total': site_averages_total,
+            'total_local': site_averages_total_local
         },
+        'totals': {
+            'sums': sums,
+            'day': averages_day,
+            'day_local': averages_day_local,
+            'total': averages_total,
+            'total_local': averages_total_local
+        },
+        'ratios': ratios,
         'rollups': rollups
     })

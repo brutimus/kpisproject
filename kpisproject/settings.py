@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'kpisproject.analytics',
-    'south'
+    'south',
+    'django_extensions',
+    'mathfilters'
 ]
 if DEBUG:
     INSTALLED_APPS.extend([

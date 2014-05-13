@@ -1,6 +1,6 @@
 {% extends "analytics/base.html" %}
 {% load humanize %}
-{% load sec num macro %}
+{% load sec num macro mathfilters %}
 {% loadmacros "analytics/macros.html" %}
 
 {% block title %}Stories{% endblock %}
@@ -25,16 +25,36 @@
                 </div>
             </div> -->
             <div class="col-xs-4 col-sm-3 big-stat">
-                {% usemacro four_up_well totals.avg_t_v|intcomma|or:"---" 999 totals.avg_v|intcomma|or:"---" 999 label="Avg Visits" %}
+                {% usemacro four_up_well
+                totals.total.avg_v|intcomma|or:"---"
+                999
+                totals.day.avg_v|intcomma|or:"---"
+                999
+                label="Avg Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                {% usemacro four_up_well totals.avg_p_t_lv|percent|or:"---" 999 totals.avg_p_lv|percent|or:"---" 999 label="% Local Visits" %}
+                {% usemacro four_up_well
+                totals.total_local.avg_v|mul:100|div:totals.total.avg_v|percent|or:"---"
+                999
+                totals.day_local.avg_v|mul:100|div:totals.day.avg_v|percent|or:"---"
+                999
+                label="% Local Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                {% usemacro four_up_well totals.avg_t_pv|intcomma|or:"---" 999 totals.avg_pv|intcomma|or:"---" 999 label="Avg Visits" %}
+                {% usemacro four_up_well
+                totals.total.avg_pv|intcomma|or:"---"
+                999
+                totals.day.avg_pv|intcomma|or:"---"
+                999
+                label="Avg Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                {% usemacro four_up_well totals.t_top|floatformat:"0"|formatSeconds|or:"---" 999 totals.top|floatformat:"0"|formatSeconds|or:"---" 999 label="Avg Time on Page" %}
+                {% usemacro four_up_well
+                totals.total.avg_top|floatformat:"0"|formatSeconds|or:"---"
+                999
+                totals.day.avg_top|floatformat:"0"|formatSeconds|or:"---"
+                999
+                label="Avg Time on Page" %}
             </div>
         </div>
         <div class="row">
@@ -66,8 +86,11 @@
                 <tr>
                     <th>Week of</th>
                     <th class="num">Stories</th>
-                    <th class="num">Visits</th>
-                    <th class="num">Views</th>
+                    <th class="num">V</th>
+                    <th class="num">LV</th>
+                    <th class="num">TV</th>
+                    <th class="num">TLV</th>
+                    <!-- <th class="num">Views</th> -->
                     <th class="num"><span class="glyphicon glyphicon-time"></span> Visit</th>
                 </tr>
             </thead>
@@ -76,7 +99,9 @@
                 <td>{{ week.week_start|date:"M jS"}} - {{ week.week_end|date:"M jS"}}</td>
                 <td class="num">{{ week.count|intcomma }}</td>
                 <td class="num">{{ week.v|intcomma }}</td>
-                <td class="num">{{ week.pv|intcomma }}</td>
+                <td class="num">{{ week.l_v|intcomma }}</td>
+                <td class="num">{{ week.t_v|intcomma }}</td>
+                <td class="num">{{ week.t_l_v|intcomma }}</td>
                 <td class="num">---</td>
             </tr>
             {% endfor %}
@@ -89,8 +114,10 @@
                 <tr>
                     <th>Month</th>
                     <th class="num">Stories</th>
-                    <th class="num">Visits</th>
-                    <th class="num">Views</th>
+                    <th class="num">V</th>
+                    <th class="num">LV</th>
+                    <th class="num">TV</th>
+                    <th class="num">TLV</th>
                     <th class="num"><span class="glyphicon glyphicon-time"></span> Visit</th>
                 </tr>
             </thead>
@@ -99,7 +126,9 @@
                 <td>{{ month.month|date:"M Y"}}</td>
                 <td class="num">{{ month.count|intcomma }}</td>
                 <td class="num">{{ month.v|intcomma }}</td>
-                <td class="num">{{ month.pv|intcomma }}</td>
+                <td class="num">{{ month.l_v|intcomma }}</td>
+                <td class="num">{{ month.t_v|intcomma }}</td>
+                <td class="num">{{ month.t_l_v|intcomma }}</td>
                 <td class="num">---</td>
             </tr>
             {% endfor %}

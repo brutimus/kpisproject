@@ -8,13 +8,19 @@ URLS = {
     }
 }
 
-# class Site(models.Model):
-#     name = models.CharField(max_length=100)
-#     edit_url = models.CharField(max_length=200)
-#     view_url = models.CharField(max_length=200)
-#     ga_table = models.CharField(max_length=50)
-#     dma = models.CharField(max_length=100)
+class Site(models.Model):
+    name = models.CharField(max_length=100)
+    edit_url = models.CharField(max_length=200)
+    view_url = models.CharField(max_length=200)
+    ga_table = models.CharField(max_length=50)
+    dma = models.CharField(max_length=100)
 
+
+class Stats(models.Model):
+    timestamp = models.DateTimeField()
+    visits = models.IntegerField(**BN)
+    pageviews = models.IntegerField(**BN)
+    time_on_page = models.IntegerField(**BN)
 
 
 class Article(models.Model):
@@ -22,6 +28,7 @@ class Article(models.Model):
     url = models.URLField()
     headline = models.CharField(max_length=500)
     date = models.DateTimeField()
+    site = models.ForeignKey(Site)
 
     # Relationships
     bylines = models.ManyToManyField('Byline')
@@ -33,17 +40,14 @@ class Article(models.Model):
     raw_category_text = models.CharField(max_length=200, **BN)
     raw_status_text = models.CharField(max_length=200, **BN)
 
-    # Used for day-of-publish analytics stats
-    visits = models.IntegerField(**BN)
-    visits_local = models.IntegerField(**BN)
-    pageviews = models.IntegerField(**BN)
-    time_on_page = models.IntegerField(**BN)
-
-    # all_ fields used for overall analytics stats
-    all_visits = models.IntegerField(**BN)
-    all_visits_local = models.IntegerField(**BN)
-    all_pageviews = models.IntegerField(**BN)
-    all_time_on_page = models.IntegerField(**BN)
+    stats_day = models.OneToOneField(Stats,
+        related_name='stats_day', **BN)
+    stats_day_local = models.OneToOneField(Stats,
+        related_name='stats_day_local', **BN)
+    stats_total = models.OneToOneField(Stats,
+        related_name='stats_total', **BN)
+    stats_total_local = models.OneToOneField(Stats,
+        related_name='stats_total_local', **BN)
 
     # Tracking
     record_updated = models.DateTimeField(**BN)
@@ -52,10 +56,10 @@ class Article(models.Model):
         return self.headline
 
     def view_url(self):
-        return URLS['ocr']['view'] % self.id
+        return self.site.view_url % self.id
 
     def edit_url(self):
-        return URLS['ocr']['edit'] % self.id
+        return self.site.edit_url % self.id
 
 
 class Category(models.Model):
@@ -65,6 +69,7 @@ class Category(models.Model):
         return self.name
 
 class Byline(models.Model):
+    id = models.IntegerField(primary_key=True)
     first_name = models.CharField(max_length=500)
     last_name = models.CharField(max_length=500)
     editor = models.ManyToManyField('Byline')

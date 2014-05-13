@@ -16,3 +16,7 @@ def percent(s):
 		return "%s%%" % int(round(s, 0))
 	except:
 		return s
+
+@register.filter('ratio')
+def ratio(a, b):
+	return float(a) / float(b) * 100

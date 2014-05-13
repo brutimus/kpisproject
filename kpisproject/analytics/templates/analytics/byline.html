@@ -1,6 +1,6 @@
 {% extends "analytics/base.html" %}
 {% load humanize %}
-{% load sec num macro %}
+{% load sec num macro mathfilters %}
 {% loadmacros "analytics/macros.html" %}
 
 {% block title %}{{ byline.first_name }} {{ byline.last_name }}{% endblock %}
@@ -29,23 +29,37 @@
                 </div>
             </div> -->
             <div class="col-xs-4 col-sm-3 big-stat">
-                {% usemacro four_up_well totals.averages_total.avg_t_v|intcomma|or:"---" totals.averages_total.r_avg_t_v totals.averages_day.avg_v|intcomma|or:"---" totals.averages_day.r_avg_v label="Avg Visits" %}
+                {% usemacro four_up_well
+                    totals.total.avg_v|floatformat:0|intcomma|or:"---"
+                    ratios.total.avg_v|mul:100|percent|or:"---"
+                    totals.day.avg_v|floatformat:0|intcomma|or:"---"
+                    ratios.day.avg_v|mul:100|percent|or:"---"
+                    label="Avg Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                {% usemacro four_up_well totals.averages_total.avg_p_t_lv|percent|or:"---" totals.averages_total.r_avg_p_t_lv totals.averages_day.avg_p_lv|percent|or:"---" totals.averages_day.r_avg_p_lv label="% Local Visits" %}
+                {% usemacro four_up_well
+                    ratios.total_local.avg_v|mul:100|percent|or:"---"
+                    ratios.total_local.r_avg_v|mul:100|percent|or:"---"
+                    ratios.day_local.avg_v|mul:100|percent|or:"---"
+                    ratios.day_local.r_avg_v|mul:100|percent|or:"---"
+                    label="% Local Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                {% usemacro four_up_well totals.averages_total.avg_t_pv|intcomma|or:"---" totals.averages_total.r_avg_t_pv totals.averages_day.avg_pv|intcomma|or:"---" totals.averages_day.r_avg_pv label="Avg Views" %}
+                {% usemacro four_up_well
+                    totals.total.avg_pv|floatformat:0|intcomma|or:"---"
+                    ratios.total.avg_pv|mul:100|percent|or:"---"
+                    totals.day.avg_pv|floatformat:0|intcomma|or:"---"
+                    ratios.day.avg_pv|mul:100|percent|or:"---"
+                    label="Avg Views" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
-                {% usemacro four_up_well totals.averages_total.avg_t_top|floatformat:"0"|formatSeconds|or:"---" totals.averages_total.r_avg_t_top totals.averages_day.avg_top|floatformat:"0"|formatSeconds|or:"---" totals.averages_day.r_avg_top label="Avg Time on Page" %}
+                {% usemacro four_up_well
+                totals.total.avg_top|floatformat:"0"|formatSeconds|or:"---"
+                ratios.total.avg_top|mul:100|percent|or:"---"
+                totals.day.avg_top|floatformat:"0"|formatSeconds|or:"---"
+                ratios.day.avg_top|mul:100|percent|or:"---"
+                label="Avg Time on Page" %}
             </div>
-            <!-- <div class="col-xs-4 col-sm-3 big-stat">
-                {% usemacro four_up_well totals.t_v|intcomma|or:"---" totals.r_t_v totals.v|intcomma|or:"---" totals.r_v label="Visits" big=1 %}
-            </div>
-            <div class="col-xs-4 col-sm-3 big-stat">
-                {% usemacro four_up_well totals.t_pv|intcomma|or:"---" totals.r_t_pv totals.pv|intcomma|or:"---" totals.r_pv label="Views" big=1 %}
-            </div> -->
         </div>
         <div class="row">
             <div class="col-xs-12" id="calendar"></div>
@@ -100,9 +114,9 @@
                 <td>Past {{ v.delta }} days</td>
                 <td class="num">{{ v.sums.count|intcomma|or:"---" }}</td>
                 <td class="num">{{ v.sums.t_v|intcomma|or:"---" }}</td>
-                <td class="num">{{ v.averages_day.avg_p_lv|floatformat:0|or:"---" }}%</td>
+                <td class="num">{{ v.day_local.avg_v|div:v.day.avg_v|mul:100|percent|or:"---" }}</td>
                 <td class="num">{{ v.sums.t_pv|intcomma|or:"---" }}</td>
-                <td class="num">{{ v.averages_total.avg_t_top|formatSeconds|or:"---" }}</td>
+                <td class="num">{{ v.total.avg_top|formatSeconds|or:"---" }}</td>
             </tr>
             {% endfor %}
         </table>
