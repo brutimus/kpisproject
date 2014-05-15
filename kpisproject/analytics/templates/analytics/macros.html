@@ -1,16 +1,16 @@
-{% load macro num %}
+{% load macro num mathfilters %}
 
 
 {% macro four_up_row icon tt1 tt2 d1 d2 big=0 %}
     <tr class="two-up">
         <td>
             <span class="glyphicon glyphicon-{{ icon }} tt" data-toggle="tooltip" title="{{ tt1 }}"></span>
-            <span class="num{% if big == 1 %} big{% endif %}">{{ d1 }}</span>
+            <span class="num{% if big == 1 %} big{% endif %}">{{ d1|or:"---" }}</span>
         </td>
         <td class="{% if d2 < 0 %}negative{% else %}positive{% endif %}">
             {% if d2 != 999 %}
             <span class="glyphicon chevron"></span>
-            <span class="percent tt" data-toggle="tooltip" title="{{ tt2 }}">{{ d2 }}</span>
+            <span class="percent tt" data-toggle="tooltip" title="{{ tt2 }}">{{ d2|mul:100|percent|or:"---" }}</span>
             {% endif %}
         </td>
     </tr>

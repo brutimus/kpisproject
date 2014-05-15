@@ -11,9 +11,9 @@ def num_or(s, sub):
         return s
 
 @register.filter('percent')
-def percent(s):
+def percent(s, places=0):
 	try:
-		return "%s%%" % int(round(s, 0))
+		return "%s%%" % int(round(s, places))
 	except:
 		return s
 

@@ -1,6 +1,7 @@
 {% extends "analytics/base.html" %}
 {% load humanize %}
-{% load sec num %}
+{% load sec num macro mathfilters %}
+{% loadmacros "analytics/macros.html" %}
 
 {% block title %}{{ today|date:"M j, Y" }} daily analysis{% endblock %}
 {% block pagenav %}
@@ -30,71 +31,59 @@
         <div class="row">
         <div class="col-xs-4 col-sm-3 big-stat">
           <div class="well big-stat-box">
-              <h1 class="num">{{ articles|length }}</h1>
-              <span class="text-muted">Total Stories</span>
-              <!-- <canvas id="total-stories-gauge" class="gauge"></canvas> -->
+              <h1 class="num">{{ totals.sums.count }}</h1>
+              <span class="text-muted well-label">Total Stories</span>
           </div>
         </div>
-        <script>
-        // $(document).ready(function() {
-            
-        
-        //     var opts = {
-        //       lines: 12, // The number of lines to draw
-        //       angle: 0, // The length of each line
-        //       lineWidth: 0.1, // The line thickness
-        //       pointer: {
-        //         length: 0.9, // The radius of the inner circle
-        //         strokeWidth: 0, // The rotation offset
-        //         color: '#333333' // Fill color
-        //       },
-        //       limitMax: 'false',   // If true, the pointer will not go past the end of the gauge
-        //       colorStart: '#41759A',   // Colors
-        //       colorStop: '#41759A',    // just experiment with them
-        //       strokeColor: '#E0E0E0',   // to see which ones work best for you
-        //       generateGradient: true
-        //     };
-        //     var gauge = new Gauge($('#total-stories-gauge').get(0)).setOptions(opts); // create sexy gauge!
-        //     gauge.maxValue = 200; // set max gauge value
-        //     gauge.animationSpeed = 10; // set animation speed (32 is default value)
-        //     gauge.set({{ articles|length }}); // set actual value
-        // });
-        </script>
         <div class="col-xs-4 col-sm-3 big-stat">
             <div class="well big-stat-box">
           <h1 class="num">{{ unused|length }}</h1>
-          <span class="text-muted">Unvisited Stories</span>
+          <span class="text-muted well-label">Unvisited Stories</span>
           </div>
         </div>
         <div class="col-xs-4 col-sm-3 big-stat">
         <div class="well big-stat-box">
           <h1 class="num">{{ sections.count }}</h1>
-          <span class="text-muted">Sections</span>
+          <span class="text-muted well-label">Sections</span>
           </div>
         </div>
         <div class="col-xs-4 col-sm-3 big-stat">
         <div class="well big-stat-box">
           <h1 class="num">{{ bylines.count }}</h1>
-          <span class="text-muted">Bylines</span>
+          <span class="text-muted well-label">Bylines</span>
           </div>
         </div>
         <div class="col-xs-4 col-sm-3 big-stat">
-        <div class="well big-stat-box">
-          <h1 class="big num">{{ totals.v|intcomma|or:"---" }}</h1>
-          <span class="text-muted">Visits</span>
-          </div>
+            {% usemacro four_up_well
+                totals.total.v|intcomma|or:"---"
+                999
+                totals.day.v|intcomma|or:"---"
+                999
+                label="Visits" %}
         </div>
         <div class="col-xs-4 col-sm-3 big-stat">
-        <div class="well big-stat-box">
-          <h1 class="big num">{{ totals.pv|intcomma|or:"---" }}</h1>
-          <span class="text-muted">Views</span>
-          </div>
+            {% usemacro four_up_well
+                totals.total_local.v|mul:100|div:totals.total.v|percent|or:"---"
+                999
+                totals.day_local.v|mul:100|div:totals.day.v|percent|or:"---"
+                999
+                label="Local Visits" %}
         </div>
         <div class="col-xs-4 col-sm-3 big-stat">
-        <div class="well big-stat-box">
-          <h1 class="num">{{ totals.time_on_page__avg|floatformat:"0"|formatSeconds|or:"---" }}</h1>
-          <span class="text-muted">Avg Time on Page</span>
-          </div>
+            {% usemacro four_up_well
+                totals.total.pv|intcomma|or:"---"
+                999
+                totals.day.pv|intcomma|or:"---"
+                999
+                label="Views" %}
+        </div>
+        <div class="col-xs-4 col-sm-3 big-stat">
+            {% usemacro four_up_well
+                totals.total.avg_top|floatformat:"0"|formatSeconds|or:"---"
+                999
+                totals.day.avg_top|floatformat:"0"|formatSeconds|or:"---"
+                999
+                label="Avg Time on Page" %}
         </div>
         </div>
     </div>
@@ -108,32 +97,41 @@
                 <th class="icon sort" name="count">#</th>
                 <th></th>
                 <th></th>
-                <th class="num sort" name="visits">Visits <small class="text-muted">(%)</small></th>
-                <th class="num sort" name="pageviews">Views <small class="text-muted">(%)</small></th>
+                <th class="num sort" name="visits">Visits</th>
+                <th class="num sort buddy" name="p_visits"><small class="text-muted tt" data-toggle="tooltip" title="Percentage of the day's visits">(%)</small></th>
+                <th class="num sort buddy" name="local"><small class="text-muted"><span class="glyphicon glyphicon-map-marker tt" data-toggle="tooltip" title="Percentage of the views that came from the local DMA"></span></small></th>
+                <th class="num sort" name="pageviews">Views</th>
+                <th class="num sort buddy" name="pageviews"><small class="text-muted tt" data-toggle="tooltip" title="Percentage of the day's views">(%)</small></th>
                 <th class="num sort" name="time"><span class="glyphicon glyphicon-time"></span> Visit</th>
             </tr>
         </thead>
-        {% for byline, group in bylines.list.items %}
+        {% for group in bylines.list %}
         
         <tbody>
             <tr class="accordion">
-                <td class="icon"><a href="/bylines/{{ byline.id }}/"><span class="glyphicon glyphicon-align-left"></span></a></td>
-                <td class="icon" name="count"><span class="badge">{{ group.sums.count }}</span></td>
-                <td class="handle" data-toggle="collapse" href="#collapse{{ byline|slugify }}">{{ byline }}</td>
+                <td class="icon"><a href="/bylines/{{ group.byline.id }}/"><span class="glyphicon glyphicon-align-left"></span></a></td>
+                <td class="icon" name="count"><span class="badge">{{ group.totals.count }}</span></td>
+                <td class="handle" data-toggle="collapse" href="#collapse{{ byline|slugify }}">{{ group.byline }}</td>
                 <td></td>
-                <td class="num" name="visits">{{ group.sums.v|intcomma|or:"---" }} <small class="text-muted">({{ group.sums.p_t_v|floatformat:2|or:"---" }})</small></td>
-                <td class="num" name="pageviews">{{ group.sums.pv|intcomma|or:"---" }} <small class="text-muted">({{ group.sums.p_t_pv|floatformat:2|or:"---" }})</small></td>
-                <td class="num" name="time">{{ group.sums.top|formatSeconds|or:"---" }}</td>
+                <td class="num" name="visits">{{ group.totals.day.v|intcomma|or:"---" }}</td>
+                <td class="num buddy" name="p_visits"><small class="text-muted">({{ group.totals.day.v|div:totals.day.v|mul:100|floatformat:1|or:"---" }})</small></td>
+                <td class="num buddy" name="local"><small class="text-muted">{% if group.totals.day.v %}{{ group.totals.day_local.v|div:group.totals.day.v|mul:100|percent|or:"---" }}{% else %}---{% endif %}</small></td>
+                <td class="num" name="pageviews">{{ group.totals.day.pv|intcomma|or:"---" }}</td>
+                <td class="num buddy" name="p_pageviews"><small class="text-muted">({{ group.totals.day.pv|div:totals.day.pv|mul:100|floatformat:1|or:"---" }})</small></td>
+                <td class="num" name="time">{{ group.totals.day.avg_top|formatSeconds|or:"---" }}</td>
             </tr>
-            {% for article in group.group|dictsortreversed:"visits" %}
+            {% for article in group.group %}
             <tr{% if article.status.name == "Don't Display" %} class="danger"{% endif %}>
                 <td class="icon"><a href="{{ article.edit_url }}"><span class="glyphicon glyphicon-pencil"></span></a></td>
                 <td class="icon"><a href="{{ article.view_url }}"><span class="glyphicon glyphicon-globe"></span></a></td>
                 <td>{{ article.headline }}</td>
                 <td>{{ article.category.name }}</td>
-                <td class="num">{{ article.visits|intcomma|or:"---" }} <small class="text-muted">({{ article.p_t_v|floatformat:2|or:"---" }})</small></td>
-                <td class="num">{{ article.pageviews|intcomma|or:"---" }} <small class="text-muted">({{ article.p_t_pv|floatformat:2|or:"---" }})</small></td>
-                <td class="num">{{ article.time_on_page|formatSeconds|or:"---" }}</td>
+                <td class="num">{{ article.stats_day.visits|intcomma|or:"---" }}</td>
+                <td class="num buddy"><small class="text-muted">({{ article.stats_day.visits|div:totals.day.v|mul:100|floatformat:1|or:"---" }})</small></td>
+                <td class="num buddy"><small class="text-muted">{% if article.stats_day %}{{ article.stats_day_local.visits|div:article.stats_day.visits|mul:100|percent|or:"---" }}{% else %}---{% endif %}</small></td>
+                <td class="num">{{ article.stats_day.pageviews|intcomma|or:"---" }}</td>
+                <td class="num buddy"><small class="text-muted">({{ article.stats_day.pageviews|div:totals.day.pv|mul:100|floatformat:1|or:"---" }})</small></td>
+                <td class="num">{{ article.stats_day.time_on_page|formatSeconds|or:"---" }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -150,33 +148,42 @@
                 <th class="icon sort" name="count">#</th>
                 <th></th>
                 <th></th>
-                <th class="num sort" name="visits">Visits <small class="text-muted">(%)</small></th>
-                <th class="num sort" name="pageviews">Views <small class="text-muted">(%)</small></th>
+                <th class="num sort" name="visits">Visits</th>
+                <th class="num sort buddy" name="p_visits"><small class="text-muted tt" data-toggle="tooltip" title="Percentage of the day's visits">(%)</small></th>
+                <th class="num sort buddy" name="local"><small class="text-muted"><span class="glyphicon glyphicon-map-marker tt" data-toggle="tooltip" title="Percentage of the views that came from the local DMA"></span></small></th>
+                <th class="num sort" name="pageviews">Views</th>
+                <th class="num sort buddy" name="pageviews"><small class="text-muted tt" data-toggle="tooltip" title="Percentage of the day's views">(%)</small></th>
                 <th class="num sort" name="time"><span class="glyphicon glyphicon-time"></span> Visit</th>
             </tr>
         </thead>
-        {% for category, group in sections.list.items %}
+        {% for group in sections.list %}
         <tbody>
 
             <tr class="accordion">
                 <td class="icon"></td>
-                <td class="icon" name="count"><span class="badge">{{ group.sums.count }}</span></td>
-                <td class="handle" data-toggle="collapse" href="#collapse{{ category|slugify }}">{{ category }}</td>
+                <td class="icon" name="count"><span class="badge">{{ group.totals.count }}</span></td>
+                <td class="handle" data-toggle="collapse" href="#collapse{{ category|slugify }}">{{ group.category.name }}</td>
                 <td></td>
-                <td class="num" name="visits">{{ group.sums.v|intcomma|or:"---" }} <small class="text-muted">({{ group.sums.p_t_v|floatformat:2|or:"---" }})</small></td>
-                <td class="num" name="pageviews">{{ group.sums.pv|intcomma|or:"---" }} <small class="text-muted">({{ group.sums.p_t_pv|floatformat:2|or:"---" }})</small></td>
-                <td class="num" name="time">{{ group.sums.top|formatSeconds|or:"---" }}</td>
+                <td class="num" name="visits">{{ group.totals.day.v|intcomma|or:"---" }}</td>
+                <td class="num buddy" name="p_visits"><small class="text-muted">({{ group.totals.day.v|div:totals.day.v|mul:100|floatformat:1|or:"---" }})</small></td>
+                <td class="num buddy" name="local"><small class="text-muted">{% if group.totals.day.v %}{{ group.totals.day_local.v|div:group.totals.day.v|mul:100|percent|or:"---" }}{% else %}---{% endif %}</small></td>
+                <td class="num" name="pageviews">{{ group.totals.day.pv|intcomma|or:"---" }}</td>
+                <td class="num buddy" name="p_pageviews"><small class="text-muted">({{ group.totals.day.pv|div:totals.day.pv|mul:100|floatformat:1|or:"---" }})</small></td>
+                <td class="num" name="time">{{ group.totals.day.avg_top|formatSeconds|or:"---" }}</td>
             </tr>
 
-            {% for article in group.group|dictsortreversed:"visits" %}
+            {% for article in group.group %}
             <tr{% if article.status.name == "Don't Display" %} class="danger"{% endif %}>
                 <td class="icon"><a href="{{ article.edit_url }}"><span class="glyphicon glyphicon-pencil"></span></a></td>
                 <td class="icon"><a href="{{ article.view_url }}"><span class="glyphicon glyphicon-globe"></span></a></td>
                 <td>{{ article.headline }}</td>
                 <td>{{ article.byline.name }}</td>
-                <td class="num">{{ article.visits|intcomma|or:"---" }} <small class="text-muted">({{ article.p_t_v|floatformat:2|or:"---" }})</small></td>
-                <td class="num">{{ article.pageviews|intcomma|or:"---" }} <small class="text-muted">({{ article.p_t_pv|floatformat:2|or:"---" }})</small></td>
-                <td class="num">{{ article.time_on_page|formatSeconds|or:"---" }}</td>
+                <td class="num">{{ article.stats_day.visits|intcomma|or:"---" }}</td>
+                <td class="num buddy"><small class="text-muted">({{ article.stats_day.visits|div:totals.day.v|mul:100|floatformat:1|or:"---" }})</small></td>
+                <td class="num buddy"><small class="text-muted">{% if article.stats_day %}{{ article.stats_day_local.visits|div:article.stats_day.visits|mul:100|percent|or:"---" }}{% else %}---{% endif %}</small></td>
+                <td class="num">{{ article.stats_day.pageviews|intcomma|or:"---" }}</td>
+                <td class="num buddy"><small class="text-muted">({{ article.stats_day.pageviews|div:totals.day.pv|mul:100|floatformat:1|or:"---" }})</small></td>
+                <td class="num">{{ article.stats_day.time_on_page|formatSeconds|or:"---" }}</td>
             </tr>
             {% endfor %}
 

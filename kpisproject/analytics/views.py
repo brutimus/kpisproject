@@ -1,4 +1,4 @@
-import json, datetime, time, re
+import json, datetime, time, re, operator
 from operator import itemgetter, methodcaller, attrgetter
 from itertools import groupby
 
@@ -12,20 +12,13 @@ from django.views.generic.dates import DayArchiveView
 from django.views.generic.list import ListView
 from kpisproject.analytics.models import Article, Byline, Category, Status
 from kpisproject.analytics import sql
+from kpisproject.analytics import process
+
 
 base.tag_re = (re.compile('(%s.*?%s|%s.*?%s|%s.*?%s)' %
-          (re.escape(base.BLOCK_TAG_START), re.escape(base.BLOCK_TAG_END),
-           re.escape(base.VARIABLE_TAG_START), re.escape(base.VARIABLE_TAG_END),
-           re.escape(base.COMMENT_TAG_START), re.escape(base.COMMENT_TAG_END)), re.DOTALL))
-
-
-def dictfetchall(cursor):
-    "Returns all rows from a cursor as a dict"
-    desc = cursor.description
-    return [
-        dict(zip([col[0] for col in desc], row))
-        for row in cursor.fetchall()
-    ]
+  (re.escape(base.BLOCK_TAG_START), re.escape(base.BLOCK_TAG_END),
+   re.escape(base.VARIABLE_TAG_START), re.escape(base.VARIABLE_TAG_END),
+   re.escape(base.COMMENT_TAG_START), re.escape(base.COMMENT_TAG_END)), re.DOTALL))
 
 
 @cache_page(60 * 15)
@@ -39,33 +32,12 @@ def story_overview(request):
         'where': '',
         'group_by': ''
     })
-    totals = dictfetchall(cursor)
-
-    avg_sql = """
-    SELECT
-        SUM(visits) / COUNT(*) AS avg_v,
-        SUM(pageviews) / COUNT(*) AS avg_pv,
-        SUM(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / SUM(visits) AS avg_top
-    FROM
-        analytics_article
-    LEFT OUTER JOIN
-        analytics_stats ON (analytics_article.%s = analytics_stats.id)
-    WHERE
-        visits IS NOT NULL
-    """
-
-    cursor.execute(avg_sql % 'stats_day_id')
-    averages_day = dictfetchall(cursor)[0]
-
-    cursor.execute(avg_sql % 'stats_day_local_id')
-    averages_day_local = dictfetchall(cursor)[0]
-
-    cursor.execute(avg_sql % 'stats_total_id')
-    averages_total = dictfetchall(cursor)[0]
-    
-    cursor.execute(avg_sql % 'stats_total_local_id')
-    averages_total_local = dictfetchall(cursor)[0]
-    # print averages_day, averages_total, averages_day_local, averages_total_local
+    totals = process.dictfetchall(cursor)
+    (
+        averages_day,
+        averages_day_local,
+        averages_total,
+        averages_total_local) = process.get_averages()
 
     # Daily Rollup
     cursor.execute(sql.sums_query % {
@@ -74,7 +46,7 @@ def story_overview(request):
         'where': '',
         'group_by': "GROUP BY ts"
     })
-    by_day = dictfetchall(cursor)
+    by_day = process.dictfetchall(cursor)
 
     # Weekly Rollup
     cursor.execute(sql.sums_query % {
@@ -87,7 +59,7 @@ def story_overview(request):
             week_start,
             week_end"""
     })
-    by_week = dictfetchall(cursor)
+    by_week = process.dictfetchall(cursor)
 
     # Monthly Rollup
     cursor.execute(sql.sums_query % {
@@ -96,7 +68,7 @@ def story_overview(request):
         'where': '',
         'group_by': "GROUP BY month"
     })
-    by_month = dictfetchall(cursor)
+    by_month = process.dictfetchall(cursor)
 
     return render_to_response('analytics/story_overview.html', {
         'totals': {
@@ -117,43 +89,8 @@ def story_overview(request):
 
 @cache_page(60 * 15)
 def story_day(request, year, month, day):
-
+    cursor = connection.cursor()
     today = datetime.date(int(year), int(month), int(day))
-    s = lambda z: lambda x, y: (x or 0) + (getattr(y, z) or 0)
-    field_fns = {
-        'count': lambda x, y: x + 1,
-        'v': s('visits'),
-        'pv': s('pageviews'),
-        't_v': s('all_visits'),
-        't_pv': s('all_pageviews'),
-        'ea': s('expanded_avg'),
-        't_ea': s('expanded_t_avg')
-    }
-
-    base_article_list = Article.objects.filter(
-        date__year=year,
-        date__month=month,
-        date__day=day
-    ).extra(
-        select={
-            # 'count': 'count(*)',
-            # # Day of
-            # 'sigma_v': 'sum(visits)',
-            # 'sigma_pv': 'sum(pageviews)',
-            # 'sigma_top': 'sum(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / sum(visits)',
-            # # Overall
-            # 'sigma_t_v': 'sum(all_visits)',
-            # 'sigma_t_pv': 'sum(all_pageviews)',
-            # 'sigma_t_top': 'sum(COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)) / sum(all_visits)',
-            # old
-            'expanded_avg': 'COALESCE(visits, 0) * COALESCE(time_on_page, 0)',
-            'expanded_t_avg': 'COALESCE(all_visits, 0) * COALESCE(all_time_on_page, 0)'
-        }
-    ).select_related(
-        'status', 'category'
-    ).prefetch_related(
-        'bylines'
-    ).order_by('date')
 
     base_byline_list = Byline.objects.filter(
         article__date__year=year,
@@ -161,44 +98,96 @@ def story_day(request, year, month, day):
         article__date__day=day
     ).order_by('first_name', 'last_name').distinct()
 
-    sigma_v = reduce(field_fns['v'], base_article_list, 0)
-    sigma_pv = reduce(field_fns['pv'], base_article_list, 0)
-    sigma_top = (
-        reduce(field_fns['ea'], base_article_list, 0) / sigma_v
-    ) if sigma_v > 0 else None
-    sigma_t_v = reduce(field_fns['t_v'], base_article_list, 0)
-    sigma_t_pv = reduce(field_fns['t_pv'], base_article_list, 0)
-    sigma_t_top = (
-        reduce(field_fns['t_ea'], base_article_list, 0) / sigma_t_v
-    ) if sigma_t_v > 0 else None
+    cursor.execute(sql.sums_query % {
+        'select': '',
+        'from': '',
+        'where': 'WHERE date BETWEEN %s AND %s',
+        'group_by': ''
+    }, [today, today + datetime.timedelta(days=1)])
+    sums = process.dictfetchall(cursor)[0]
+
+    (
+        site_averages_day,
+        site_averages_day_local,
+        site_averages_total,
+        site_averages_total_local) = process.get_averages()
+
+    (
+        averages_day,
+        averages_day_local,
+        averages_total,
+        averages_total_local) = process.get_averages(date=today)
+
+    (
+        byline_averages_day,
+        byline_averages_day_local,
+        byline_averages_total,
+        byline_averages_total_local) = process.get_averages(
+            date=today,
+            byline_group=True)
+
+    dictify = lambda y: {x['byline_id']: x for x in y}
+
+    byline_averages_day = dictify(byline_averages_day)
+    byline_averages_day_local = dictify(byline_averages_day_local)
+    byline_averages_total = dictify(byline_averages_total)
+    byline_averages_total_local = dictify(byline_averages_total_local)
+
+    base_article_list = Article.objects.filter(
+        date__year=year,
+        date__month=month,
+        date__day=day
+    ).select_related(
+        'status',
+        'category',
+        'stats_day',
+        'stats_day_local',
+        'stats_total',
+        'stats_total_local',
+        'site'
+    ).prefetch_related(
+        'bylines'
+    ).order_by('date')
+
+
+    def summertime(data, field):
+        s = lambda y:reduce(
+            operator.add,
+            map(
+                operator.attrgetter('%s.%s' % (field, y)),
+                filter(operator.attrgetter(field), data)),
+            0)
+        avg = lambda x:(s(x) / len(filter(
+            operator.attrgetter(field),
+            data))) if len(filter(
+                operator.attrgetter(field),
+                data)) > 0 else 0
+        return {
+            'count': len(data),
+            'v': s('visits'),
+            'avg_v': avg('visits'),
+            'pv': s('pageviews'),
+            'avg_pv': avg('pageviews'),
+            'avg_top': (reduce(
+                operator.add,
+                map(
+                    lambda x:reduce(
+                        operator.mul,
+                        operator.attrgetter(
+                            '%s.visits' % field,
+                            '%s.time_on_page' % field)(x)),
+                    filter(
+                        operator.attrgetter(field),
+                        data)),
+                0) / s('visits')) if s('visits') > 0 else 0
+        }
+
 
     # PROCESS BYLINES
     byline_context = {
         'count': len(base_byline_list),
         'list': []
     }
-
-    
-    def summarize_groups(data, fields=field_fns):
-        results = {}
-        for key, group in data.items():
-            results[key] = {'sums': {}, 'group': group}
-            for name, fn in fields.items():
-                results[key]['sums'][name] = reduce(fn, group, 0)
-        return results
-
-    def ammend_sums(data):
-        for k, v in data.items():
-            v['sums']['top'] = (v['sums']['ea'] / v['sums']['v']) if v['sums']['v'] else 0
-            v['sums']['t_top'] = (v['sums']['t_ea'] / v['sums']['t_v']) if v['sums']['t_v'] else 0
-            v['sums']['p_t_v'] = float(v['sums']['v']) / float(sigma_v) * 100
-            v['sums']['p_t_pv'] = float(v['sums']['pv']) / float(sigma_pv) * 100
-            for a in v['group']:
-                a.p_t_v = float(a.visits or 0) / float(sigma_v) * 100
-                a.p_t_pv = float(a.pageviews or 0) / float(sigma_pv) * 100
-        return data
-
-
 
     # Byline(): [Article(), ... ]
     byline_groups = {}
@@ -207,9 +196,35 @@ def story_day(request, year, month, day):
             byline_groups[byline] = byline_groups.get(byline, [])
             byline_groups[byline].append(article)
 
-    byline_sums = summarize_groups(byline_groups, field_fns)
-    ammend_sums(byline_sums)
-    byline_context['list'] = byline_sums
+    # byline_sums = summarize_groups(byline_groups)
+    byline_sums = []
+    for key, articles in byline_groups.items():
+        byline_sums.append({
+            'byline': key,
+            'totals': {
+                'count': len(articles),
+                'day': summertime(articles, 'stats_day'),
+                'day_local': summertime(articles, 'stats_day_local'),
+                'total': summertime(articles, 'stats_total'),
+                'total_local': summertime(articles, 'stats_total_local'),
+            },
+            'ratios': process.calc_ratios(
+                byline_averages_day.get(key.id),
+                byline_averages_day_local.get(key.id),
+                site_averages_day,
+                site_averages_day_local,
+                byline_averages_total.get(key.id),
+                byline_averages_total_local.get(key.id),
+                site_averages_total,
+                site_averages_total_local
+            ),
+            'group': articles
+        })
+    # ammend_sums(byline_sums)
+    byline_context['list'] = sorted(
+        byline_sums,
+        key=lambda x:x['totals']['day'].get('v', 0),
+        reverse=True)
 
     # PROCESS SECTIONS
     section_context = {
@@ -221,22 +236,46 @@ def story_day(request, year, month, day):
         key: list(group) for key, group in
         groupby(sorted(base_article_list, key=key), key=key)}
     section_context['count'] = len(category_groups)
-
-
-    category_sums = summarize_groups(category_groups, field_fns)
-    ammend_sums(category_sums)
-    section_context['list'] = category_sums
+    section_sums = []
+    for key, articles in category_groups.items():
+        section_sums.append({
+            'category': articles[0].category,
+            'totals': {
+                'count': len(articles),
+                'day': summertime(articles, 'stats_day'),
+                'day_local': summertime(articles, 'stats_day_local'),
+                'total': summertime(articles, 'stats_total'),
+                'total_local': summertime(articles, 'stats_total_local'),
+            },
+            # 'ratios': process.calc_ratios(
+            #     byline_averages_day.get(key.id),
+            #     byline_averages_day_local.get(key.id),
+            #     site_averages_day,
+            #     site_averages_day_local,
+            #     byline_averages_total.get(key.id),
+            #     byline_averages_total_local.get(key.id),
+            #     site_averages_total,
+            #     site_averages_total_local
+            # ),
+            'group': articles
+        })
+    section_context['list'] = sorted(
+        section_sums,
+        key=lambda x:x['totals']['day'].get('v', 0),
+        reverse=True)
 
     context = {
         'totals': {
-            'v': sigma_v,
-            'pv': sigma_pv,
-            'time_on_page__avg': sigma_top
+            'sums': sums,
+            'day': averages_day,
+            'day_local': averages_day_local,
+            'total': averages_total,
+            'total_local': averages_total_local
         },
         'articles': base_article_list,
         'bylines': byline_context,
         'sections': section_context,
-        'unused': base_article_list.filter(visits__isnull=True),
+        'unused': base_article_list.filter(stats_day__isnull=True),
         'yesterday': today - datetime.timedelta(days=1),
         'today': today,
         'tomorrow': today + datetime.timedelta(days=1)
@@ -253,6 +292,9 @@ def byline_overview(request):
 def byline_detail(request, byline_id):
     date_min = datetime.date(2000,1,1)
     cursor = connection.cursor()
+    base_article_list = Article.objects.filter(
+        bylines__id=byline_id
+    )
 
     cursor.execute(sql.sums_query % {
         'select': '',
@@ -260,65 +302,19 @@ def byline_detail(request, byline_id):
         'where': '',
         'group_by': ''
     })
-    site_totals = dictfetchall(cursor)[0]
-    site_avg_sql = """
-    SELECT
-        SUM(visits) / COUNT(*) AS avg_v,
-        SUM(pageviews) / COUNT(*) AS avg_pv,
-        SUM(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / SUM(visits) AS avg_top
-    FROM
-        analytics_article
-    LEFT OUTER JOIN
-        analytics_stats ON (analytics_article.%s = analytics_stats.id)
-    WHERE
-        visits IS NOT NULL
-    """
+    site_totals = process.dictfetchall(cursor)[0]
 
-    cursor.execute(site_avg_sql % 'stats_day_id')
-    site_averages_day = dictfetchall(cursor)[0]
+    (
+        site_averages_day,
+        site_averages_day_local,
+        site_averages_total,
+        site_averages_total_local) = process.get_averages()
 
-    cursor.execute(site_avg_sql % 'stats_day_local_id')
-    site_averages_day_local = dictfetchall(cursor)[0]
-
-    cursor.execute(site_avg_sql % 'stats_total_id')
-    site_averages_total = dictfetchall(cursor)[0]
-    
-    cursor.execute(site_avg_sql % 'stats_total_local_id')
-    site_averages_total_local = dictfetchall(cursor)[0]
-
-    avg_sql = """
-    SELECT
-        SUM(visits) / COUNT(*) AS avg_v,
-        SUM(pageviews) / COUNT(*) AS avg_pv,
-        SUM(COALESCE(visits, 0) * COALESCE(time_on_page, 0)) / SUM(visits) AS avg_top
-    FROM
-        analytics_article,
-        analytics_article_bylines,
-        analytics_stats
-    WHERE
-        analytics_article.id = analytics_article_bylines.article_id
-        AND analytics_article_bylines.byline_id = %%s
-        AND analytics_article.%s = analytics_stats.id
-        AND visits IS NOT NULL
-        AND date >= TIMESTAMP %%s;
-    """
-
-    cursor.execute(avg_sql % 'stats_day_id', [byline_id, date_min])
-    averages_day = dictfetchall(cursor)[0]
-
-    cursor.execute(avg_sql % 'stats_day_local_id', [byline_id, date_min])
-    averages_day_local = dictfetchall(cursor)[0]
-
-    cursor.execute(avg_sql % 'stats_total_id', [byline_id, date_min])
-    averages_total = dictfetchall(cursor)[0]
-    
-    cursor.execute(avg_sql % 'stats_total_local_id', [byline_id, date_min])
-    averages_total_local = dictfetchall(cursor)[0]
-
-
-    base_article_list = Article.objects.filter(
-        bylines__id=byline_id
-    )
+    (
+        averages_day,
+        averages_day_local,
+        averages_total,
+        averages_total_local) = process.get_averages(byline_id=byline_id)
 
     # Sums ##########################################################
     cursor.execute(sql.sums_query % {
@@ -329,7 +325,7 @@ def byline_detail(request, byline_id):
             AND analytics_article_bylines.byline_id = %s""" % int(byline_id),
         'group_by': ''
     })
-    sums = dictfetchall(cursor)[0]
+    sums = process.dictfetchall(cursor)[0]
 
     # Rollups
     rollup_days = (30, 60, 90, 180, 365)
@@ -347,28 +343,24 @@ def byline_detail(request, byline_id):
                     d.strftime('%Y-%m-%d')),
             'group_by': ''
         })
-        sums = dictfetchall(cursor)[0]
+        sums = process.dictfetchall(cursor)[0]
 
-        cursor.execute(avg_sql % 'stats_day_id', [byline_id, d])
-        averages_day = dictfetchall(cursor)[0]
-
-        cursor.execute(avg_sql % 'stats_day_local_id', [byline_id, d])
-        averages_day_local = dictfetchall(cursor)[0]
-
-        cursor.execute(avg_sql % 'stats_total_id', [byline_id, d])
-        averages_total = dictfetchall(cursor)[0]
-        
-        cursor.execute(avg_sql % 'stats_total_local_id', [byline_id, d])
-        averages_total_local = dictfetchall(cursor)[0]
+        (
+            roll_averages_day,
+            roll_averages_day_local,
+            roll_averages_total,
+            roll_averages_total_local) = process.get_averages(
+                byline_id=byline_id,
+                start_date=d)
         
 
         rollups.append({
             'delta': delta,
             'sums': sums,
-            'day': averages_day,
-            'day_local': averages_day_local,
-            'total': averages_total,
-            'total_local': averages_total_local
+            'day': roll_averages_day,
+            'day_local': roll_averages_day_local,
+            'total': roll_averages_total,
+            'total_local': roll_averages_total_local
         })
 
 
@@ -380,7 +372,7 @@ def byline_detail(request, byline_id):
         'where': """WHERE analytics_article_bylines.byline_id = %s""" % int(byline_id),
         'group_by': "GROUP BY ts"
     })
-    by_day = dictfetchall(cursor)
+    by_day = process.dictfetchall(cursor)
 
     # Weekly Rollup
     cursor.execute(sql.sums_query % {
@@ -394,7 +386,7 @@ def byline_detail(request, byline_id):
             week_start,
             week_end"""
     })
-    by_week = dictfetchall(cursor)
+    by_week = process.dictfetchall(cursor)
 
     # Monthly Rollup
     cursor.execute(sql.sums_query % {
@@ -404,63 +396,7 @@ def byline_detail(request, byline_id):
         'where': """WHERE analytics_article_bylines.byline_id = %s""" % int(byline_id),
         'group_by': "GROUP BY month"
     })
-    by_month = dictfetchall(cursor)
-
-    # Process ratios
-    def floatall(d):
-        return {k: float(v) for k, v in d.items()}
-    averages_day = floatall(averages_day)
-    averages_day_local = floatall(averages_day_local)
-    averages_total = floatall(averages_total)
-    averages_total_local = floatall(averages_total_local)
-    site_averages_day = floatall(site_averages_day)
-    site_averages_day_local = floatall(site_averages_day_local)
-    site_averages_total = floatall(site_averages_total)
-    site_averages_total_local = floatall(site_averages_total_local)
-
-    ratios = {
-        'day': {
-            # Compare day to site avg
-            'avg_v': averages_day['avg_v'] / site_averages_day['avg_v'],
-            'avg_pv': averages_day['avg_pv'] / site_averages_day['avg_pv'],
-            'avg_top': averages_day['avg_top'] / site_averages_day['avg_top']},
-        'day_local': {
-            # Compare day local to day (percent local)
-            'avg_v': averages_day_local['avg_v'] / averages_day['avg_v'],
-            'avg_pv': averages_day_local['avg_pv'] / averages_day['avg_pv'],
-            'avg_top': averages_day_local['avg_top'] / averages_day['avg_top'],
-            # Compare byline percent local to site percent local
-            'r_avg_v': (
-                averages_day_local['avg_v'] / averages_day['avg_v']) / (
-                site_averages_day_local['avg_v'] / site_averages_day['avg_v']),
-            'r_avg_pv': (
-                averages_day_local['avg_pv'] / averages_day['avg_pv']) / (
-                site_averages_day_local['avg_pv'] / site_averages_day['avg_pv']),
-            'r_avg_top': (
-                averages_day_local['avg_top'] / averages_day['avg_top']) / (
-                site_averages_day_local['avg_top'] / site_averages_day['avg_top'])},
-        'total': {
-            # Compare total to site total
-            'avg_v': averages_total['avg_v'] / site_averages_total['avg_v'],
-            'avg_pv': averages_total['avg_pv'] / site_averages_total['avg_pv'],
-            'avg_top': averages_total['avg_top'] / site_averages_total['avg_top']},
-        'total_local': {
-            # Compare total local to total (percent local)
-            'avg_v': averages_total_local['avg_v'] / averages_total['avg_v'],
-            'avg_pv': averages_total_local['avg_pv'] / averages_total['avg_pv'],
-            'avg_top': averages_total_local['avg_top'] / averages_total['avg_top'],
-            # Compare byline percent local to site percent local
-            'r_avg_v': (
-                averages_total_local['avg_v'] / averages_total['avg_v']) / (
-                site_averages_total_local['avg_v'] / site_averages_total['avg_v']),
-            'r_avg_pv': (
-                averages_total_local['avg_pv'] / averages_total['avg_pv']) / (
-                site_averages_total_local['avg_pv'] / site_averages_total['avg_pv']),
-            'r_avg_top': (
-                averages_total_local['avg_top'] / averages_total['avg_top']) / (
-                site_averages_total_local['avg_top'] / site_averages_total['avg_top'])},
-    }
-
+    by_month = process.dictfetchall(cursor)
 
     return render_to_response('analytics/byline.html', {
         'byline': Byline.objects.get(id=int(byline_id)),
@@ -486,6 +422,15 @@ def byline_detail(request, byline_id):
             'total': averages_total,
             'total_local': averages_total_local
         },
-        'ratios': ratios,
+        'ratios': process.calc_ratios(
+            averages_day,
+            averages_day_local,
+            site_averages_day,
+            site_averages_day_local,
+            averages_total,
+            averages_total_local,
+            site_averages_total,
+            site_averages_total_local
+        ),
         'rollups': rollups
     })

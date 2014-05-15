@@ -38,7 +38,7 @@
                 999
                 totals.day_local.avg_v|mul:100|div:totals.day.avg_v|percent|or:"---"
                 999
-                label="% Local Visits" %}
+                label="Local Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
                 {% usemacro four_up_well
@@ -86,23 +86,18 @@
                 <tr>
                     <th>Week of</th>
                     <th class="num">Stories</th>
-                    <th class="num">V</th>
-                    <th class="num">LV</th>
-                    <th class="num">TV</th>
-                    <th class="num">TLV</th>
-                    <!-- <th class="num">Views</th> -->
-                    <th class="num"><span class="glyphicon glyphicon-time"></span> Visit</th>
+                    <th class="num" name="visits">Visits</th>
+                    <th class="num buddy" name="local"><small class="text-muted"><span class="glyphicon glyphicon-map-marker tt" data-toggle="tooltip" title="Percentage of the views that came from the local DMA"></span></small></th>
+                    <th class="num" name="time"><span class="glyphicon glyphicon-time"></span> Visit</th>
                 </tr>
             </thead>
             {% for week in by_week %}
             <tr>
                 <td>{{ week.week_start|date:"M jS"}} - {{ week.week_end|date:"M jS"}}</td>
                 <td class="num">{{ week.count|intcomma }}</td>
-                <td class="num">{{ week.v|intcomma }}</td>
-                <td class="num">{{ week.l_v|intcomma }}</td>
-                <td class="num">{{ week.t_v|intcomma }}</td>
-                <td class="num">{{ week.t_l_v|intcomma }}</td>
-                <td class="num">---</td>
+                <td class="num" name="visits">{{ week.t_v|intcomma|or:"---" }}</td>
+                <td class="num buddy" name="local"><small class="text-muted">{{ week.t_l_v|div:week.t_v|mul:100|percent|or:"---" }}</small></td>
+                <td class="num" name="time">{{ week.avg_top|formatSeconds|or:"---" }}</td>
             </tr>
             {% endfor %}
         </table>
@@ -114,22 +109,18 @@
                 <tr>
                     <th>Month</th>
                     <th class="num">Stories</th>
-                    <th class="num">V</th>
-                    <th class="num">LV</th>
-                    <th class="num">TV</th>
-                    <th class="num">TLV</th>
-                    <th class="num"><span class="glyphicon glyphicon-time"></span> Visit</th>
+                    <th class="num" name="visits">Visits</th>
+                    <th class="num buddy" name="local"><small class="text-muted"><span class="glyphicon glyphicon-map-marker tt" data-toggle="tooltip" title="Percentage of the views that came from the local DMA"></span></small></th>
+                    <th class="num" name="time"><span class="glyphicon glyphicon-time"></span> Visit</th>
                 </tr>
             </thead>
             {% for month in by_month %}
             <tr>
                 <td>{{ month.month|date:"M Y"}}</td>
                 <td class="num">{{ month.count|intcomma }}</td>
-                <td class="num">{{ month.v|intcomma }}</td>
-                <td class="num">{{ month.l_v|intcomma }}</td>
-                <td class="num">{{ month.t_v|intcomma }}</td>
-                <td class="num">{{ month.t_l_v|intcomma }}</td>
-                <td class="num">---</td>
+                <td class="num" name="visits">{{ month.t_v|intcomma|or:"---" }}</td>
+                <td class="num buddy" name="local"><small class="text-muted">{{ month.t_l_v|div:month.t_v|mul:100|percent|or:"---" }}</small></td>
+                <td class="num" name="time">{{ month.avg_top|formatSeconds|or:"---" }}</td>
             </tr>
             {% endfor %}
         </table>

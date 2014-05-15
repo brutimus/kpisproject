@@ -22,43 +22,37 @@
             <span class="pull-right text-muted hidden-xs"><small>{% now "DATE_FORMAT" %}</small></span>
         </h1>
         <div class="row">
-            <!-- <div class="col-xs-4 col-sm-3 big-stat">
-                <div class="well big-stat-box">
-                    <h1 class="num">{{ totals.count }}</h1>
-                    <span class="well-label text-muted">Total Stories</span>
-                </div>
-            </div> -->
             <div class="col-xs-4 col-sm-3 big-stat">
                 {% usemacro four_up_well
                     totals.total.avg_v|floatformat:0|intcomma|or:"---"
-                    ratios.total.avg_v|mul:100|percent|or:"---"
+                    ratios.total.avg_v
                     totals.day.avg_v|floatformat:0|intcomma|or:"---"
-                    ratios.day.avg_v|mul:100|percent|or:"---"
+                    ratios.day.avg_v
                     label="Avg Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
                 {% usemacro four_up_well
                     ratios.total_local.avg_v|mul:100|percent|or:"---"
-                    ratios.total_local.r_avg_v|mul:100|percent|or:"---"
+                    ratios.total_local.r_avg_v
                     ratios.day_local.avg_v|mul:100|percent|or:"---"
-                    ratios.day_local.r_avg_v|mul:100|percent|or:"---"
+                    ratios.day_local.r_avg_v
                     label="% Local Visits" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
                 {% usemacro four_up_well
                     totals.total.avg_pv|floatformat:0|intcomma|or:"---"
-                    ratios.total.avg_pv|mul:100|percent|or:"---"
+                    ratios.total.avg_pv
                     totals.day.avg_pv|floatformat:0|intcomma|or:"---"
-                    ratios.day.avg_pv|mul:100|percent|or:"---"
+                    ratios.day.avg_pv
                     label="Avg Views" %}
             </div>
             <div class="col-xs-4 col-sm-3 big-stat">
                 {% usemacro four_up_well
-                totals.total.avg_top|floatformat:"0"|formatSeconds|or:"---"
-                ratios.total.avg_top|mul:100|percent|or:"---"
-                totals.day.avg_top|floatformat:"0"|formatSeconds|or:"---"
-                ratios.day.avg_top|mul:100|percent|or:"---"
-                label="Avg Time on Page" %}
+                    totals.total.avg_top|floatformat:"0"|formatSeconds|or:"---"
+                    ratios.total.avg_top
+                    totals.day.avg_top|floatformat:"0"|formatSeconds|or:"---"
+                    ratios.day.avg_top
+                    label="Avg Time on Page" %}
             </div>
         </div>
         <div class="row">

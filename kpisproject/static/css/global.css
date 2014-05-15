@@ -8488,172 +8488,176 @@ body.menu-open {
 }
 /* line 161, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003161}}
+.table .num.buddy {
+  width: 35px;
+}
+/* line 165, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003165}}
 .table .num small {
   display: inline-block;
   float: right;
-  width: 45px;
   line-height: 160%;
 }
-/* line 171, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003171}}
+/* line 174, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003174}}
 .big-stat {
   text-align: center;
   font-weight: 200;
 }
-/* line 175, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003175}}
+/* line 178, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003178}}
 .big-stat .well {
   background: none;
   border: none;
   box-shadow: none;
 }
-/* line 182, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003182}}
+/* line 185, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003185}}
 .big-stat .well h1.num {
   font-size: 60px;
   line-height: 40px;
   font-weight: 300;
 }
-/* line 186, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003186}}
+/* line 189, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003189}}
 .big-stat .well h1.num.big {
   font-size: 46px;
 }
-/* line 191, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003191}}
+/* line 194, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003194}}
 .big-stat .well > .well-label {
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: .7px;
   font-weight: 600;
 }
-/* line 198, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003198}}
+/* line 201, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003201}}
 .big-stat .well table {
   width: 100%;
   color: #555555;
   margin-bottom: 5px;
 }
-/* line 204, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003204}}
+/* line 207, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003207}}
 .big-stat .well table tr.two-up:first-child {
   border-bottom: 1px solid #eeeeee;
 }
-/* line 209, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003209}}
+/* line 212, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003212}}
 .big-stat .well table tr.two-up td .num {
   font-size: 30px;
   line-height: 34px;
 }
-/* line 212, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003212}}
+/* line 215, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003215}}
 .big-stat .well table tr.two-up td .num.big {
   font-size: 22px;
 }
-/* line 217, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003217}}
+/* line 220, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003220}}
 .big-stat .well table tr.two-up td:first-child {
   text-align: right;
   width: 70%;
   padding-right: 10px;
 }
-/* line 221, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003221}}
+/* line 224, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003224}}
 .big-stat .well table tr.two-up td:first-child span {
   display: inline-block;
   float: right;
 }
-/* line 224, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003224}}
+/* line 227, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003227}}
 .big-stat .well table tr.two-up td:first-child span.glyphicon {
   font-size: 15px;
   float: left;
   line-height: 34px;
   color: #999999;
 }
-/* line 232, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003232}}
+/* line 235, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003235}}
 .big-stat .well table tr.two-up td:last-child {
   text-align: left;
   width: 30%;
 }
-/* line 236, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003236}}
+/* line 239, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003239}}
 .big-stat .well table tr.two-up td:last-child span {
   display: inline-block;
   float: left;
 }
-/* line 243, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003243}}
+/* line 246, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003246}}
 .big-stat .well table .percent {
   font-size: 10px;
   font-weight: 600;
   line-height: 20px;
 }
-/* line 248, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003248}}
+/* line 251, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003251}}
 .big-stat .well table .glyphicon {
   font-size: 16px;
   line-height: 19px;
   margin-right: 3px;
 }
-/* line 254, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003254}}
+/* line 257, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003257}}
 .big-stat .well table .positive {
   color: #5cb85c;
 }
-/* line 256, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003256}}
+/* line 259, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003259}}
 .big-stat .well table .positive .glyphicon.chevron:before {
   content: "\e113";
 }
-/* line 260, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003260}}
+/* line 263, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003263}}
 .big-stat .well table .negative {
   color: #d9534f;
 }
-/* line 262, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003262}}
+/* line 265, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003265}}
 .big-stat .well table .negative .glyphicon.chevron:before {
   content: "\e114";
 }
-/* line 270, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003270}}
+/* line 273, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003273}}
 .cal-heatmap-container {
   float: right;
 }
-/* line 273, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003273}}
+/* line 276, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003276}}
 .cal-heatmap-container .graph-rect {
   fill: white;
   transition: fill 200ms;
   -webkit-transition: fill 200ms;
 }
-/* line 278, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003278}}
+/* line 281, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003281}}
 .cal-heatmap-container .subdomain-text {
   transition: fill 200ms;
   -webkit-transition: fill 200ms;
 }
-/* line 282, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003282}}
+/* line 285, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003285}}
 .cal-heatmap-container .graph-subdomain-group rect:hover {
   stroke: #ccc;
   stroke-width: 1px;
 }
-/* line 286, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003286}}
+/* line 289, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003289}}
 .cal-heatmap-container rect.now {
   stroke: #DCA7A7;
   fill: #DCA7A7;
 }
-/* line 290, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003290}}
+/* line 293, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003293}}
 .cal-heatmap-container text.now {
   fill: white;
 }
-/* line 293, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003293}}
+/* line 296, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003296}}
 .cal-heatmap-container .q3 ~ text,
 .cal-heatmap-container .q4 ~ text,
 .cal-heatmap-container .q5 ~ text,
@@ -8666,80 +8670,80 @@ body.menu-open {
 .cal-heatmap-container .q12 ~ text {
   fill: white;
 }
-/* line 303, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003303}}
+/* line 306, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003306}}
 .cal-heatmap-container .q1 {
   fill: white;
 }
-/* line 304, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003304}}
+/* line 307, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003307}}
 .cal-heatmap-container .q2,
 .cal-heatmap-container .RdYlGn .q0-11 {
   fill: #d9edf7;
 }
-/* line 305, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003305}}
+/* line 308, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003308}}
 .cal-heatmap-container .q3,
 .cal-heatmap-container .RdYlGn .q1-11 {
   fill: #bcdff1;
 }
-/* line 306, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003306}}
+/* line 309, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003309}}
 .cal-heatmap-container .q4,
 .cal-heatmap-container .RdYlGn .q2-11 {
   fill: #9acfea;
 }
-/* line 307, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003307}}
+/* line 310, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003310}}
 .cal-heatmap-container .q5,
 .cal-heatmap-container .RdYlGn .q3-11 {
   fill: #78bfe2;
 }
-/* line 308, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003308}}
+/* line 311, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003311}}
 .cal-heatmap-container .q6,
 .cal-heatmap-container .RdYlGn .q4-11 {
   fill: #57afdb;
 }
-/* line 309, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003309}}
+/* line 312, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003312}}
 .cal-heatmap-container .q7,
 .cal-heatmap-container .RdYlGn .q5-11 {
   fill: #359fd4;
 }
-/* line 310, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003310}}
+/* line 313, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003313}}
 .cal-heatmap-container .q8,
 .cal-heatmap-container .RdYlGn .q6-11 {
   fill: #2789b9;
 }
-/* line 311, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003311}}
+/* line 314, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003314}}
 .cal-heatmap-container .q9,
 .cal-heatmap-container .RdYlGn .q7-11 {
   fill: #207097;
 }
-/* line 312, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003312}}
+/* line 315, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003315}}
 .cal-heatmap-container .q10,
 .cal-heatmap-container .RdYlGn .q8-11 {
   fill: #195776;
 }
-/* line 313, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003313}}
+/* line 316, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003316}}
 .cal-heatmap-container .q11,
 .cal-heatmap-container .RdYlGn .q9-11 {
   fill: #123e54;
 }
-/* line 314, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003314}}
+/* line 317, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003317}}
 .cal-heatmap-container .q12,
 .cal-heatmap-container .RdYlGn .q10-11 {
   fill: #0b2532;
 }
 @media print {
-  /* line 320, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
-  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003320}}
+  /* line 323, /Users/brutimus/Code/kpisproject/kpisproject/static/less/global.less */
+  @media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/brutimus\/Code\/kpisproject\/kpisproject\/static\/less\/global\.less}line{font-family:\00003323}}
   a[href]:after {
     content: none !important;
   }
