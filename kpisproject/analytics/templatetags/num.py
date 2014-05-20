@@ -5,7 +5,7 @@ register = template.Library()
 
 @register.filter('or')
 def num_or(s, sub):
-    if (s is None) or (s == 'None'):
+    if (s is None) or (s == 'None') or (s == ''):
         return sub
     else:
         return s

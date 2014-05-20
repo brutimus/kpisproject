@@ -189,15 +189,15 @@
                 <td class="num" name="pageviews">{{ group.total_pageviews|intcomma|or:"---" }} <small class="text-muted">({{ group.percent_total_pageviews|floatformat:2|or:"---" }})</small></td>
                 <td class="num" name="time">{{ group.avg_time_on_page|formatSeconds|or:"---" }}</td>
             </tr>
-            {% for article in group.list|dictsortreversed:"visits" %}
+            {% for article in group.list %}
             <tr{% if article.status.name == "Don't Display" %} class="danger"{% endif %}>
                 <td class="icon"><a href="{{ EDIT_URL }}{{ article.id }}"><span class="glyphicon glyphicon-pencil"></span></a></td>
                 <td class="icon"><a href="http://www.ocregister.com/articles/-{{ article.id }}--.html"><span class="glyphicon glyphicon-globe"></span></a></td>
                 <td>{{ article.headline }}</td>
                 <td>{{ article.byline.name }}</td>
-                <td class="num">{{ article.visits|intcomma|or:"---" }} <small class="text-muted">---</small></td>
-                <td class="num">{{ article.pageviews|intcomma|or:"---" }} <small class="text-muted">---</small></td>
-                <td class="num">{{ article.time_on_page|formatSeconds|or:"---" }}</td>
+                <td class="num">{{ article.stats_total.visits|intcomma|or:"---" }} <small class="text-muted">---</small></td>
+                <td class="num">{{ article.stats_total.pageviews|intcomma|or:"---" }} <small class="text-muted">---</small></td>
+                <td class="num">{{ article.stats_total.time_on_page|formatSeconds|or:"---" }}</td>
             </tr>
             {% endfor %}
         </tbody>
