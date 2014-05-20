@@ -15,6 +15,9 @@ class Site(models.Model):
     ga_table = models.CharField(max_length=50)
     dma = models.CharField(max_length=100)
 
+    def __unicode__(self):
+        return self.name
+
 
 class Stats(models.Model):
     timestamp = models.DateTimeField()
