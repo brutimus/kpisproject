@@ -102,51 +102,52 @@ def calc_ratios(d, dl, sd, sdl, t, tl, st, stl):
     tl = floatall(tl)
     st = floatall(st)
     stl = floatall(stl)
+    z = lambda x:x or 1
     return {
         'day': {
             # Compare day to site avg
-            'avg_v': (d['avg_v'] - sd['avg_v']) / sd['avg_v'],
-            'avg_pv': (d['avg_pv'] - sd['avg_pv']) / sd['avg_pv'],
-            'avg_top': (d['avg_top'] - sd['avg_top']) / sd['avg_top']},
+            'avg_v': (d['avg_v'] - sd['avg_v']) / z(sd['avg_v']),
+            'avg_pv': (d['avg_pv'] - sd['avg_pv']) / z(sd['avg_pv']),
+            'avg_top': (d['avg_top'] - sd['avg_top']) / z(sd['avg_top'])},
         'day_local': {
             # Compare day local to day (percent local)
-            'avg_v': dl['avg_v'] / d['avg_v'],
-            'avg_pv': dl['avg_pv'] / d['avg_pv'],
-            'avg_top': dl['avg_top'] / d['avg_top'],
+            'avg_v': dl['avg_v'] / z(d['avg_v']),
+            'avg_pv': dl['avg_pv'] / z(d['avg_pv']),
+            'avg_top': dl['avg_top'] / z(d['avg_top']),
             # Compare byline percent local to site percent local
             'r_avg_v': (
-                (dl['avg_v'] / d['avg_v']) - (
-                sdl['avg_v'] / sd['avg_v'])) / (
-                sdl['avg_v'] / sd['avg_v']),
+                (dl['avg_v'] / z(d['avg_v'])) - (
+                sdl['avg_v'] / z(sd['avg_v']))) / (
+                sdl['avg_v'] / z(sd['avg_v'])),
             'r_avg_pv': (
-                (dl['avg_pv'] / d['avg_pv']) - (
-                sdl['avg_pv'] / sd['avg_pv'])) / (
-                sdl['avg_pv'] / sd['avg_pv']),
+                (dl['avg_pv'] / z(d['avg_pv'])) - (
+                sdl['avg_pv'] / z(sd['avg_pv']))) / (
+                sdl['avg_pv'] / z(sd['avg_pv'])),
             'r_avg_top': (
-                (dl['avg_top'] / d['avg_top']) - (
-                sdl['avg_top'] / sd['avg_top'])) / (
-                sdl['avg_top'] / sd['avg_top'])},
+                (dl['avg_top'] / z(d['avg_top'])) - (
+                sdl['avg_top'] / z(sd['avg_top']))) / (
+                sdl['avg_top'] / z(sd['avg_top']))},
         'total': {
             # Compare total to site total
-            'avg_v': (t['avg_v'] - st['avg_v']) / st['avg_v'],
-            'avg_pv': (t['avg_pv'] - st['avg_pv']) / st['avg_pv'],
-            'avg_top': (t['avg_top'] - st['avg_top']) / st['avg_top']},
+            'avg_v': (t['avg_v'] - st['avg_v']) / z(st['avg_v']),
+            'avg_pv': (t['avg_pv'] - st['avg_pv']) / z(st['avg_pv']),
+            'avg_top': (t['avg_top'] - st['avg_top']) / z(st['avg_top'])},
         'total_local': {
             # Compare total local to total (percent local)
-            'avg_v': tl['avg_v'] / t['avg_v'],
-            'avg_pv': tl['avg_pv'] / t['avg_pv'],
-            'avg_top': tl['avg_top'] / t['avg_top'],
+            'avg_v': tl['avg_v'] / z(t['avg_v']),
+            'avg_pv': tl['avg_pv'] / z(t['avg_pv']),
+            'avg_top': tl['avg_top'] / z(t['avg_top']),
             # Compare byline percent local to site percent local
             'r_avg_v': (
-                (tl['avg_v'] / t['avg_v']) - (
-                stl['avg_v'] / st['avg_v'])) / (
-                stl['avg_v'] / st['avg_v']),
+                (tl['avg_v'] / z(t['avg_v'])) - (
+                stl['avg_v'] / z(st['avg_v']))) / (
+                stl['avg_v'] / z(st['avg_v'])),
             'r_avg_pv': (
-                (tl['avg_pv'] / t['avg_pv']) - (
-                stl['avg_pv'] / st['avg_pv'])) / (
-                stl['avg_pv'] / st['avg_pv']),
+                (tl['avg_pv'] / z(t['avg_pv'])) - (
+                stl['avg_pv'] / z(st['avg_pv']))) / (
+                stl['avg_pv'] / z(st['avg_pv'])),
             'r_avg_top': (
-                (tl['avg_top'] / t['avg_top']) - (
-                stl['avg_top'] / st['avg_top'])) / (
-                stl['avg_top'] / st['avg_top'])},
+                (tl['avg_top'] / z(t['avg_top'])) - (
+                stl['avg_top'] / z(st['avg_top']))) / (
+                stl['avg_top'] / z(st['avg_top']))},
     }
