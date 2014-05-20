@@ -1,0 +1,35 @@
+{% extends "analytics/base.html" %}
+{% load humanize %}
+{% load sec num macro mathfilters %}
+{% loadmacros "analytics/macros.html" %}
+
+{% block title %}{{ today|date:"M j, Y" }} daily analysis{% endblock %}
+{% block pagenav %}
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#bylines">Bylines</a></li>
+    <li><a href="#sections">Sections</a></li>
+    <li><a href="#unvisited">Unvisited</a></li>
+{% endblock %}
+{% block content %}
+
+    <div class="row section">
+        <h1 id="overview" class="page-header clearfix">
+            {% include "analytics/menu-button.html" %}
+            <span class="hidden-xs">Daily Analysis</span>
+            <span class="pull-right text-muted visible-print"><small>{{ today|date:"M j, Y" }}</small></span>
+            <div class="btn-group pull-right hidden-print">
+                <a class="btn btn-primary" role="button" href="/stories/{{ yesterday|date:"Y/m/d" }}/">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                </a>
+                <button type="button" class="btn btn-primary">{{ today|date:"M j, Y" }}</button>
+                <a class="btn btn-primary" role="button" href="/stories/{{ tomorrow|date:"Y/m/d" }}/">
+                    <span class="glyphicon glyphicon-arrow-right"></span>
+                </a>
+            </div>
+        </h1>
+        <div class="empty text-center">
+            <h2>There is no data at the moment for:</h2>
+            <h1>{{ today|date:"M j, Y" }}</h1>
+        </div>
+    </div>
+{% endblock %}

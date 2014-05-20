@@ -89,8 +89,27 @@ def story_overview(request):
 
 @cache_page(60 * 15)
 def story_day(request, year, month, day):
-    cursor = connection.cursor()
+    
     today = datetime.date(int(year), int(month), int(day))
+    base_article_list = Article.objects.filter(
+        date__year=year,
+        date__month=month,
+        date__day=day
+    ).select_related(
+        'status',
+        'category',
+        'stats_day',
+        'stats_day_local',
+        'stats_total',
+        'stats_total_local',
+        'site'
+    ).prefetch_related(
+        'bylines'
+    ).order_by('date')
+    if base_article_list.count() == 0:
+        return render_to_response('analytics/story_day_empty.html', {
+            'today': today
+        })
 
     base_byline_list = Byline.objects.filter(
         article__date__year=year,
@@ -98,6 +117,7 @@ def story_day(request, year, month, day):
         article__date__day=day
     ).order_by('first_name', 'last_name').distinct()
 
+    cursor = connection.cursor()
     cursor.execute(sql.sums_query % {
         'select': '',
         'from': '',
@@ -132,22 +152,6 @@ def story_day(request, year, month, day):
     byline_averages_day_local = dictify(byline_averages_day_local)
     byline_averages_total = dictify(byline_averages_total)
     byline_averages_total_local = dictify(byline_averages_total_local)
-
-    base_article_list = Article.objects.filter(
-        date__year=year,
-        date__month=month,
-        date__day=day
-    ).select_related(
-        'status',
-        'category',
-        'stats_day',
-        'stats_day_local',
-        'stats_total',
-        'stats_total_local',
-        'site'
-    ).prefetch_related(
-        'bylines'
-    ).order_by('date')
 
 
     def summertime(data, field):

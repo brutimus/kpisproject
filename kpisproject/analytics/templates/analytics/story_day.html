@@ -29,9 +29,16 @@
             </div>
         </h1>
         <div class="row">
+        {% if not totals.total.v %}
+        <div class="col-xs-12">
+        <div class="col-xs-12 alert alert-warning">
+            <strong>Notice!</strong> Overall analytics totals for these stories have not yet been processed. Here you will only see analytics for day-of traffic.</strong>
+        </div>
+        </div>
+        {% endif %}
         <div class="col-xs-4 col-sm-3 big-stat">
           <div class="well big-stat-box">
-              <h1 class="num">{{ totals.sums.count }}</h1>
+              <h1 class="num">{{ articles|length }}</h1>
               <span class="text-muted well-label">Total Stories</span>
           </div>
         </div>
