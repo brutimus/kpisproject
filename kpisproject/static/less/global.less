@@ -2,6 +2,7 @@
 @import "bootstrap/bootstrap.less";
 @import "../css/d3tip.css";
 @import "../css/cal-heatmap.css";
+@import "../css/nv.d3.min.css";
 
 /*
  * Base structure
@@ -16,6 +17,10 @@ body {
   &.menu-open {
     left: 100px;
   }
+}
+
+svg {
+  shape-rendering: auto;
 }
 
 /*
@@ -188,8 +193,6 @@ body {
   
   .well {
     background: none;
-    // box-shadow: 1px 1px 3px -3px #333;
-    // border-radius: 2px;
     border: none;
     box-shadow: none;
     
@@ -281,6 +284,8 @@ body {
   }
 }
 
+// HEATMAPS
+
 .cal-heatmap-container {
   float:right;
 
@@ -327,6 +332,37 @@ body {
   .q11, .RdYlGn .q9-11{fill:#123E54}
   .q12, .RdYlGn .q10-11{fill:#0B2532}
 
+}
+
+//  NVD3
+
+#year-chart {
+  position: inherit;
+  margin-bottom: 20px;
+}
+
+.nvd3 {
+  text {
+    font-family: @font-family-base;
+    font-weight: 200;
+    font-size: 10px;
+    line-height: 10px;
+    fill: @gray-light;
+  }
+  .nv-x.nv-axis .tick line {
+    opacity: 0;
+  }
+  .nv-y.nv-axis {
+    .nv-axisMaxMin text {
+      font-weight: 400;
+    }
+    .tick line {
+      opacity: 0.5;
+    }
+  }
+  .nv-axis path.domain {
+    opacity: 0;
+  }
 }
 
 
