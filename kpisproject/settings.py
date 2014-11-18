@@ -61,7 +61,7 @@ INSTALLED_APPS = [
 if DEBUG:
     INSTALLED_APPS.extend([
         'django_databrowse',
-        'debug_toolbar'
+        # 'debug_toolbar'
     ])
 
 MIDDLEWARE_CLASSES = (
