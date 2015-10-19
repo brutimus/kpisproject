@@ -8,13 +8,15 @@
     <li><a href="#overview">Overview</a></li>
     <li><a href="#weekly">Weekly</a></li>
     <li><a href="#monthly">Monthly</a></li>
+    <hr>
+    <li><a href="#analytics">Analytics</a></li>
 {% endblock %}
 {% block content %}
 
     <div class="row section">
         <h1 id="overview" class="page-header clearfix">
             {% include "analytics/menu-button.html" %}
-            <span class="hidden-xs">Stories</span>
+            <span class="hidden-xs">Stories <small><span class="glyphicon glyphicon-question-sign text-muted tt" data-toggle"tooltip" data-placement="bottom" title="Statistics in this section are story-based. These figures only represent the stories published in the selected time frame. For example, if a story published a year ago spiked in traffic today, that data will not show here. Please see the 'Analytics' section below for those figures."></span></small></span>
             <span class="pull-right text-muted"><small>{% now "DATE_FORMAT" %}</small></span>
         </h1>
         <div class="row">
@@ -58,9 +60,6 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12" id="year-chart" ><svg style="height:200px;"></svg></div>
-        </div>
-        <div class="row">
             <div class="col-xs-12" id="calendar"></div>
         </div>
         <div class="row">
@@ -80,10 +79,10 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="col-xs-12" id="calendar2"></div> -->
     </div>
     <div class="row section">
-        <h1 id="weekly" class="page-header">Weekly Stats</h1>
+        <h1 id="weekly" class="page-header">Weekly <small><span class="glyphicon glyphicon-question-sign text-muted tt" data-toggle"tooltip" data-placement="bottom" title="Statistics in this section are story-based. These figures only represent the stories published in the selected time frame. For example, if a story published a year ago spiked in traffic today, that data will not show here. Please see the 'Analytics' section below for those figures."></span></small></h1>
+        <div class="col-xs-12 full-chart" id="week-chart" ><svg style="height:200px;"></svg></div>
         <table class="table table-outside table-responsive">
             <thead>
                 <tr>
@@ -106,7 +105,8 @@
         </table>
     </div>
     <div class="row section">
-        <h1 id="monthly" class="page-header">Monthly Stats</h1>
+        <h1 id="monthly" class="page-header">Monthly <small><span class="glyphicon glyphicon-question-sign text-muted tt" data-toggle"tooltip" data-placement="bottom" title="Statistics in this section are story-based. These figures only represent the stories published in the selected time frame. For example, if a story published a year ago spiked in traffic today, that data will not show here. Please see the 'Analytics' section below for those figures."></span></small></h1>
+        <div class="col-xs-12 full-chart" id="month-chart" ><svg style="height:200px;"></svg></div>
         <table class="table table-outside table-responsive">
             <thead>
                 <tr>
@@ -128,99 +128,313 @@
             {% endfor %}
         </table>
     </div>
+    <div class="row section">
+        <h1 id="analytics" class="page-header">Analytics <small><span class="glyphicon glyphicon-question-sign text-muted tt" data-toggle"tooltip" data-placement="bottom" title="Data in this section is a standard analytics-type view into the traffic data. This shows the numbers all pages or stories across the site earned in the selected time frame."></span></small></h1>
+        <div class="row text-center">
+            <button class="authorize-button" style="display:none;">Authorize</button>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 full-chart" id="year-chart" ><svg style="height:300px;"></svg></div>
+            <div class="col-xs-12" style="text-align:center;">
+                <div id="year-chart-timespan" class="btn-group hidden-print" data-toggle="buttons">
+                    <label id="days-7" class="btn btn-primary btn-sm">
+                        <input type="radio" name="options">7 Days</input>
+                    </label>
+                    <label id="days-30" class="btn btn-primary btn-sm">
+                        <input type="radio" name="options">30 Days</input>
+                    </label>
+                    <label id="days-180" class="btn btn-primary btn-sm active">
+                        <input type="radio" name="options">180 Days</input>
+                    </label>
+                    <label id="days-365" class="btn btn-primary btn-sm">
+                        <input type="radio" name="options">365 Days</input>
+                    </label>
+                </div>
+                <div id="year-chart-granularity" class="btn-group hidden-print" data-toggle="buttons">
+                    <label class="date btn btn-primary btn-sm active">
+                        <input type="radio" name="options">Day</input>
+                    </label>
+                    <label class="week btn btn-primary btn-sm">
+                        <input type="radio" name="options">Week</input>
+                    </label>
+                    <label class="month btn btn-primary btn-sm">
+                        <input type="radio" name="options">Month</input>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
+        var dailyChart,
+            weeklyChart,
+            monthlyChart,
+            data = [];
+
         jQuery(document).ready(function($) {
+            // DAILY CHART - (starts empty)
             nv.addGraph(function() {
-              var chart = nv.models.lineChart()
+              dailyChart = nv.models.lineChart()
                 .interpolate("cardinal")   
                 .x(function(d) { return d[0] })
                 .y(function(d) { return d[1] })
-                .useInteractiveGuideline(true)
-                ;
-
-              chart.xAxis
+                .useInteractiveGuideline(true);
+              dailyChart.xAxis
                   .showMaxMin(false)
                   .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
-              chart.yAxis
+              dailyChart.yAxis
                   .tickFormat( d3.format('s') );
-
               d3.select('#year-chart svg')
+                .datum(data)
+                .transition().duration(500)
+                .call(dailyChart);
+              nv.utils.windowResize(dailyChart.update);
+              return dailyChart;
+            });
+            // WEEKLY CHART
+            nv.addGraph(function() {
+              var weeklyChart = nv.models.lineChart()
+                .interpolate("cardinal")   
+                .x(function(d) { return d[0] })
+                .y(function(d) { return d[1] })
+                .useInteractiveGuideline(true);
+              weeklyChart.xAxis
+                  .showMaxMin(false)
+                  .tickFormat(function(d) { return d3.time.format('%x')(new Date(d)) });
+              weeklyChart.yAxis
+                  .tickFormat( d3.format('s') );
+              d3.select('#week-chart svg')
                 .datum([{
-                    'values': [{% for x, y in histograms.v.items %}[{{x}}000, {{y}}]{% if not forloop.last %},{% endif %}{% endfor %}].sort(function(a,b){return +a[0] -b[0]}),
+                    'values': [{% for x in by_week %}[{{x.week_start|date:"U"}}000, {{x.t_v|or:0}}]{% if not forloop.last %},{% endif %}{% endfor %}].sort(function(a,b){return +a[0] -b[0]}),
                     'key': 'Visits'
                 },{
-                    'values': [{% for x, y in histograms.pv.items %}[{{x}}000, {{y}}]{% if not forloop.last %},{% endif %}{% endfor %}].sort(function(a,b){return +a[0] -b[0]}),
+                    'values': [{% for x in by_week %}[{{x.week_start|date:"U"}}000, {{y.t_pv|or:0}}]{% if not forloop.last %},{% endif %}{% endfor %}].sort(function(a,b){return +a[0] -b[0]}),
                     'key': 'Views',
                     'color': '#ff7f0e'
                 }])
                 .transition().duration(500)
-                .call(chart)
-                ;
-
-              nv.utils.windowResize(chart.update);
-
-              return chart;
+                .call(weeklyChart);
+              nv.utils.windowResize(weeklyChart.update);
+              return weeklyChart;
             });
-            
+            // MONTHLY CHART
+            nv.addGraph(function() {
+              var monthlyChart = nv.models.lineChart()
+                .interpolate("cardinal")   
+                .x(function(d) { return d[0] })
+                .y(function(d) { return d[1] })
+                .useInteractiveGuideline(true);
+              monthlyChart.xAxis
+                  .showMaxMin(false)
+                  .tickFormat(function(d) { return d3.time.format('%m/%Y')(new Date(d)) });
+              monthlyChart.yAxis
+                  .tickFormat( d3.format('2s') );
+              d3.select('#month-chart svg')
+                .datum([{
+                    'values': [{% for x in by_month %}[{{x.month|date:"U"}}000, {{x.t_v|or:0}}]{% if not forloop.last %},{% endif %}{% endfor %}].sort(function(a,b){return +a[0] -b[0]}),
+                    'key': 'Visits'
+                },{
+                    'values': [{% for x in by_month %}[{{x.month|date:"U"}}000, {{y.t_pv|or:0}}]{% if not forloop.last %},{% endif %}{% endfor %}].sort(function(a,b){return +a[0] -b[0]}),
+                    'key': 'Views',
+                    'color': '#ff7f0e'
+                }])
+                .transition().duration(500)
+                .call(monthlyChart);
+              nv.utils.windowResize(monthlyChart.update);
+              return monthlyChart;
+            });
+
+            var cal = new CalHeatMap();
+            cal.init({
+                itemSelector: "#calendar",
+                itemName: ['story', 'stories'],
+                domain: "month",
+                subDomain: "x_day",
+                data: {{ histograms.count }},
+                start: (new Date()).setMonth((new Date()).getMonth() - 5),
+                highlight: ["now"],
+                // weekStartOnMonday: false,
+                domainDynamicDimension: false,
+                cellSize: 24,
+                cellPadding: 0,
+                domainGutter: 20,
+                range: 6,
+                tooltip: true,
+                domainLabelFormat: function(date) {
+                    moment.lang("en");
+                    return moment(date).format("MMMM YYYY").toUpperCase();
+                },
+                subDomainTextFormat: "%d",
+                legend: [0, 50, 75, 100, 125, 150, 175, 200],
+                displayLegend: false,
+                onClick: function(date, nb) {
+                    window.location = '/stories/' + moment(date).format("YYYY/MM/DD") + '/'
+                },
+                previousSelector: '#calPrev',
+                nextSelector: '#calNext'
+            });
         });
 
-        var cal = new CalHeatMap();
-        cal.init({
-            itemSelector: "#calendar",
-            itemName: ['story', 'stories'],
-            domain: "month",
-            subDomain: "x_day",
-            data: {{ histograms.count }},
-            start: (new Date()).setMonth((new Date()).getMonth() - 5),
-            highlight: ["now"],
-            // weekStartOnMonday: false,
-            domainDynamicDimension: false,
-            cellSize: 24,
-            cellPadding: 0,
-            domainGutter: 20,
-            range: 6,
-            tooltip: true,
-            domainLabelFormat: function(date) {
-                moment.lang("en");
-                return moment(date).format("MMMM YYYY").toUpperCase();
-            },
-            subDomainTextFormat: "%d",
-            legend: [0, 50, 75, 100, 125, 150, 175, 200],
-            displayLegend: false,
-            onClick: function(date, nb) {
-                window.location = '/stories/' + moment(date).format("YYYY/MM/DD") + '/'
-            },
-            previousSelector: '#calPrev',
-            nextSelector: '#calNext'
-        });
+        function analyticsPostInit(){loadCharts()};
+        function loadCharts(){
+            var config = [{
+                chart: dailyChart,
+                timespans: [7, 30, 180, 365],
+                granularities: ['date', 'week', 'month'],
+                gaGranTrans: {
+                    'date': 'date',
+                    'week': 'isoYearIsoWeek',
+                    'month': 'yearMonth'
+                },
+                selector: '#year-chart',
+                qp: {
+                    'metrics': 'ga:sessions',
+                    'ids': 'ga:42641304'
+                },
+                layers: [{
+                    name: 'All Visits',
+                    color: '#41759a',
+                    qp: {}
+                },{
+                    name: 'Article Visits',
+                    color: '#ff7f0e',
+                    qp: {'filters': 'ga:pagePath=~.+-[0-9]{5\\,}-.+'}
+                },{
+                    name: 'All Local Visits',
+                    color: '#359fd4',
+                    qp: {'segment': 'sessions::condition::ga:metro=@Angeles'}
+                },{
+                    name: 'Article Local Visits',
+                    color: '#FFB97A',
+                    qp: {
+                        'segment': 'sessions::condition::ga:metro=@Angeles',
+                        'filters': 'ga:pagePath=~.+-[0-9]{5\\,}-.+'
+                      }
+                },]
+            }];
+            $.each(config, function(index, val) {
+                doLayers(val, 180);
+                $.each(val['timespans'], function(index2, val2) {
+                    $(val['selector'] + '-timespan #days-' + val2 ).click(function(){
+                        selectedTimespan = val2;
+                        doLayers(val);
+                    })
+                });
+                $.each(val['granularities'], function(index2, val2) {
+                    $(val['selector'] + '-granularity .' + val2 ).click(function(){
+                        selectedGranularity = val2;
+                        doLayers(val);
+                    })
+                });
+            });
+        }
 
-        // var cal2 = new CalHeatMap();
-        // cal2.init({
-        //     itemSelector: "#calendar2",
-        //     domain: "month",
-        //     subDomain: "x_week",
-        //     data: {{ by_week }},
-        //     start: (new Date()).setMonth((new Date()).getMonth() - 5),
-        //     highlight: ["now"],
-        //     // weekStartOnMonday: false,
-        //     // verticalOrientation: true,
-        //     domainDynamicDimension: false,
-        //     cellSize: 24,
-        //     cellPadding: 0,
-        //     domainGutter: 150,
-        //     range: 6,
-        //     domainLabelFormat: function(date) {
-        //         // console.log(cal2.options.data, date)
-        //         moment.lang("en");
-        //         return moment(date).format("MMMM YYYY").toUpperCase();
-        //     },
-        //     subDomainTextFormat: "%W",
-        //     legend: [0, 50, 75, 100, 125, 150, 175, 200],
-        //     onClick: function(date, nb) {
-        //         window.location = '/stories/' + moment(date).format("YYYY/MM/DD") + '/'
-        //     }
-        // });
+        function doLayers (params) {
+            var data = [];
+            if (activeQueries.length > 0) { };
+            $.each(params['layers'], function(index, val) {
+                var params2 = $.extend({}, params, val, {
+                    qp: $.extend({}, val['qp'], params['qp']),
+                    layers: []
+                });
+                activeQueries.push(doQuery(selectedTimespan, params2, data));
+            });
+        }
+
+        function doQuery (days, params, data) {
+            var days = days ? days : 180,
+                today = new Date(),
+                dFormat = d3.time.format('%Y-%m-%d');
+
+            var qp = $.extend({}, params['qp'], {
+                'dimensions': 'ga:' + params['gaGranTrans'][selectedGranularity],
+                'sort': 'ga:' + params['gaGranTrans'][selectedGranularity],
+                'start-date': dFormat(today.addDays(-days)),
+                'end-date': dFormat(today.addDays(-1))
+            });
+            q = gapi.client.analytics.data.ga.get(qp);
+            q.execute(
+                handleCoreReportingResults.bind(
+                    null, params['name'], params['color'], params['selector'], params['chart'], data)
+            );
+            return q
+        }
+
+        // function queryCoreReportingApi(days) {
+        //   days = days ? days : 180;
+        //   data = [];
+
+        //   var today = new Date();
+        //   var dFormat = d3.time.format('%Y-%m-%d');
+        //   var queryParams = {
+        //     'ids': 'ga:42641304',
+        //     'start-date': dFormat(today.addDays(-days)),
+        //     'end-date': dFormat(today.addDays(-1)),
+        //     'dimensions': 'ga:date',
+        //     'metrics': 'ga:sessions',
+        //     'sort': 'ga:date'
+        //   }
+
+        //   gapi.client.analytics.data.ga.get(queryParams).execute(
+        //       handleCoreReportingResults.bind(
+        //         null, 'All Visits', '#41759a', '#year-chart svg', dailyChart)
+        //   );
+        //   q2 = $.extend({}, queryParams, {'filters': 'ga:pagePath=~.+-[0-9]{5\\,}-.+'});
+        //   gapi.client.analytics.data.ga.get(q2).execute(
+        //       handleCoreReportingResults.bind(
+        //         null, 'Article Visits', '#ff7f0e', '#year-chart svg', dailyChart)
+        //   );
+        //   q3 = $.extend({}, queryParams, {'segment': 'sessions::condition::ga:metro=@Angeles'});
+        //   gapi.client.analytics.data.ga.get(q3).execute(
+        //       handleCoreReportingResults.bind(
+        //         null, 'All Local Visits', '#359fd4', '#year-chart svg', dailyChart)
+        //   );
+        //   q4 = $.extend({}, queryParams, {
+        //     'segment': 'sessions::condition::ga:metro=@Angeles',
+        //     'filters': 'ga:pagePath=~.+-[0-9]{5\\,}-.+'
+        //   });
+        //   gapi.client.analytics.data.ga.get(q4).execute(
+        //       handleCoreReportingResults.bind(
+        //         null, 'Article Local Visits', '#FFB97A', '#year-chart svg', dailyChart)
+        //   );
+        // }
+        function handleCoreReportingResults(name, color, selector, chart, data, results) {
+          if (results.error) {
+            // console.log('There was an error querying core reporting API: ' + results.message);
+          } else {
+            if (results.rows && results.rows.length) {
+                // console.log('View (Profile) Name: ', results.profileInfo.profileName);
+                // console.log('Total Rows: ', results.rows.length);
+                // console.log(results.rows);
+                switch (selectedGranularity) {
+                    case 'date':
+                        var gaDFormat = function(x){return d3.time.format('%Y%m%d').parse(x).getTime()};
+                        break;
+                    case 'week':
+                        var gaDFormat = function(x){return moment(x, 'GGGGWW').unix()*1000}
+                        break;
+                    case 'month':
+                        var gaDFormat = function(x){return moment(x, 'YYYYMM').unix()*1000}
+                        break
+                }
+                data.push({
+                    'values': $.map(results.rows, function(el, i){
+                        return [[gaDFormat(el[0]), parseInt(el[1])]]
+                    }),
+                    'key': name,
+                    'color': color
+                });
+                d3.select(selector + ' svg')
+                    .datum(data)
+                    .transition().duration(250)
+                    .call(chart);
+
+              } else {
+                // console.log('No results found');
+              }
+          }
+        }
 
     </script>
+    <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
 {% endblock %}

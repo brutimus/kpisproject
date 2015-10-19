@@ -123,6 +123,11 @@ svg {
   margin-top: 0;
 }
 
+.about-stats {
+  margin-top: 20px;
+  font-size: .9em;
+}
+
 .empty {
   margin-top: 150px;
   h1 {
@@ -218,8 +223,9 @@ svg {
       margin-bottom: 5px;
 
       tr.two-up {
-        &:first-child {
-          border-bottom: 1px solid @gray-lighter;
+        border-bottom: 1px solid @gray-lighter;
+        &:last-child {
+          border-bottom: 0;
         }
         td {
           // padding: 0px 5px;
@@ -231,6 +237,35 @@ svg {
             }
           }
         }
+        
+      }
+
+      .percent {
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 20px;
+      }
+      .glyphicon {
+        font-size: 16px;
+        line-height: 19px;
+        margin-right: 3px;
+      }
+
+      .positive {
+        color: @brand-success;
+        .glyphicon.chevron:before {
+          content: "\e113";
+        }
+      }
+      .negative {
+        color: @brand-danger;
+        .glyphicon.chevron:before {
+          content: "\e114";
+        }
+      }
+    }
+    &.four-up {
+      table tr.two-up {
         td:first-child {
           text-align: right;
           width: 70%;
@@ -256,28 +291,21 @@ svg {
           }
         }
       }
-
-      .percent {
-        font-size: 10px;
-        font-weight: 600;
-        line-height: 20px;
-      }
-      .glyphicon {
-        font-size: 16px;
-        line-height: 19px;
-        margin-right: 3px;
-      }
-
-      .positive {
-        color: @brand-success;
-        .glyphicon.chevron:before {
-          content: "\e113";
-        }
-      }
-      .negative {
-        color: @brand-danger;
-        .glyphicon.chevron:before {
-          content: "\e114";
+    }
+    &.four-up-stacked {
+      table tr.two-up td {
+        width: 100%;
+        text-align: right;
+        padding-right: 10px;
+        span {
+          display: inline-block;
+          float: right;
+          &.glyphicon {
+            font-size: 15px;
+            float: left;
+            line-height: 34px;
+            color: @gray-light;
+          }
         }
       }
     }
@@ -336,9 +364,12 @@ svg {
 
 //  NVD3
 
-#year-chart {
+.full-chart {
   position: inherit;
   margin-bottom: 20px;
+}
+#year-chart-buttons {
+  margin-top: -10px;
 }
 
 .nvd3 {

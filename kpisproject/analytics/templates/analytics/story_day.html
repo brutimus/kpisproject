@@ -4,11 +4,143 @@
 {% loadmacros "analytics/macros.html" %}
 
 {% block title %}{{ today|date:"M j, Y" }} daily analysis{% endblock %}
+{% block extrahead %}
+    {{ block.super }}
+    <script>
+        var hourlyChart,
+            data = [];
+
+        jQuery(document).ready(function($) {
+            // DAILY CHART - (starts empty)
+            nv.addGraph(function() {
+              hourlyChart = nv.models.lineChart()
+                .interpolate("cardinal")   
+                .x(function(d) { return d[0] })
+                .y(function(d) { return d[1] })
+                .useInteractiveGuideline(true);
+              hourlyChart.xAxis
+                  .showMaxMin(false)
+                  // .tickFormat(function(d) { return d3.time.format('%h:%m')(new Date(d)) });
+              hourlyChart.yAxis
+                  .tickFormat( d3.format('s') );
+              d3.select('#hour-chart svg')
+                .datum(data)
+                .transition().duration(500)
+                .call(hourlyChart);
+              nv.utils.windowResize(hourlyChart.update);
+              return hourlyChart;
+            });
+        });
+
+        function analyticsPostInit(){loadCharts()};
+        function loadCharts(){
+            var config = [{
+                chart: hourlyChart,
+                selector: '#hour-chart',
+                qp: {
+                    'metrics': 'ga:sessions,ga:pageviews,ga:avgTimeOnPage',
+                    'ids': 'ga:42641304',
+                    'sort': 'ga:hour'
+                },
+                layers: [{
+                    name: 'All Visits',
+                    color: '#41759a',
+                    sel: 'a-v',
+                    i: 0,
+                    qp: {}
+                },{
+                    name: 'Article Visits',
+                    color: '#ff7f0e',
+                    sel: 'ar-v',
+                    i: 1,
+                    qp: {'filters': 'ga:pagePath=~.+-[0-9]{5\\,}-.+'}
+                },{
+                    name: 'All Local Visits',
+                    color: '#359fd4',
+                    sel: 'a-l-v',
+                    i: 2,
+                    qp: {'segment': 'sessions::condition::ga:metro=@Angeles'}
+                },{
+                    name: 'Article Local Visits',
+                    color: '#FFB97A',
+                    sel: 'ar-l-v',
+                    i: 3,
+                    qp: {
+                        'segment': 'sessions::condition::ga:metro=@Angeles',
+                        'filters': 'ga:pagePath=~.+-[0-9]{5\\,}-.+'
+                      }
+                },]
+            }];
+            $.each(config, function(index, val) {
+                doLayers(val);
+            });
+        }
+
+        function doLayers (params) {
+            $.each(params['layers'], function(index, val) {
+                var params2 = $.extend({}, params, val, {
+                    qp: $.extend({}, val['qp'], params['qp']),
+                    layers: []
+                });
+                doQuery(params2, data)
+            });
+        }
+
+        function doQuery (params, data) {
+            var qp = $.extend({}, params['qp'], {
+                'dimensions': 'ga:' + 'hour',
+                'sort': 'ga:' + 'hour',
+                'start-date': '{{ today|date:"Y-m-d" }}',
+                'end-date': '{{ today|date:"Y-m-d" }}'
+            });
+            q = gapi.client.analytics.data.ga.get(qp);
+            q.execute(
+                handleCoreReportingResults.bind(
+                    null, params['name'], params['color'], params['selector'], params['chart'], params['sel'], params['i'], data)
+            );
+            return q
+        }
+
+        function handleCoreReportingResults(name, color, selector, chart, sel, i, data, results) {
+          if (results.error) {
+            // console.log('There was an error querying core reporting API: ' + results.message);
+          } else {
+            if (results.rows && results.rows.length) {
+                console.log('View (Profile) Name: ', results.profileInfo.profileName);
+                console.log('Total Rows: ', results.rows.length);
+                console.log(results);
+                if (sel){
+                    $('.visits .two-up .num').eq(i).html(d3.format(',g')(results.totalsForAllResults['ga:sessions']));
+                    $('.views .two-up .num').eq(i).html(d3.format(',g')(results.totalsForAllResults['ga:pageviews']));
+                    $('.top .two-up .num').eq(i).html(Math.floor(results.totalsForAllResults['ga:avgTimeOnPage'] / 60) + ':' + d3.format('02d')(Math.floor(results.totalsForAllResults['ga:avgTimeOnPage'] % 60)));
+                }
+                data.push({
+                    'values': $.map(results.rows, function(el, i){
+                        return [[el[0], parseInt(el[1])]]
+                    }),
+                    'key': name,
+                    'color': color
+                });
+                d3.select(selector + ' svg')
+                    .datum(data)
+                    .transition().duration(250)
+                    .call(chart);
+
+              } else {
+                // console.log('No results found');
+              }
+          }
+        }
+
+    </script>
+{% endblock %}
 {% block pagenav %}
     <li><a href="#overview">Overview</a></li>
     <li><a href="#bylines">Bylines</a></li>
     <li><a href="#sections">Sections</a></li>
     <li><a href="#unvisited">Unvisited</a></li>
+    <hr>
+    <li><a href="#analytics">Analytics</a></li>
 {% endblock %}
 {% block content %}
     {% regroup object_list|dictsort:"category_id" by category as category_list %}
@@ -226,4 +358,44 @@
             {% endfor %}
         </table>
     </div>
+
+     <div class="row section">
+        <h1 id="analytics" class="page-header">Analytics <small><span class="glyphicon glyphicon-question-sign text-muted tt" data-toggle"tooltip" data-placement="bottom" title="Data in this section is a standard analytics-type view into the traffic data. This shows the numbers all pages or stories across the site earned in the selected time frame."></span></small></h1>
+        <div class="row text-center">
+            <button class="authorize-button" style="display:none;">Authorize</button>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 full-chart" id="hour-chart" ><svg style="height:300px;"></svg></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-sm-3 big-stat">
+                {% usemacro four_up_well_stacked
+                    '---'
+                    '---'
+                    '---'
+                    '---'
+                    label="Visits"
+                    cls="visits" %}
+            </div>
+            <div class="col-xs-4 col-sm-3 big-stat">
+                {% usemacro four_up_well_stacked
+                    '---'
+                    '---'
+                    '---'
+                    '---'
+                    label="Views"
+                    cls="views" %}
+            </div>
+            <div class="col-xs-4 col-sm-3 big-stat">
+                {% usemacro four_up_well_stacked
+                    '---'
+                    '---'
+                    '---'
+                    '---'
+                    label="Avg Time on Page"
+                    cls="top" %}
+            </div>
+        </div>
+    </div>
+    <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
 {% endblock %}

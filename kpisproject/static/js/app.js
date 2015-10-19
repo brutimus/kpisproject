@@ -45,6 +45,12 @@ jQuery.fn.sortElements = (function() {
     };
 
 })();
+Date.prototype.addDays = function(days)
+{
+    var dat = new Date(this.valueOf());
+    dat.setDate(dat.getDate() + days);
+    return dat;
+}
 
 $(document).ready(function() {
     $(function() {
@@ -67,3 +73,39 @@ $(document).ready(function() {
     });
     $('.tt').tooltip();
 });
+
+var clientId = '1023142531881-sf4ri487on3tiv9mq0dt04k2s72phsar.apps.googleusercontent.com';
+var apiKey = 'AIzaSyAQspm-R0JkjZniAI6C8c_iGEZDBq-KY4g';
+var scopes = 'https://www.googleapis.com/auth/analytics.readonly';
+var selectedTimespan = 180,
+    selectedGranularity = 'date',
+    activeQueries = [];
+
+function handleClientLoad () {
+    gapi.client.setApiKey(apiKey);
+    window.setTimeout(checkAuth,1);
+}
+function checkAuth(immediate) {
+    gapi.auth.authorize({
+        client_id: clientId,
+        scope: scopes,
+        immediate: typeof immediate === 'undefined' ? true : immediate
+    }, handleAuthResult);
+}
+function handleAuthClick(event) {
+    checkAuth(false);
+    return false;
+}
+function handleAuthResult(authResult) {
+    var authorizeButton = $('.authorize-button');
+    if (authResult && !authResult.error) {
+      authorizeButton.hide();
+      loadAPI();
+    } else {
+      authorizeButton.show();
+      authorizeButton.click(handleAuthClick);
+    }
+}
+function loadAPI() {
+    gapi.client.load('analytics', 'v3', analyticsPostInit);
+}

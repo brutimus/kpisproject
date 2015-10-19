@@ -16,11 +16,33 @@
     </tr>
 {% endmacro %}
 
-{% macro four_up_well tl tr bl br label="" tltip="All time" trtip="Compared to site average" bltip="Day published" brtip="Compared to site average" big=0 %}
-    <div class="well">
+{% macro four_up_well tl tr bl br label="" tltip="All time" trtip="Compared to site average" bltip="Day published" brtip="Compared to site average" big=0 cls='' %}
+    <div class="well four-up{% if cls %} {{ cls }}{% endif %}">
         <table>
             {% usemacro four_up_row "calendar" tltip trtip tl tr big %}
             {% usemacro four_up_row "time" bltip brtip bl br big %}
+        </table>
+        <span class="well-label text-muted">{{ label }}</span>
+    </div>
+{% endmacro %}
+
+{% macro four_up_stacked_row icon tt1 tt2 d1 d2 big=0 icon2='' %}
+    <tr class="two-up">
+        <td>
+            <span class="glyphicon glyphicon-{{ icon }} tt" data-toggle="tooltip" title="{{ tt1 }}"></span>
+            {% if icon2 %}<span class="glyphicon glyphicon-{{ icon2 }} tt" data-toggle="tooltip" title="{{ tt1 }}"></span>{% endif %}
+            <span class="num{% if big == 1 %} big{% endif %}">{{ d1|or:"---" }}</span>
+        </td>
+    </tr>
+{% endmacro %}
+
+{% macro four_up_well_stacked v1 v2 v3 v4 label="" v1tip="Total for day" v2tip="Total local for day" v3tip="Totay for day's articles" v4tip="Total local for day's articles" cls='' %}
+    <div class="well four-up-stacked{% if cls %} {{ cls }}{% endif %}">
+        <table>
+            {% usemacro four_up_stacked_row "globe" v1tip '' v1 999 %}
+            {% usemacro four_up_stacked_row "globe" v2tip '' v2 999 icon2="map-marker" %}
+            {% usemacro four_up_stacked_row "align-left" v3tip '' v3 999 %}
+            {% usemacro four_up_stacked_row "align-left" v4tip '' v4 999 icon2="map-marker" %}
         </table>
         <span class="well-label text-muted">{{ label }}</span>
     </div>

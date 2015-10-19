@@ -1,5 +1,5 @@
 import django_databrowse
-
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.views.generic.list import ListView
 
@@ -25,3 +25,9 @@ urlpatterns = patterns('',
 )
 
 # django_databrowse.site.register(Article, Byline, Status, Category)
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += patterns('',
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    )

@@ -24,6 +24,7 @@
     <script src="{% static "js/moment.min.js" %}"></script>
     <script src="{% static "js/gauge.min.js" %}"></script>
     <script src="{% static "js/app.js" %}"></script>
+    {% block extrahead %}{% endblock %}
   </head>
 
   <body data-spy="scroll" data-target=".sidebar">
